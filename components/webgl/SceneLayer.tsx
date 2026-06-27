@@ -1,0 +1,55 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { useSite } from "@/lib/site-context";
+import { initSceneInputs } from "@/lib/scene-store";
+
+const SceneRoot = dynamic(() => import("./SceneRoot"), { ssr: false });
+
+/* Static brand-toned atmosphere — reduced-motion & pre-mount fallback */
+function GradientFallback() {
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <div
+        className="absolute right-0 top-0 h-[70vmax] w-[70vmax] translate-x-1/4 -translate-y-1/4 rounded-full opacity-60 blur-[100px]"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(251,0,63,0.4), rgba(255,92,158,0.22) 45%, transparent 70%)",
+        }}
+      />
+      <div
+        className="absolute bottom-0 left-0 h-[55vmax] w-[55vmax] -translate-x-1/4 translate-y-1/4 rounded-full opacity-45 blur-[100px]"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(95,201,188,0.36), transparent 70%)",
+        }}
+      />
+    </div>
+  );
+}
+
+export default function SceneLayer() {
+  const { reducedMotion } = useSite();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const dispose = initSceneInputs();
+    const id = window.requestAnimationFrame(() => setMounted(true));
+    return () => {
+      window.cancelAnimationFrame(id);
+      dispose();
+    };
+  }, []);
+
+  return (
+    <div className="pointer-events-none fixed inset-0 -z-10">
+      <GradientFallback />
+      {mounted && !reducedMotion && (
+        <div className="absolute inset-0">
+          <SceneRoot />
+        </div>
+      )}
+    </div>
+  );
+}

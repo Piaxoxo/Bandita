@@ -45,12 +45,13 @@ export default function AccessibilityPanel({
     document.documentElement.dataset.contrast = contrast ? "high" : "normal";
   }, [contrast]);
 
-  useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--a11y-brightness",
-      String(brightness / 100),
-    );
-  }, [brightness]);
+  // Brightness as an overlay tint (filter on <body> would break fixed layers)
+  const brightnessStyle =
+    brightness < 100
+      ? { background: "#000", opacity: ((100 - brightness) / 100) * 0.9 }
+      : brightness > 100
+        ? { background: "#fff", opacity: ((brightness - 100) / 100) * 0.6 }
+        : { opacity: 0 };
 
   useEffect(() => {
     document.documentElement.style.setProperty(
@@ -68,6 +69,7 @@ export default function AccessibilityPanel({
 
   return (
     <>
+      <div className="brightness-overlay" aria-hidden style={brightnessStyle} />
       <button
         onClick={() => setOpen((v) => !v)}
         aria-label={t.open}

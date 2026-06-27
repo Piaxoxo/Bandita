@@ -42,7 +42,17 @@ body {
   color: var(--fg);
   font-family: var(--font-inter), system-ui, sans-serif;
   overflow-x: hidden;
-  filter: brightness(var(--a11y-brightness));
+  /* NOTE: never put filter/transform/perspective on <body> or <html> — it
+     creates a containing block that breaks position:fixed for the WebGL layer,
+     loader and nav. Brightness is handled by a fixed overlay instead. */
+}
+
+/* Accessibility brightness/dim overlay */
+.brightness-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  pointer-events: none;
 }
 
 /* Hide the native cursor only when our custom cursor is active (desktop, fine pointer) */

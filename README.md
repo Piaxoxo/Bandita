@@ -28,12 +28,17 @@ until their phase ships.
 
 ## What's in Phase 1
 
-- **Cinematic loader** — the Bandita wordmark forms out of an animated atmosphere
-  (counter + staggered reveal). No spinner. Skippable. Reduced-motion fallback.
-- **WebGL hero** (Three.js / React-Three-Fiber) — a frosted glass orb with real
-  transmission, drifting brand-coloured particles, floating distortion blobs, animated
-  lighting, a soft gradient backdrop, and pointer-driven camera parallax.
-- **Custom cursor** — magnetic ring + dot, glow, reacts to links/buttons/images.
+- **Particle opening** — the BANDITA wordmark is sampled into particles that fly in
+  from 3D space, hold, then the camera pushes through and they dissolve into the
+  homepage. No spinner. Skippable. Reduced-motion fallback.
+- **Persistent WebGL layer** (Three.js / React-Three-Fiber) — a single full-page scene
+  behind the whole homepage: a volumetric, shader-driven particle field reacting to
+  pointer + scroll velocity, a scroll-driven camera dolly (depth on every scroll), a
+  frosted transmission glass orb and floating distortion blobs. Tier-aware (lighter on
+  mobile); static gradient fallback for reduced motion.
+- **3D service constellation** — the disciplines orbit as a depth-sorted, pointer-reactive
+  floating word system instead of a flat list.
+- **Custom cursor** — magnetic ring + dot + soft glow trail, reacts to links/buttons/images.
   Desktop (fine-pointer) only; auto-disabled on touch.
 - **Scroll story** — five curiosity-building sections, each with its own signature motion
   (masked headline reveals, scrub-driven word fills, marquee, parallax glass cards),
