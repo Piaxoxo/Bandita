@@ -65,6 +65,12 @@ const de: Dictionary = {
       { value: "03", label: "Handwerk, das man spürt" },
     ],
   },
+  work: {
+    eyebrow: "Im Bild",
+    line: "Essen, Licht, Story — alles in-house.",
+    altFood1: "Bandita Foodfotografie — Rote-Bete-Carpaccio mit Feta und Rucola",
+    altFood2: "Bandita Foodfotografie — Nahaufnahme von Feta, Roter Bete und Balsamico",
+  },
   cta: {
     eyebrow: "Wien · Weltweit",
     heading: "Lass uns etwas bauen, das die Welt nicht ignorieren kann.",

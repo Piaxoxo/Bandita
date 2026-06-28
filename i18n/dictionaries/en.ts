@@ -65,6 +65,12 @@ const en: Dictionary = {
       { value: "03", label: "Craft you can feel" },
     ],
   },
+  work: {
+    eyebrow: "In frame",
+    line: "Food, light, story — shot in-house.",
+    altFood1: "Bandita food photography — beetroot carpaccio with feta and rocket",
+    altFood2: "Bandita food photography — close-up of feta, beetroot and balsamic",
+  },
   cta: {
     eyebrow: "Vienna · Worldwide",
     heading: "Let's build something the world can't ignore.",
