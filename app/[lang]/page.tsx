@@ -4,6 +4,7 @@ import Hero from "@/components/sections/Hero";
 import Manifesto from "@/components/sections/Manifesto";
 import Capabilities from "@/components/sections/Capabilities";
 import Philosophy from "@/components/sections/Philosophy";
+import WorkGlimpse from "@/components/sections/WorkGlimpse";
 import ContactCTA from "@/components/sections/ContactCTA";
 
 export function generateStaticParams() {
@@ -20,6 +21,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
       <Manifesto dict={dict} />
       <Capabilities dict={dict} />
       <Philosophy dict={dict} />
+      <WorkGlimpse dict={dict} />
       <ContactCTA dict={dict} />
     </>
   );

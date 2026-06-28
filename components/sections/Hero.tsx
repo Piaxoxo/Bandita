@@ -5,7 +5,6 @@ import { gsap } from "gsap";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
-import HeroCanvas from "@/components/webgl/HeroCanvas";
 import MagneticButton from "@/components/MagneticButton";
 
 export default function Hero({ dict }: { dict: Dictionary }) {
@@ -49,10 +48,10 @@ export default function Hero({ dict }: { dict: Dictionary }) {
       ref={root}
       className="relative flex min-h-[100svh] items-center overflow-hidden"
     >
-      <HeroCanvas />
-
-      {/* soft top + bottom vignette for legibility */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-creme/40 via-transparent to-creme/60" />
+      {/* The persistent WebGL layer (SceneLayer) renders behind the whole page.
+          A vignette keeps the headline legible over it — stronger on mobile
+          where the scene fills more of the small viewport. */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-creme/70 via-creme/25 to-creme/70 md:from-creme/30 md:via-transparent md:to-creme/55" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 md:px-10">
         <p className="hero-eyebrow mb-6 font-sans text-[11px] uppercase tracking-[0.4em] text-pink md:text-xs">

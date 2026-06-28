@@ -1,0 +1,84 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - claude/new-project-phase-1-tb5g0g
+  workflow_dispatch:
+
+# Allow the workflow to publish to Pages via OIDC
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deploy at a time; let a newer run cancel an in-progress one
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      EXPORT: "true"
+      NEXT_PUBLIC_SITE_URL: "https://piaxoxo.github.io/Bandita"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Remove middleware (unsupported by static export)
+        run: rm -f middleware.ts
+
+      - name: Build static export
+        run: npm run build
+
+      - name: Add root redirect + .nojekyll
+        run: |
+          touch out/.nojekyll
+          cat > out/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <title>BANDITA — Creative Studio, Vienna</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1" />
+              <meta http-equiv="refresh" content="0; url=./en/" />
+              <link rel="canonical" href="https://piaxoxo.github.io/Bandita/en/" />
+              <script>
+                location.replace("./en/" + location.search + location.hash);
+              </script>
+            </head>
+            <body></body>
+          </html>
+          HTML
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

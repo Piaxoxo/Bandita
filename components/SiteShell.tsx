@@ -9,6 +9,7 @@ import Loader from "./Loader";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import AccessibilityPanel from "./AccessibilityPanel";
+import SceneLayer from "./webgl/SceneLayer";
 
 export default function SiteShell({
   lang,
@@ -21,6 +22,7 @@ export default function SiteShell({
 }) {
   return (
     <SiteProvider>
+      <SceneLayer />
       <SmoothScroll />
       <CustomCursor />
       <Loader dict={dict} />

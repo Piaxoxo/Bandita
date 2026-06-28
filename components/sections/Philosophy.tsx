@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import Reveal from "@/components/anim/Reveal";
+import Parallax from "@/components/anim/Parallax";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -42,17 +43,10 @@ export default function Philosophy({ dict }: { dict: Dictionary }) {
       {/* atmospheric gradient field */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div
-          className="absolute left-0 top-1/4 h-[40vmax] w-[40vmax] rounded-full opacity-40 blur-[100px]"
+          className="absolute left-0 top-1/4 h-[36vmax] w-[36vmax] rounded-full opacity-[0.15] blur-[110px]"
           style={{
             background:
               "radial-gradient(circle, rgba(255,92,158,0.5), transparent 70%)",
-          }}
-        />
-        <div
-          className="absolute bottom-0 right-0 h-[40vmax] w-[40vmax] rounded-full opacity-30 blur-[100px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(255,194,61,0.5), transparent 70%)",
           }}
         />
       </div>
@@ -65,9 +59,11 @@ export default function Philosophy({ dict }: { dict: Dictionary }) {
                 {dict.philosophy.eyebrow}
               </p>
             </Reveal>
-            <Reveal as="h2" className="font-display text-3xl font-medium leading-[1.12] tracking-[-0.01em] text-ink sm:text-4xl md:text-5xl lg:text-6xl">
-              {dict.philosophy.heading}
-            </Reveal>
+            <Parallax speed={-50}>
+              <Reveal as="h2" className="font-display text-3xl font-medium leading-[1.12] tracking-[-0.01em] text-ink sm:text-4xl md:text-5xl lg:text-6xl">
+                {dict.philosophy.heading}
+              </Reveal>
+            </Parallax>
             <Reveal>
               <p className="mt-10 max-w-md font-sans text-lg leading-relaxed text-ink/70">
                 {dict.philosophy.body}

@@ -21,7 +21,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const SITE_URL = "https://bandita.studio";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.studio";
 
 export function generateStaticParams() {
   return i18n.locales.map((lang) => ({ lang }));
