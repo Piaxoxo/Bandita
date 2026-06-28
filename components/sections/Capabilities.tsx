@@ -10,8 +10,12 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
   return (
     <section
       id="capabilities"
-      className="relative overflow-hidden bg-ink py-32 text-creme md:py-44"
+      className="relative overflow-hidden py-32 text-creme md:py-44"
     >
+      {/* Immersive dark moment — the WebGL world darkens behind this section.
+          A scrim guarantees text contrast even before the scene fully dims. */}
+      <div className="pointer-events-none absolute inset-0 -z-[1] bg-ink/45" />
+
       {/* subtle radial depth glow */}
       <div
         aria-hidden

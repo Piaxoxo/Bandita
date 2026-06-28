@@ -2,6 +2,7 @@
 
 import type { Dictionary } from "@/i18n/types";
 import Reveal from "@/components/anim/Reveal";
+import Parallax from "@/components/anim/Parallax";
 import MagneticButton from "@/components/MagneticButton";
 
 export default function ContactCTA({ dict }: { dict: Dictionary }) {
@@ -27,12 +28,14 @@ export default function ContactCTA({ dict }: { dict: Dictionary }) {
           </p>
         </Reveal>
 
-        <Reveal
-          as="h2"
-          className="mx-auto max-w-5xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-7xl"
-        >
-          {dict.cta.heading}
-        </Reveal>
+        <Parallax speed={-60}>
+          <Reveal
+            as="h2"
+            className="mx-auto max-w-5xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-7xl"
+          >
+            {dict.cta.heading}
+          </Reveal>
+        </Parallax>
 
         <Reveal>
           <p className="mx-auto mt-10 max-w-md font-sans text-lg leading-relaxed text-creme/80">

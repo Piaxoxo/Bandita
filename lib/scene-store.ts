@@ -13,6 +13,7 @@ type SceneState = {
   rawPointerY: number;
   introProgress: number; // 0..1 while the intro plays
   introDone: boolean;
+  dark: number; // 0..1 how "deep/dark" the world is at the current scroll
   tier: DeviceTier;
   reduced: boolean;
 };
@@ -27,6 +28,7 @@ export const scene: SceneState = {
   rawPointerY: 0,
   introProgress: 0,
   introDone: false,
+  dark: 0,
   tier: "high",
   reduced: false,
 };
