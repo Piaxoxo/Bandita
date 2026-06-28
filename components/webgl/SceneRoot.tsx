@@ -16,12 +16,12 @@ import Caustics from "./Caustics";
 import GlassPanels from "./GlassPanels";
 import PostFX from "./PostFX";
 
-const BRIGHT_TOP = new THREE.Color("#FFF6EC");
-const BRIGHT_BOT = new THREE.Color("#FCD9E2");
-const DARK_TOP = new THREE.Color("#3A1E2C");
-const DARK_BOT = new THREE.Color("#140C12");
-const FOG_BRIGHT = new THREE.Color("#FBE6E6");
-const FOG_DARK = new THREE.Color("#1E1018");
+const BRIGHT_TOP = new THREE.Color("#FFF7EF");
+const BRIGHT_BOT = new THREE.Color("#F6E4E0");
+const DARK_TOP = new THREE.Color("#2E1A24");
+const DARK_BOT = new THREE.Color("#140D12");
+const FOG_BRIGHT = new THREE.Color("#FBEFEC");
+const FOG_DARK = new THREE.Color("#1B0F16");
 
 // "dark" amount as a function of scroll — a deep cinematic dip around the
 // capabilities section, bright everywhere else.
@@ -202,10 +202,10 @@ export default function SceneRoot() {
 
       <SceneBackground />
 
-      <ambientLight intensity={0.75} />
-      <directionalLight position={[5, 8, 4]} intensity={1.2} />
-      <pointLight position={[-6, -2, 2]} intensity={45} color="#FB003F" />
-      <pointLight position={[6, 3, -2]} intensity={28} color="#5FC9BC" />
+      <ambientLight intensity={0.85} />
+      <directionalLight position={[5, 8, 4]} intensity={1.15} />
+      <pointLight position={[-6, -2, 2]} intensity={22} color="#FF6E9E" />
+      <pointLight position={[6, 3, -2]} intensity={12} color="#FFD8C9" />
 
       <Caustics />
       {layered && <LightShafts />}
@@ -217,9 +217,9 @@ export default function SceneRoot() {
 
       <GlassOrb tier={tier} />
       {tier === "high" && <GlassPanels />}
-      <Blob position={[-3.4, -1.2, -2]} color="#FF5C9E" scale={1.1} speed={1.3} />
-      <Blob position={[-1.6, 2.4, -3]} color="#FFC23D" scale={0.6} speed={1.7} />
-      <Blob position={[3.8, -2.4, -2.5]} color="#5FC9BC" scale={0.7} speed={1.5} />
+      <Blob position={[-3.4, -1.2, -2]} color="#FF9DB8" scale={1.1} speed={1.3} />
+      <Blob position={[-1.6, 2.4, -3]} color="#F6C9D2" scale={0.6} speed={1.7} />
+      <Blob position={[3.8, -2.4, -2.5]} color="#FBD9D0" scale={0.7} speed={1.5} />
 
       <CameraRig />
       <PostFX tier={tier} />
