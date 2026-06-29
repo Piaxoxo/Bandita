@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
@@ -20,16 +20,26 @@ export default function Nav({
 }) {
   const { introDone } = useSite();
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const barRef = useRef<HTMLElement>(null);
 
-  // links — Phase 1 routes to homepage anchors; unbuilt pages are flagged "soon"
-  const links = [
-    { key: "about", label: dict.nav.about, anchor: "manifesto", ready: true },
+  const isHome = pathname === `/${lang}`;
+
+  // links — About is its own page; Services/Contact resolve to homepage anchors.
+  // Unbuilt pages are flagged "soon".
+  const links: {
+    key: string;
+    label: string;
+    href?: string;
+    anchor?: string;
+    ready: boolean;
+  }[] = [
+    { key: "about", label: dict.nav.about, href: `/${lang}/about`, ready: true },
     { key: "services", label: dict.nav.services, anchor: "capabilities", ready: true },
-    { key: "portfolio", label: dict.nav.portfolio, anchor: null, ready: false },
-    { key: "journal", label: dict.nav.journal, anchor: null, ready: false },
+    { key: "portfolio", label: dict.nav.portfolio, ready: false },
+    { key: "journal", label: dict.nav.journal, ready: false },
     { key: "contact", label: dict.nav.contact, anchor: "contact", ready: true },
   ];
 
@@ -57,10 +67,19 @@ export default function Nav({
     };
   }, [open]);
 
-  const handleAnchor = (anchor: string | null) => {
+  // Anchor links live on the homepage. From any other route, navigate home
+  // with a hash; the homepage hash-scroll handler (SmoothScroll) finishes the job.
+  const handleAnchor = (anchor?: string) => {
     setOpen(false);
-    if (anchor) setTimeout(() => scrollToId(anchor), 60);
+    if (!anchor) return;
+    if (isHome) {
+      setTimeout(() => scrollToId(anchor), 60);
+    } else {
+      router.push(`/${lang}#${anchor}`);
+    }
   };
+
+  const handleHref = () => setOpen(false);
 
   const otherLang: Locale = lang === "en" ? "de" : "en";
   const switchedPath = pathname.replace(/^\/(en|de)/, `/${otherLang}`);
@@ -92,27 +111,37 @@ export default function Nav({
 
         {/* Desktop links */}
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
-          {links.map((l) => (
-            <button
-              key={l.key}
-              onClick={() => l.ready && handleAnchor(l.anchor)}
-              data-cursor="link"
-              disabled={!l.ready}
-              className={`group relative font-sans text-sm uppercase tracking-[0.12em] transition-colors ${
-                l.ready
-                  ? "text-ink/80 hover:text-pink"
-                  : "cursor-not-allowed text-ink/30"
-              }`}
-            >
-              {l.label}
-              {!l.ready && (
-                <sup className="ml-1 text-[8px] uppercase tracking-wider text-pink/70">
-                  {dict.nav.soon}
-                </sup>
-              )}
-              <span className="absolute -bottom-1 left-0 h-px w-0 bg-pink transition-all duration-300 group-hover:w-full" />
-            </button>
-          ))}
+          {links.map((l) => {
+            const cls = `group relative font-sans text-sm uppercase tracking-[0.12em] transition-colors ${
+              l.ready ? "text-ink/80 hover:text-pink" : "cursor-not-allowed text-ink/30"
+            }`;
+            const inner = (
+              <>
+                {l.label}
+                {!l.ready && (
+                  <sup className="ml-1 text-[8px] uppercase tracking-wider text-pink/70">
+                    {dict.nav.soon}
+                  </sup>
+                )}
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-pink transition-all duration-300 group-hover:w-full" />
+              </>
+            );
+            return l.href && l.ready ? (
+              <Link key={l.key} href={l.href} onClick={handleHref} data-cursor="link" className={cls}>
+                {inner}
+              </Link>
+            ) : (
+              <button
+                key={l.key}
+                onClick={() => l.ready && handleAnchor(l.anchor)}
+                data-cursor="link"
+                disabled={!l.ready}
+                className={cls}
+              >
+                {inner}
+              </button>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-3 md:gap-5">
@@ -130,7 +159,7 @@ export default function Nav({
 
           {/* CTA (desktop) */}
           <MagneticButton
-            onClick={() => scrollToId("contact")}
+            onClick={() => handleAnchor("contact")}
             cursor="hover"
             className="hidden rounded-full bg-ink px-6 py-3 font-sans text-xs uppercase tracking-[0.15em] text-creme transition-colors hover:bg-pink md:inline-flex"
           >
@@ -177,26 +206,40 @@ export default function Nav({
         }`}
       >
         <nav className="mt-28 flex flex-col gap-1 px-8" aria-label="Mobile">
-          {[{ key: "home", label: dict.nav.home, anchor: "top", ready: true }, ...links].map(
-            (l, i) => (
-              <button
-                key={l.key}
-                onClick={() => l.ready && handleAnchor(l.anchor)}
-                disabled={!l.ready}
-                className={`flex items-baseline justify-between border-b border-ink/10 py-5 text-left font-display text-4xl transition-colors ${
-                  l.ready ? "text-ink hover:text-pink" : "text-ink/30"
-                }`}
-                style={{ transitionDelay: open ? `${i * 40}ms` : "0ms" }}
-              >
+          {[
+            { key: "home", label: dict.nav.home, href: `/${lang}`, ready: true },
+            ...links,
+          ].map((l, i) => {
+            const cls = `flex items-baseline justify-between border-b border-ink/10 py-5 text-left font-display text-4xl transition-colors ${
+              l.ready ? "text-ink hover:text-pink" : "text-ink/30"
+            }`;
+            const style = { transitionDelay: open ? `${i * 40}ms` : "0ms" };
+            const inner = (
+              <>
                 {l.label}
                 {!l.ready && (
                   <span className="text-xs uppercase tracking-widest text-pink/70">
                     {dict.nav.soon}
                   </span>
                 )}
+              </>
+            );
+            return l.href && l.ready ? (
+              <Link key={l.key} href={l.href} onClick={handleHref} className={cls} style={style}>
+                {inner}
+              </Link>
+            ) : (
+              <button
+                key={l.key}
+                onClick={() => l.ready && handleAnchor(l.anchor)}
+                disabled={!l.ready}
+                className={cls}
+                style={style}
+              >
+                {inner}
               </button>
-            ),
-          )}
+            );
+          })}
         </nav>
 
         <div className="mt-auto flex items-center justify-between px-8 pb-10">

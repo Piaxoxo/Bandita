@@ -92,6 +92,136 @@ const de: Dictionary = {
       alt: "Bandita Event-Content — Gäste teilen einen Moment bei Nacht",
     },
   },
+  about: {
+    meta: {
+      title: "Warum Bandita — Die Geschichte hinter dem Namen",
+      description:
+        "Wir machen nichts Normales. Wir stehlen Aufmerksamkeit. Die Geschichte hinter Bandita — ein Kreativstudio, gebaut auf Psychologie statt Meinungen, aus Wien und für überall.",
+    },
+    hero: {
+      eyebrow: "Warum Bandita",
+      line1: "Wir machen nichts Normales.",
+      line2: "Wir stehlen Aufmerksamkeit.",
+      scroll: "Die Geschichte",
+    },
+    name: {
+      kicker: "Warum Bandita?",
+      heading: "Die kleine Banditin.",
+      paras: [
+        "Mein italienischer Vater nannte mich nie bei meinem Namen. Er nannte mich Bandita.",
+        "Die kleine Banditin. Der Wildfang. Die, die immer noch eine Idee hatte.",
+        "Jahre später sagten Kunden genau dasselbe.",
+      ],
+      quote:
+        "Wenn du jemals deine eigene Agentur gründest — genau so musst du sie nennen.",
+      quoteSub: "Sie sprachen nicht über ein Unternehmen. Sie sprachen über eine Haltung.",
+      close: "Also habe ich es getan. Bandita war geboren.",
+      illoAlt: "Bandita — Linien-Illustration einer Frau, die Namensgeberin des Studios",
+    },
+    why: {
+      kicker: "Warum wir?",
+      heading: "Wir verkaufen kein Marketing. Wir verkaufen unfaire Vorteile.",
+      lines: [
+        "Wir bauen keine WordPress-Templates. Das kann jeder.",
+        "Wir bauen Erlebnisse. Cinematische Websites. Marken, an die man sich erinnert.",
+        "Kampagnen, über die man spricht. Filme, die sich wie Netflix anfühlen.",
+        "Logos, die Trends überleben. Geschichten, die verkaufen, bevor jemand über den Preis spricht.",
+      ],
+      punchA: "Hübsch verkauft nicht. Strategie schon.",
+      punchB: "Schön ist leicht. Unvergesslich ist schwer.",
+      close: "Wir verkaufen kein Marketing. Wir verkaufen unfaire Vorteile.",
+    },
+    psychology: {
+      kicker: "Gebaut auf Psychologie. Nicht auf Meinungen.",
+      heading: "Marketing ist keine Magie. Es ist menschliches Verhalten.",
+      body: "Deshalb verbindet Bandita jahrelangen echten Markenaufbau mit Neuromarketing und einem laufenden Master in Wirtschaftspsychologie.",
+      detail: "Wir raten nicht. Wir verstehen.",
+      nothing: ["Jede Farbe.", "Jede Bewegung.", "Jedes Wort.", "Jedes Bild."],
+      verdict: "Nichts ist zufällig.",
+    },
+    team: {
+      kicker: "Die Banditas",
+      heading: "Wir sind keine Freelancer mit Logo. Wir sind ein Studio.",
+      intro:
+        "Wir stellen nur die Köpfe vor, die das Handwerk führen. Jede:r leitet eine eigene Welt — und alles lebt unter einem Dach. Kunden müssen kein Team zusammenstellen. Sie bekommen eines.",
+      members: [
+        {
+          name: "Pia-Alice",
+          role: "CEO · Head of Marketing",
+          craft:
+            "Markenstrategie, Neuromarketing und ein laufender Master in Wirtschaftspsychologie. Der Kopf hinter der Methode — und der Grund, warum hier nichts dem Geschmack überlassen bleibt.",
+        },
+        {
+          name: "Dino P.S.",
+          role: "Head of Video Production",
+          craft:
+            "Regie in Kino-Qualität und die Bildsprache, die eine Marke wie Film wirken lässt — nicht wie Werbung.",
+        },
+        {
+          name: "Niddl",
+          role: "Head of Music Production",
+          craft:
+            "Originalsound und Scoring — der Teil einer Marke, den man fühlt, bevor man ihn benennen kann.",
+        },
+        {
+          name: "Noemi Santo",
+          role: "Head of Photography",
+          craft:
+            "Das stehende Bild. Licht, Komposition und das eine Foto, das den Scroll stoppt.",
+        },
+      ],
+      note: "Hinter jedem Lead steht das Team, das es real macht.",
+      imageAlt: "Bandita — Content-Produktion on location",
+    },
+    services: {
+      kicker: "Was wir tun",
+      heading: "Wenn es eine Marke formt, machen wir es.",
+      items: [
+        "Markenstrategie",
+        "Markenidentität",
+        "Creative Direction",
+        "Cinema-Produktion",
+        "Fotografie",
+        "Audioproduktion",
+        "3D-Websites",
+        "Web-Erlebnisse",
+        "Performance Marketing",
+        "Werbung",
+        "Social Media",
+        "Events",
+        "Merchandise",
+      ],
+      everything: "Alles.",
+      online: "Online.",
+      offline: "Offline.",
+      close: "Wenn es eine Marke formt — machen wir es.",
+    },
+    vienna: {
+      kicker: "Aus Wien. Gebaut für überall.",
+      heading: "Große Ideen brauchen keine Pässe. Wir auch nicht.",
+      body: "Wir sind in Wien verwurzelt und arbeiten mit ambitionierten Marken weltweit. Der Akzent ist österreichisch. Der Anspruch ist es nicht.",
+      imageAlt: "Bandita — Content-Produktion on location",
+    },
+    manifesto: {
+      kicker: "Das Manifest",
+      heading: "Wir glauben nicht an Durchschnitt.",
+      beliefs: [
+        "Wir glauben nicht an Durchschnitt.",
+        "Wir glauben nicht an Templates.",
+        "Wir glauben nicht an „gut genug“.",
+        "Wir glauben, Marken sollten Menschen innehalten lassen.",
+        "Wir glauben, Aufmerksamkeit muss man sich verdienen.",
+        "Wir glauben, Marketing sollte sich wie Kino anfühlen.",
+        "Wir glauben, unvergesslich schlägt immer akzeptabel.",
+      ],
+    },
+    final: {
+      line1: "Deine Konkurrenz wird uns nicht mögen.",
+      line2: "Deine Kunden schon.",
+      cta: "Projekt starten",
+      note: "Wien · Weltweit",
+    },
+  },
   cta: {
     eyebrow: "Wien · Weltweit",
     heading: "Lass uns etwas bauen, das die Welt nicht ignorieren kann.",
