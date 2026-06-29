@@ -84,6 +84,7 @@ function Plate({
   const tex = useTexture(url);
   const mesh = useRef<THREE.Mesh>(null);
   const matRef = useRef<THREE.ShaderMaterial>(null);
+  const ease = useRef({ rev: 0, pass: 0 });
   const L = LAYOUT[index];
   const xFac = compact ? 0.34 : 1; // pull plates toward centre on phones
   const yBias = compact ? -0.4 : 0;
@@ -105,28 +106,38 @@ function Plate({
     [tex],
   );
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     const m = mesh.current;
     const u = matRef.current?.uniforms;
     if (!m || !u) return;
     const ps = aboutScene.plates[index] ?? { reveal: 0, pass: 0 };
-    const r = ps.reveal;
-    const p = ps.pass;
 
-    m.visible = r > 0.012;
+    // smooth the scroll-driven values for a floaty, lag-eased flow
+    const k = Math.min(1, delta * 4);
+    ease.current.rev += (ps.reveal - ease.current.rev) * k;
+    ease.current.pass += (ps.pass - ease.current.pass) * k;
+    const r = ease.current.rev;
+    const p = ease.current.pass;
+
+    m.visible = r > 0.01;
     if (!m.visible) return;
 
-    // fly-through pose
+    const t = state.clock.elapsedTime;
+    // gentle idle float so a held plate still breathes in 3D space
+    const bobY = Math.sin(t * 0.5 + index) * 0.07;
+    const driftY = Math.sin(t * 0.3 + index * 1.7) * 0.03;
+
     m.position.x = L.x * xFac + p * 1.0 + aboutScene.pointerX * 0.5;
-    m.position.y = L.y + yBias + aboutScene.pointerY * 0.35;
+    m.position.y = L.y + yBias + bobY + aboutScene.pointerY * 0.35;
     m.position.z = L.z + p * 3.4;
-    m.rotation.y = -p * 0.42 + aboutScene.pointerX * 0.14;
+    m.rotation.y = -p * 0.42 + driftY + aboutScene.pointerX * 0.14;
     m.rotation.x = aboutScene.pointerY * 0.1 + p * 0.05;
+    m.rotation.z = Math.sin(t * 0.4 + index) * 0.012;
     const s = (0.92 + r * 0.12) * L.sc;
     m.scale.set(s, s, 1);
 
     u.uReveal.value = r;
-    u.uTime.value = state.clock.elapsedTime;
+    u.uTime.value = t;
     u.uOpacity.value = Math.min(1, r * 1.4);
   });
 

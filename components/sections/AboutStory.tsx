@@ -197,14 +197,13 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           end: "bottom 20%",
           onUpdate: (self) => {
             const p = self.progress;
-            // reveal: ramp up → HOLD fully formed (0.38–0.62) → ramp down,
+            // reveal: ramp up → HOLD fully formed (0.36–0.64) → ramp down,
             // so the real photo is centred, sharp and recognisable for a beat
-            const reveal = Math.min(ss(0.12, 0.38, p), 1 - ss(0.62, 0.9, p));
-            // pass: ease in from behind → settle centred & still during the hold → fly out
-            let pass: number;
-            if (p <= 0.38) pass = ss(0, 0.38, p) - 1;
-            else if (p >= 0.62) pass = ss(0.62, 1, p);
-            else pass = 0;
+            const reveal = Math.min(ss(0.1, 0.36, p), 1 - ss(0.64, 0.92, p));
+            // pass: continuous glide that lingers slowly through the centre
+            // (never freezes) — graceful cinematic drift instead of a hard stop
+            const x = p * 2 - 1;
+            const pass = Math.sign(x) * Math.pow(Math.abs(x), 1.8);
             const ps = aboutScene.plates[i];
             ps.reveal = reveal;
             ps.pass = pass;
