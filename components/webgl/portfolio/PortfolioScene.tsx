@@ -1,8 +1,8 @@
 "use client";
 
-import { Suspense, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useTexture, useVideoTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import {
   EffectComposer,
   Bloom,
@@ -16,10 +16,19 @@ import { STATIONS, type Station } from "@/components/portfolio/portfolio-data";
 
 const SPACING = 17;
 const FIRST = -13;
-const RANGE = 9.5;
+const RANGE = 10;
+const HOLD = 4.2; // camera range over which a station stays fully revealed
+const SWEET = 8; // station sits this far AHEAD of the camera at peak (head-on view)
+const sideXFor = (side: number, compact: boolean) => side * (compact ? 1.4 : 2.7);
 const stationZ = (i: number) => FIRST - i * SPACING;
 const TRAVEL_START = 7;
-const TRAVEL_END = stationZ(STATIONS.length - 1) - 7;
+const TRAVEL_END = stationZ(STATIONS.length - 1) + 3;
+
+// focus (0..1, plateau hold) for a station, peaking while it's ahead in view
+function viewFocus(camZ: number, sZ: number) {
+  const d = camZ - sZ - SWEET;
+  return 1 - THREE.MathUtils.smoothstep(Math.abs(d), HOLD, RANGE);
+}
 
 /* ───────── floating dust / starfield ───────── */
 function Dust({ count }: { count: number }) {
@@ -192,16 +201,55 @@ function PhotoFrame(props: Omit<Parameters<typeof Frame>[0], "texture"> & { url:
 function VideoFrame(
   props: Omit<Parameters<typeof Frame>[0], "texture"> & { url: string; getFocus: () => { focus: number; pass: number } },
 ) {
-  const texture = useVideoTexture(props.url, { muted: true, loop: true, start: true, playsInline: true });
-  // pause when far to save power
+  const [tex, setTex] = useState<THREE.VideoTexture | null>(null);
+  const vidRef = useRef<HTMLVideoElement | null>(null);
+
+  // Manual, non-suspending VideoTexture. The element is muted + playsInline and
+  // lives (1px, hidden) in the DOM so iOS Safari will autoplay it.
+  useEffect(() => {
+    const v = document.createElement("video");
+    v.src = props.url;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.loop = true;
+    v.autoplay = true;
+    v.preload = "auto";
+    v.crossOrigin = "anonymous";
+    v.setAttribute("muted", "");
+    v.setAttribute("playsinline", "");
+    v.playsInline = true;
+    Object.assign(v.style, {
+      position: "fixed",
+      left: "-10px",
+      width: "1px",
+      height: "1px",
+      opacity: "0",
+      pointerEvents: "none",
+    });
+    document.body.appendChild(v);
+    const t = new THREE.VideoTexture(v);
+    t.colorSpace = THREE.SRGBColorSpace;
+    v.play().catch(() => {});
+    vidRef.current = v;
+    setTex(t);
+    return () => {
+      t.dispose();
+      v.pause();
+      v.removeAttribute("src");
+      v.remove();
+    };
+  }, [props.url]);
+
   useFrame(() => {
-    const v = texture.image as HTMLVideoElement | undefined;
+    const v = vidRef.current;
     if (!v) return;
-    const near = props.getFocus().focus > 0.06;
+    const near = props.getFocus().focus > 0.02;
     if (near && v.paused) v.play().catch(() => {});
     else if (!near && !v.paused) v.pause();
   });
-  return <Frame {...props} texture={texture} />;
+
+  if (!tex) return null;
+  return <Frame {...props} texture={tex} />;
 }
 
 /* ───────── a station = a small floating cluster ───────── */
@@ -212,12 +260,11 @@ function StationGroup({ station, index, compact }: { station: Station; index: nu
   const portrait = station.orientation === "portrait";
   const baseW = compact ? (portrait ? 3.6 : 6) : portrait ? 4.4 : 7.4;
   const baseH = portrait ? baseW * 1.4 : baseW * 0.62;
-  const sideX = station.side * (compact ? 1.4 : 3.0);
+  const sideX = sideXFor(station.side, compact);
 
   const focusFor = (offset: number) => () => {
-    const dz = camera.position.z - (z + offset);
-    const focus = Math.max(0, 1 - Math.abs(dz) / RANGE);
-    const pass = Math.max(-1, Math.min(1, dz / RANGE));
+    const focus = viewFocus(camera.position.z, z + offset);
+    const pass = Math.max(-1, Math.min(1, (camera.position.z - (z + offset) - SWEET) / RANGE));
     return { focus, pass };
   };
 
@@ -283,10 +330,11 @@ function StationGroup({ station, index, compact }: { station: Station; index: nu
 }
 
 /* ───────── camera travel + mood lighting ───────── */
-function Rig() {
+function Rig({ compact }: { compact: boolean }) {
   const { camera, scene } = useThree();
   const fog = useMemo(() => new THREE.FogExp2("#08070a", 0.018), []);
   const tintCol = useMemo(() => new THREE.Color("#08070a"), []);
+  const moodCol = useMemo(() => new THREE.Color("#08070a"), []);
   useMemo(() => {
     scene.fog = fog;
   }, [scene, fog]);
@@ -294,25 +342,31 @@ function Rig() {
   useFrame(() => {
     tickPortfolio();
     const z = THREE.MathUtils.lerp(TRAVEL_START, TRAVEL_END, portfolio.progress);
-    camera.position.x += (portfolio.pointerX * 1.4 - camera.position.x) * 0.05;
-    camera.position.y += (portfolio.pointerY * 0.9 - camera.position.y) * 0.05;
+    camera.position.x += (portfolio.pointerX * 1.2 - camera.position.x) * 0.05;
+    camera.position.y += (portfolio.pointerY * 0.8 - camera.position.y) * 0.05;
     camera.position.z += (z - camera.position.z) * 0.08;
-    camera.lookAt(portfolio.pointerX * 0.6, portfolio.pointerY * 0.4, camera.position.z - 10);
 
-    // nearest station → mood + active index
+    // station currently in the viewing sweet spot → mood + active index
     let nearest = -1,
-      best = 1e9;
+      amt = 0;
     for (let i = 0; i < STATIONS.length; i++) {
-      const d = Math.abs(camera.position.z - stationZ(i));
-      if (d < best) {
-        best = d;
+      const f = viewFocus(camera.position.z, stationZ(i));
+      if (f > amt) {
+        amt = f;
         nearest = i;
       }
     }
-    portfolio.active = best < RANGE ? nearest : -1;
-    const target = nearest >= 0 ? STATIONS[nearest].color : "#08070a";
-    const amt = best < RANGE ? 1 - best / RANGE : 0;
-    tintCol.set("#08070a").lerp(new THREE.Color(target), amt * 0.16);
+    portfolio.active = amt > 0.12 ? nearest : -1;
+
+    // turn the camera toward the approaching station so it comes to centre
+    const sx = nearest >= 0 ? sideXFor(STATIONS[nearest].side, compact) : 0;
+    const sy = nearest >= 0 ? STATIONS[nearest].y : 0;
+    const lookX = portfolio.pointerX * 0.5 + sx * amt * 0.6;
+    const lookY = portfolio.pointerY * 0.35 + sy * amt * 0.5;
+    camera.lookAt(lookX, lookY, camera.position.z - 10);
+
+    moodCol.set(nearest >= 0 ? STATIONS[nearest].color : "#08070a");
+    tintCol.set("#08070a").lerp(moodCol, amt * 0.18);
     fog.color.copy(tintCol);
   });
   return null;
@@ -323,13 +377,13 @@ function Inner({ compact, dust }: { compact: boolean; dust: number }) {
     <>
       <color attach="background" args={["#08070a"]} />
       <ambientLight intensity={0.7} />
-      <Rig />
+      <Rig compact={compact} />
       <Dust count={dust} />
-      <Suspense fallback={null}>
-        {STATIONS.map((st, i) => (
-          <StationGroup key={st.id} station={st} index={i} compact={compact} />
-        ))}
-      </Suspense>
+      {STATIONS.map((st, i) => (
+        <Suspense key={st.id} fallback={null}>
+          <StationGroup station={st} index={i} compact={compact} />
+        </Suspense>
+      ))}
       <EffectComposer multisampling={0}>
         <Bloom intensity={compact ? 0.8 : 1.25} luminanceThreshold={0.22} luminanceSmoothing={0.5} mipmapBlur radius={0.8} />
         <ChromaticAberration offset={new THREE.Vector2(0.0004, 0.0004)} radialModulation={false} modulationOffset={0} />
