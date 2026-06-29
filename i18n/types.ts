@@ -129,6 +129,15 @@ export interface Dictionary {
       note: string;
     };
   };
+  portfolio: {
+    meta: { title: string; description: string };
+    enter: string; // intro word
+    scroll: string;
+    sound: string;
+    cta: string;
+    fallbackKicker: string;
+    fallbackHeading: string;
+  };
   cta: {
     eyebrow: string;
     heading: string;

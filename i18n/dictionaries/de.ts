@@ -234,6 +234,19 @@ const de: Dictionary = {
       note: "Wien · Weltweit",
     },
   },
+  portfolio: {
+    meta: {
+      title: "Portfolio — Bandita",
+      description:
+        "Keine Galerie. Eine Reise. Reise durch Banditas Arbeiten — schwebende Welten aus Film, Food, Fashion und Nightlife in einem cinematischen dunklen Raum.",
+    },
+    enter: "Portfolio",
+    scroll: "Reisen",
+    sound: "Ton",
+    cta: "Projekt starten",
+    fallbackKicker: "Ausgewählte Arbeiten",
+    fallbackHeading: "Schau. Mehr braucht es nicht.",
+  },
   cta: {
     eyebrow: "Wien · Weltweit",
     heading: "Lass uns etwas bauen, das die Welt nicht ignorieren kann.",

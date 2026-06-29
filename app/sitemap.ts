@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const routes: { path: string; priority: number }[] = [
     { path: "", priority: 1 },
     { path: "/about", priority: 0.8 },
+    { path: "/portfolio", priority: 0.8 },
   ];
 
   return i18n.locales.flatMap((lang) =>

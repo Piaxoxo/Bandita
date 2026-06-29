@@ -26,8 +26,8 @@ export default function Nav({
   const barRef = useRef<HTMLElement>(null);
 
   const isHome = pathname === `/${lang}`;
-  // The About page renders a dark world — flip the (otherwise ink) chrome to light.
-  const dark = /^\/(en|de)\/about(\/|$)/.test(pathname);
+  // About & Portfolio render dark worlds — flip the (otherwise ink) chrome to light.
+  const dark = /^\/(en|de)\/(about|portfolio)(\/|$)/.test(pathname);
 
   // links — About is its own page; Services/Contact resolve to homepage anchors.
   // Unbuilt pages are flagged "soon".
@@ -40,7 +40,7 @@ export default function Nav({
   }[] = [
     { key: "about", label: dict.nav.about, href: `/${lang}/about`, ready: true },
     { key: "services", label: dict.nav.services, anchor: "capabilities", ready: true },
-    { key: "portfolio", label: dict.nav.portfolio, ready: false },
+    { key: "portfolio", label: dict.nav.portfolio, href: `/${lang}/portfolio`, ready: true },
     { key: "journal", label: dict.nav.journal, ready: false },
     { key: "contact", label: dict.nav.contact, anchor: "contact", ready: true },
   ];

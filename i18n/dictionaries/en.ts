@@ -234,6 +234,19 @@ const en: Dictionary = {
       note: "Vienna · Worldwide",
     },
   },
+  portfolio: {
+    meta: {
+      title: "Portfolio — Bandita",
+      description:
+        "Not a gallery. A journey. Travel through Bandita's work — floating worlds of film, food, fashion and nightlife in a cinematic dark space.",
+    },
+    enter: "Portfolio",
+    scroll: "Travel",
+    sound: "Sound",
+    cta: "Start a project",
+    fallbackKicker: "Selected work",
+    fallbackHeading: "Look. That's the whole point.",
+  },
   cta: {
     eyebrow: "Vienna · Worldwide",
     heading: "Let's build something the world can't ignore.",

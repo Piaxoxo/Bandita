@@ -36,9 +36,9 @@ export default function SceneLayer() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
-  // The About page renders its own bespoke particle world (AboutSceneLayer),
-  // so the homepage champagne scene must not paint there.
-  const isAbout = /^\/(en|de)\/about(\/|$)/.test(pathname);
+  // About & Portfolio render their own bespoke worlds, so the homepage
+  // champagne scene must not paint there.
+  const isAbout = /^\/(en|de)\/(about|portfolio)(\/|$)/.test(pathname);
 
   useEffect(() => {
     const dispose = initSceneInputs();
