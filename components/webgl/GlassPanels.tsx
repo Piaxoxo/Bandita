@@ -91,7 +91,7 @@ export default function GlassPanels() {
         args={[3, 1.9, 0.2]}
         rotation={[0.1, 0.5, -0.08]}
         scrollFactor={5}
-        image="/work/food-01.jpg"
+        image="/work/bar-01.jpg"
       />
       <Panel
         position={[5.8, -1.5, -5]}

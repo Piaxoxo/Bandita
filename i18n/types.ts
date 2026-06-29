@@ -50,13 +50,11 @@ export interface Dictionary {
     body: string;
     stats: { value: string; label: string }[];
   };
-  work: {
-    eyebrow: string;
-    line: string;
-    altFood1: string;
-    altFood2: string;
-    altFilm1: string;
-    altFilm2: string;
+  showcase: {
+    s1: { heading: string; sub: string; label: string; alt: string };
+    s2: { heading: string; sub: string; alt: string; altSmall: string };
+    s3: { heading: string; sub: string; label: string; alt: string };
+    s4: { heading: string; sub: string; label: string; alt: string };
   };
   cta: {
     eyebrow: string;

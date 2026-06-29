@@ -30,3 +30,7 @@ next-env.d.ts
 # editor
 .vscode
 .idea
+
+# raw image originals (optimised into /public via scripts/optimize-images.mjs)
+/media/raw/*
+!/media/raw/.gitkeep
