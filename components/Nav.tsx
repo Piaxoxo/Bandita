@@ -26,6 +26,8 @@ export default function Nav({
   const barRef = useRef<HTMLElement>(null);
 
   const isHome = pathname === `/${lang}`;
+  // The About page renders a dark world — flip the (otherwise ink) chrome to light.
+  const dark = /^\/(en|de)\/about(\/|$)/.test(pathname);
 
   // links — About is its own page; Services/Contact resolve to homepage anchors.
   // Unbuilt pages are flagged "soon".
@@ -113,7 +115,13 @@ export default function Nav({
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
           {links.map((l) => {
             const cls = `group relative font-sans text-sm uppercase tracking-[0.12em] transition-colors ${
-              l.ready ? "text-ink/80 hover:text-pink" : "cursor-not-allowed text-ink/30"
+              l.ready
+                ? dark
+                  ? "text-creme/80 hover:text-pink"
+                  : "text-ink/80 hover:text-pink"
+                : dark
+                  ? "cursor-not-allowed text-creme/30"
+                  : "cursor-not-allowed text-ink/30"
             }`;
             const inner = (
               <>
@@ -150,10 +158,12 @@ export default function Nav({
             href={switchedPath}
             data-cursor="link"
             aria-label={`Switch language to ${otherLang.toUpperCase()}`}
-            className="hidden items-center gap-1 font-sans text-xs uppercase tracking-[0.15em] text-ink/60 transition-colors hover:text-pink sm:flex"
+            className={`hidden items-center gap-1 font-sans text-xs uppercase tracking-[0.15em] transition-colors hover:text-pink sm:flex ${
+              dark ? "text-creme/60" : "text-ink/60"
+            }`}
           >
             <span className={lang === "en" ? "text-pink" : ""}>EN</span>
-            <span className="text-ink/30">/</span>
+            <span className={dark ? "text-creme/30" : "text-ink/30"}>/</span>
             <span className={lang === "de" ? "text-pink" : ""}>DE</span>
           </Link>
 
@@ -161,7 +171,11 @@ export default function Nav({
           <MagneticButton
             onClick={() => handleAnchor("contact")}
             cursor="hover"
-            className="hidden rounded-full bg-ink px-6 py-3 font-sans text-xs uppercase tracking-[0.15em] text-creme transition-colors hover:bg-pink md:inline-flex"
+            className={`hidden rounded-full px-6 py-3 font-sans text-xs uppercase tracking-[0.15em] transition-colors md:inline-flex ${
+              dark
+                ? "bg-creme text-ink hover:bg-pink hover:text-creme"
+                : "bg-ink text-creme hover:bg-pink"
+            }`}
           >
             {dict.nav.cta}
           </MagneticButton>
@@ -175,17 +189,17 @@ export default function Nav({
             className="relative z-[57] flex h-10 w-10 flex-col items-center justify-center gap-[5px] lg:hidden"
           >
             <span
-              className={`block h-[2px] w-6 bg-ink transition-all duration-300 ${
+              className={`block h-[2px] w-6 transition-all duration-300 ${open ? "bg-ink" : dark ? "bg-creme" : "bg-ink"} ${
                 open ? "translate-y-[7px] rotate-45" : ""
               }`}
             />
             <span
-              className={`block h-[2px] w-6 bg-ink transition-all duration-300 ${
+              className={`block h-[2px] w-6 transition-all duration-300 ${open ? "bg-ink" : dark ? "bg-creme" : "bg-ink"} ${
                 open ? "opacity-0" : ""
               }`}
             />
             <span
-              className={`block h-[2px] w-6 bg-ink transition-all duration-300 ${
+              className={`block h-[2px] w-6 transition-all duration-300 ${open ? "bg-ink" : dark ? "bg-creme" : "bg-ink"} ${
                 open ? "-translate-y-[7px] -rotate-45" : ""
               }`}
             />

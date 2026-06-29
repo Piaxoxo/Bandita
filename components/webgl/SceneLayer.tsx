@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useSite } from "@/lib/site-context";
 import { initSceneInputs } from "@/lib/scene-store";
 
@@ -33,6 +34,11 @@ function GradientFallback() {
 export default function SceneLayer() {
   const { reducedMotion } = useSite();
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
+
+  // The About page renders its own bespoke particle world (AboutSceneLayer),
+  // so the homepage champagne scene must not paint there.
+  const isAbout = /^\/(en|de)\/about(\/|$)/.test(pathname);
 
   useEffect(() => {
     const dispose = initSceneInputs();
@@ -42,6 +48,8 @@ export default function SceneLayer() {
       dispose();
     };
   }, []);
+
+  if (isAbout) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10">
