@@ -56,6 +56,74 @@ export interface Dictionary {
     s3: { heading: string; sub: string; label: string; alt: string };
     s4: { heading: string; sub: string; label: string; alt: string };
   };
+  about: {
+    meta: { title: string; description: string };
+    hero: {
+      eyebrow: string;
+      line1: string;
+      line2: string;
+      scroll: string;
+    };
+    name: {
+      kicker: string;
+      heading: string;
+      paras: string[];
+      quote: string;
+      quoteSub: string;
+      close: string;
+      illoAlt: string;
+    };
+    why: {
+      kicker: string;
+      heading: string;
+      lines: string[];
+      punchA: string;
+      punchB: string;
+      close: string;
+    };
+    psychology: {
+      kicker: string;
+      heading: string;
+      body: string;
+      detail: string;
+      nothing: string[];
+      verdict: string;
+    };
+    team: {
+      kicker: string;
+      heading: string;
+      intro: string;
+      members: { name: string; role: string; craft: string }[];
+      note: string;
+      imageAlt: string;
+    };
+    services: {
+      kicker: string;
+      heading: string;
+      items: string[];
+      everything: string;
+      online: string;
+      offline: string;
+      close: string;
+    };
+    vienna: {
+      kicker: string;
+      heading: string;
+      body: string;
+      imageAlt: string;
+    };
+    manifesto: {
+      kicker: string;
+      heading: string;
+      beliefs: string[];
+    };
+    final: {
+      line1: string;
+      line2: string;
+      cta: string;
+      note: string;
+    };
+  };
   cta: {
     eyebrow: string;
     heading: string;
