@@ -67,7 +67,7 @@ const en: Dictionary = {
   },
   work: {
     eyebrow: "In frame",
-    line: "Food, light, story — shot in-house.",
+    line: "We don't take pictures. We make people look.",
     altFood1: "Bandita food photography — beetroot carpaccio with feta and rocket",
     altFood2: "Bandita food photography — close-up of feta, beetroot and balsamic",
     altFilm1: "Bandita film production — cinematographer on location with a cinema camera rig",
