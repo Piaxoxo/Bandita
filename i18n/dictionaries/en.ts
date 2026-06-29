@@ -202,6 +202,18 @@ const en: Dictionary = {
       body: "We're rooted in Vienna and work with ambitious brands worldwide. The accent is Austrian. The standard is not local.",
       imageAlt: "Bandita — on-location content production",
     },
+    work: {
+      kicker: "From the field",
+      heading: "Real campaigns. No stock.",
+      items: [
+        { caption: "Film · North Macedonia", alt: "Bandita campaign — cinematographer Dino Stelzl on a film production in North Macedonia" },
+        { caption: "Content · Big client", alt: "Bandita campaign — content production on a MacBook for a major client" },
+        { caption: "Behind the scenes · Studio", alt: "Bandita campaign — content production behind the scenes in the studio" },
+        { caption: "Fashion · Backstage", alt: "Bandita campaign — social-media content and image film for a fashion brand, backstage" },
+        { caption: "Content · Fashion brands", alt: "Bandita campaign — beauty and make-up content production for fashion brands" },
+        { caption: "Drone · North Macedonia", alt: "Bandita campaign — drone film production for an international travel client in North Macedonia" },
+      ],
+    },
     manifesto: {
       kicker: "The Manifesto",
       heading: "We don't believe in average.",

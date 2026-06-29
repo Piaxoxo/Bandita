@@ -173,6 +173,32 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           onLeaveBack: () => (aboutScene.finale = 0),
         });
       }
+
+      // Floating campaign plates — one per section, distributed down the page.
+      const plateSecs = [
+        "about-name",
+        "about-why",
+        "about-psych",
+        "about-services",
+        "about-work-focal",
+        "about-manifesto",
+      ];
+      plateSecs.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 78%",
+          end: "bottom 22%",
+          onUpdate: (self) => {
+            const ps = aboutScene.plates[i];
+            ps.reveal = Math.sin(self.progress * Math.PI);
+            ps.pass = self.progress * 2 - 1;
+          },
+          onLeave: () => (aboutScene.plates[i].reveal = 0),
+          onLeaveBack: () => (aboutScene.plates[i].reveal = 0),
+        });
+      });
       gsap.fromTo(
         ".manifesto-belief",
         { opacity: 0.12 },
@@ -190,6 +216,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       aboutScene.intensity = 0;
       aboutScene.explode = 0;
       aboutScene.finale = 0;
+      aboutScene.plates.forEach((p) => (p.reveal = 0));
     };
   }, [r]);
 
@@ -264,33 +291,31 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
         </div>
       </section>
 
-      {/* ════════ ③ WHY US ════════ */}
-      <section className="relative overflow-hidden py-28 md:py-40">
-        <div className="absolute inset-0 bg-[#0c0a0c]/55" />
+      {/* ════════ ③ WHY US — plate flies in on the right ════════ */}
+      <section id="about-why" className="relative overflow-hidden py-28 md:py-40">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0c0a0c]/85 via-[#0c0a0c]/45 to-transparent" />
         <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
           <Reveal><span className="mb-9 block text-pink"><Kicker>{a.why.kicker}</Kicker></span></Reveal>
-          <Reveal as="h2" y={30} className="max-w-4xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-6xl lg:text-7xl">
+          <Reveal as="h2" y={30} className="max-w-3xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-6xl lg:text-7xl">
             {a.why.heading}
           </Reveal>
-          <div className="mt-14 grid gap-10 md:grid-cols-2 md:gap-16">
-            <div className="space-y-5 font-sans text-lg leading-relaxed text-creme/70 md:text-xl">
-              {a.why.lines.map((l, i) => (
-                <Reveal as="p" key={i} delay={i * 0.04} blur={false} y={20}>{l}</Reveal>
-              ))}
-            </div>
-            <div className="flex flex-col justify-center gap-7">
-              <Reveal as="p" className="font-display text-3xl leading-tight md:text-4xl">{a.why.punchA}</Reveal>
-              <Reveal as="p" className="font-display text-3xl leading-tight md:text-4xl">{a.why.punchB}</Reveal>
-            </div>
+          <div className="mt-14 max-w-xl space-y-5 font-sans text-lg leading-relaxed text-creme/70 md:text-xl">
+            {a.why.lines.map((l, i) => (
+              <Reveal as="p" key={i} delay={i * 0.04} blur={false} y={20}>{l}</Reveal>
+            ))}
           </div>
-          <Reveal as="p" className="mt-20 max-w-4xl font-display text-3xl italic leading-tight text-pink sm:text-4xl md:text-5xl">
+          <div className="mt-12 flex max-w-xl flex-col gap-6">
+            <Reveal as="p" className="font-display text-3xl leading-tight md:text-4xl">{a.why.punchA}</Reveal>
+            <Reveal as="p" className="font-display text-3xl leading-tight md:text-4xl">{a.why.punchB}</Reveal>
+          </div>
+          <Reveal as="p" className="mt-16 max-w-3xl font-display text-3xl italic leading-tight text-pink sm:text-4xl md:text-5xl">
             {a.why.close}
           </Reveal>
         </div>
       </section>
 
       {/* ════════ ④ PSYCHOLOGY — minimal, world breathes ════════ */}
-      <section className="relative overflow-hidden py-32 md:py-48">
+      <section id="about-psych" className="relative overflow-hidden py-32 md:py-48">
         <div className="relative mx-auto max-w-[1100px] px-5 text-center md:px-10">
           <Reveal><span className="mb-10 inline-block text-pink"><Kicker>{a.psychology.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="mx-auto max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-5xl md:text-6xl">
@@ -310,7 +335,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       </section>
 
       {/* ════════ ⑤ THE BANDITAS — 3D tilt gallery ════════ */}
-      <section className="relative overflow-hidden py-28 md:py-40">
+      <section id="about-team" className="relative overflow-hidden py-28 md:py-40">
         <div className="absolute inset-0 bg-[#0c0a0c]/60" />
         <div className="relative mx-auto max-w-[1500px] px-5 md:px-10">
           <Reveal><span className="mb-9 block text-pink"><Kicker>{a.team.kicker}</Kicker></span></Reveal>
@@ -352,8 +377,8 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       </section>
 
       {/* ════════ ⑥ WHAT WE DO — kinetic marquee ════════ */}
-      <section className="relative overflow-hidden py-28 md:py-40">
-        <div className="absolute inset-0 bg-[#0c0a0c]/45" />
+      <section id="about-services" className="relative overflow-hidden py-28 md:py-40">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0c0a0c]/80 via-[#0c0a0c]/40 to-transparent" />
         <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
           <Reveal><span className="mb-9 block text-pink"><Kicker>{a.services.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="max-w-3xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-6xl">
@@ -394,6 +419,45 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           <Reveal as="p" className="mt-12 font-display text-2xl italic text-pink md:text-3xl">{a.services.close}</Reveal>
         </div>
       </section>
+
+      {/* ════════ Focal campaign moment — the big centred plate develops here ════════ */}
+      {!r && (
+        <section id="about-work-focal" className="relative flex min-h-[95svh] items-center overflow-hidden py-24">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0a0c]/85 via-[#0c0a0c]/35 to-transparent" />
+          <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 md:px-10">
+            <Reveal><span className="mb-8 block text-pink"><Kicker>{a.work.kicker}</Kicker></span></Reveal>
+            <Reveal as="h2" y={30} className="max-w-xl font-display text-5xl font-medium leading-[1.02] tracking-[-0.01em] sm:text-6xl md:text-7xl">
+              {a.work.heading}
+            </Reveal>
+          </div>
+        </section>
+      )}
+
+      {/* Campaign plates live in the 3D world (CampaignPlates). For reduced-motion
+          users there is no canvas, so present them here as a clean DOM gallery. */}
+      {r && (
+        <section className="relative overflow-hidden py-24">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <span className="mb-8 block text-pink">
+              <Kicker>{a.work.kicker}</Kicker>
+            </span>
+            <h2 className="mb-12 max-w-2xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-5xl">
+              {a.work.heading}
+            </h2>
+            <div className="grid gap-8 md:grid-cols-2">
+              {a.work.items.map((it, i) => (
+                <figure key={i} className="overflow-hidden rounded-[1.1rem] ring-1 ring-creme/12">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`/about/work/campaign-0${i + 1}.jpg`} alt={it.alt} className="w-full" />
+                  <figcaption className="px-1 pt-3 font-sans text-[11px] uppercase tracking-[0.2em] text-creme/55">
+                    {it.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ════════ ⑦ VIENNA — full-bleed atmosphere ════════ */}
       <section className="relative flex min-h-[80svh] items-end overflow-hidden">
