@@ -51,3 +51,17 @@ projects + the build brief.
 - Category: Image film + photography
 
 _(more projects incoming…)_
+
+## Video content
+
+- `video/deutschland-gta.mp4` (1280×720, 30 fps, H.264 + faststart, ~1.4 MB) +
+  `video/deutschland-gta-poster.jpg` poster frame.
+  - Source: „Deutschland_GTA.mov" (1080p/50fps, 8.7 MB) → web-optimised.
+  - Use: the Portfolio "Cinema Void" / video slots (still→video crossfade).
+  - Project assignment: TBD — confirm which project this belongs to
+    (Besser Reisen / international tourism / its own „Deutschland" project?).
+- `video/portugal-reel-01.mp4`, `video/portugal-reel-02.mp4` (vertical 720×1280,
+  H.264 + faststart, ~0.8 MB each) + posters. Source: 4K HEVC reels „ohne Text".
+  - Brief label: „travel reels · Portugal"
+  - Use: vertical "reels swarm" (floating phone-glass panels) and/or the
+    travel/tourism project surfaces.
