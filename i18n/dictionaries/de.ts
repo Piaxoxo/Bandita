@@ -65,13 +65,31 @@ const de: Dictionary = {
       { value: "03", label: "Handwerk, das man spürt" },
     ],
   },
-  work: {
-    eyebrow: "Im Bild",
-    line: "Wir machen keine Bilder. Wir machen, dass man hinsieht.",
-    altFood1: "Bandita Foodfotografie — Rote-Bete-Carpaccio mit Feta und Rucola",
-    altFood2: "Bandita Foodfotografie — Nahaufnahme von Feta, Roter Bete und Balsamico",
-    altFilm1: "Bandita Filmproduktion — Kameramann on location mit Cinema-Rig",
-    altFilm2: "Bandita Filmproduktion — 6K-Cinema-Kamera in Nahaufnahme",
+  showcase: {
+    s1: {
+      heading: "Produktionen in Kino-Qualität.",
+      sub: "Jedes Bild entsteht mit professionellen Cinema-Kameras, hochwertigem Licht und cinematischem Storytelling.",
+      label: "Filmproduktion",
+      alt: "Bandita Filmproduktion — Kameramann on location mit Cinema-Rig",
+    },
+    s2: {
+      heading: "Gebaut wie Kino. Geliefert wie Marketing.",
+      sub: "Produktionen in Werbequalität für Hospitality, Restaurants, Hotels und Premium-Marken.",
+      alt: "Bandita Filmproduktion — 6K-Cinema-Kamera in Nahaufnahme",
+      altSmall: "Bandita Filmproduktion — Kameramann hinter der Kamera",
+    },
+    s3: {
+      heading: "Atmosphäre, die man spürt.",
+      sub: "Luxus entsteht nicht durch teure Interieurs. Er entsteht durch Emotion, Licht und unvergessliche Momente.",
+      label: "Hospitality • Events • Nightlife",
+      alt: "Bandita Hospitality-Content — Barkeeper an einer stimmungsvollen Premium-Bar",
+    },
+    s4: {
+      heading: "Echte Momente. Echte Emotion.",
+      sub: "Menschen erinnern sich nicht an Werbung. Sie erinnern sich daran, wie eine Marke sie fühlen ließ.",
+      label: "Content, der verbindet",
+      alt: "Bandita Event-Content — Gäste teilen einen Moment bei Nacht",
+    },
   },
   cta: {
     eyebrow: "Wien · Weltweit",

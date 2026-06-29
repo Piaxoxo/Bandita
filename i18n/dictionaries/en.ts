@@ -65,13 +65,31 @@ const en: Dictionary = {
       { value: "03", label: "Craft you can feel" },
     ],
   },
-  work: {
-    eyebrow: "In frame",
-    line: "We don't take pictures. We make people look.",
-    altFood1: "Bandita food photography — beetroot carpaccio with feta and rocket",
-    altFood2: "Bandita food photography — close-up of feta, beetroot and balsamic",
-    altFilm1: "Bandita film production — cinematographer on location with a cinema camera rig",
-    altFilm2: "Bandita film production — 6K cinema camera, close-up",
+  showcase: {
+    s1: {
+      heading: "Cinema-grade productions.",
+      sub: "Every frame is crafted with professional cinema cameras, premium lighting and cinematic storytelling.",
+      label: "Film Production",
+      alt: "Bandita film production — cinematographer on location with a cinema camera rig",
+    },
+    s2: {
+      heading: "Built like cinema. Delivered like marketing.",
+      sub: "Commercial-quality productions for hospitality, restaurants, hotels and premium brands.",
+      alt: "Bandita film production — 6K cinema camera, close-up",
+      altSmall: "Bandita film production — cinematographer behind the camera",
+    },
+    s3: {
+      heading: "Atmosphere you can feel.",
+      sub: "Luxury is not created with expensive interiors. It is created through emotion, light and unforgettable moments.",
+      label: "Hospitality • Events • Nightlife",
+      alt: "Bandita hospitality content — bartenders at a moody, premium bar",
+    },
+    s4: {
+      heading: "Real moments. Real emotion.",
+      sub: "People don't remember advertisements. They remember how your brand made them feel.",
+      label: "Content that connects",
+      alt: "Bandita event content — guests sharing a moment at night",
+    },
   },
   cta: {
     eyebrow: "Vienna · Worldwide",
