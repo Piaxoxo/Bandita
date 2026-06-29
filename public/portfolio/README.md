@@ -27,4 +27,12 @@ projects + the build brief.
 - Client name: not given (unnamed Vienna bar)
 - Category: Social media content
 
+### 04 · Kern Beherbergungsbetriebs GmbH — Social media content
+- Folder: `kern/`
+- Files: `01.jpg`–`03.jpg` (portrait, 1086×1448)
+- Brief label: „Social Media Content für Kern Beherbergungsbetriebs GmbH"
+- Client name: Kern Beherbergungsbetriebs GmbH — CONFIRM before publishing the
+  full legal name (display as given, or shorten to „Kern", or anonymise?)
+- Category: Social media content
+
 _(more projects incoming…)_
