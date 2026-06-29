@@ -7,396 +7,367 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
+import { detectTier } from "@/lib/scene-store";
+import { aboutScene } from "@/lib/about-scene";
 import Reveal from "@/components/anim/Reveal";
 import MagneticButton from "@/components/MagneticButton";
+import AboutSceneLayer from "@/components/webgl/AboutSceneLayer";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
-/* ── Tracked kicker label with a hairline ───────────────────────────────── */
+/* ── Tracked kicker with a hairline ─────────────────────────────────────── */
 function Kicker({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <span
-      className={`inline-flex items-center gap-3 font-sans text-[10px] uppercase tracking-[0.34em] ${className}`}
-    >
+    <span className={`inline-flex items-center gap-3 font-sans text-[10px] uppercase tracking-[0.34em] ${className}`}>
       <span className="h-px w-8 bg-current opacity-50" />
       {children}
     </span>
   );
 }
 
-/* ── Image that drops in when the asset exists, else an elegant placeholder ─ */
-function SmartImage({
-  src,
-  alt,
-  monogram,
+/* ── Cursor-reactive 3D tilt card ───────────────────────────────────────── */
+function TiltCard({
+  children,
   className = "",
-  imgClass = "",
-  label,
+  disabled,
 }: {
-  src: string;
-  alt: string;
-  monogram?: string;
+  children: ReactNode;
   className?: string;
-  imgClass?: string;
-  label?: string;
+  disabled: boolean;
 }) {
-  const [failed, setFailed] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const onMove = (e: React.PointerEvent) => {
+    if (disabled || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    gsap.to(ref.current, {
+      rotateY: px * 14,
+      rotateX: -py * 16,
+      duration: 0.5,
+      ease: "power3.out",
+      transformPerspective: 800,
+    });
+  };
+  const onLeave = () => {
+    if (!ref.current) return;
+    gsap.to(ref.current, { rotateY: 0, rotateX: 0, duration: 0.8, ease: "elastic.out(1,0.5)" });
+  };
   return (
-    <div className={`relative overflow-hidden bg-ink/[0.04] ${className}`}>
-      {!failed ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={alt}
-          loading="lazy"
-          onError={() => setFailed(true)}
-          className={`h-full w-full object-cover ${imgClass}`}
-        />
-      ) : (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-ink/[0.06] via-pink/[0.05] to-ink/[0.03]">
-          {monogram && (
-            <span className="font-display text-5xl font-medium tracking-tight text-ink/30 md:text-6xl">
-              {monogram}
-            </span>
-          )}
-          {label && (
-            <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-ink/30">
-              {label}
-            </span>
-          )}
-        </div>
-      )}
+    <div style={{ perspective: 900 }} className={className}>
+      <div
+        ref={ref}
+        onPointerMove={onMove}
+        onPointerLeave={onLeave}
+        className="will-change-transform [transform-style:preserve-3d]"
+      >
+        {children}
+      </div>
     </div>
   );
 }
 
-const PORTRAITS = [
-  { slug: "pia-alice", initials: "PA" },
-  { slug: "dino", initials: "D" },
-  { slug: "niddl", initials: "N" },
-  { slug: "noemi-santo", initials: "NS" },
-];
-
-export default function AboutStory({
-  dict,
-  lang,
-}: {
-  dict: Dictionary;
-  lang: Locale;
-}) {
+export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const a = dict.about;
   const { introDone, reducedMotion: r } = useSite();
   const root = useRef<HTMLDivElement>(null);
+  const heroInner = useRef<HTMLDivElement>(null);
+  const [staticIllo, setStaticIllo] = useState(true);
 
-  /* Hero intro */
+  useEffect(() => {
+    setStaticIllo(r || detectTier() === "low");
+  }, [r]);
+
+  /* Hero entrance + mouse parallax */
   useEffect(() => {
     if (!introDone || !root.current) return;
-    if (r) {
-      gsap.set(root.current.querySelectorAll(".ah-line span"), { yPercent: 0 });
-      gsap.set(root.current.querySelectorAll(".ah-fade"), { opacity: 1, y: 0 });
-      return;
-    }
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-      tl.from(".ah-eyebrow", { opacity: 0, y: 18, duration: 0.8 })
-        .from(".ah-line span", { yPercent: 120, duration: 1.2, stagger: 0.14 }, "-=0.4")
-        .from(".ah-scroll", { opacity: 0, duration: 0.8 }, "-=0.4");
+      if (!r) {
+        gsap.timeline({ defaults: { ease: "expo.out" } })
+          .from(".ah-eyebrow", { opacity: 0, y: 18, duration: 0.8 })
+          .from(".ah-line span", { yPercent: 120, rotateX: -55, duration: 1.25, stagger: 0.16 }, "-=0.4")
+          .from(".ah-scroll", { opacity: 0, duration: 0.8 }, "-=0.5");
+      }
     }, root);
-    return () => ctx.revert();
+
+    let raf = 0;
+    let lx = 0, ly = 0;
+    const loop = () => {
+      lx += (aboutScene.rawPointerX - lx) * 0.06;
+      ly += (aboutScene.rawPointerY - ly) * 0.06;
+      if (heroInner.current) {
+        heroInner.current.style.transform = `translate3d(${lx * 18}px, ${ly * -12}px, 0)`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    if (!r) raf = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(raf);
+      ctx.revert();
+    };
   }, [introDone, r]);
 
-  /* Scroll-scrubbed reveals (manifesto + psychology lists) */
+  /* Scroll-driven illustration formation + manifesto intensity + manifesto reveal */
   useEffect(() => {
     if (r || !root.current) return;
     const ctx = gsap.context(() => {
+      const nameEl = document.getElementById("about-name");
+      if (nameEl) {
+        ScrollTrigger.create({
+          trigger: nameEl,
+          start: "top 85%",
+          end: "bottom 15%",
+          onUpdate: (self) => {
+            aboutScene.cohesion = Math.sin(self.progress * Math.PI);
+          },
+          onLeave: () => (aboutScene.cohesion = 0),
+          onLeaveBack: () => (aboutScene.cohesion = 0),
+        });
+      }
+      const manifestoEl = document.getElementById("about-manifesto");
+      if (manifestoEl) {
+        ScrollTrigger.create({
+          trigger: manifestoEl,
+          start: "top 70%",
+          end: "bottom bottom",
+          onUpdate: (self) => {
+            aboutScene.intensity = Math.sin(self.progress * Math.PI) * 0.8;
+          },
+          onLeave: () => (aboutScene.intensity = 0),
+          onLeaveBack: () => (aboutScene.intensity = 0),
+        });
+      }
       gsap.fromTo(
         ".manifesto-belief",
-        { opacity: 0.14 },
+        { opacity: 0.12 },
         {
           opacity: 1,
           stagger: 0.5,
           ease: "none",
-          scrollTrigger: {
-            trigger: ".manifesto-list",
-            start: "top 78%",
-            end: "bottom 70%",
-            scrub: true,
-          },
+          scrollTrigger: { trigger: ".manifesto-list", start: "top 78%", end: "bottom 72%", scrub: true },
         },
       );
     }, root);
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      aboutScene.cohesion = 0;
+      aboutScene.intensity = 0;
+    };
   }, [r]);
 
   return (
-    <div ref={root} className="about-root">
-      {/* ════════ ① HERO — over the live scene ════════ */}
-      <section
-        id="top"
-        className="relative flex min-h-[100svh] items-center overflow-hidden"
-      >
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-creme/75 via-creme/30 to-creme/75 md:from-creme/35 md:via-transparent md:to-creme/60" />
-        <div className="relative z-10 mx-auto w-full max-w-[1500px] px-5 md:px-10">
+    <div ref={root} className="about-root relative text-creme">
+      <AboutSceneLayer />
+
+      {/* ════════ ① HERO ════════ */}
+      <section id="top" className="relative flex min-h-[100svh] items-center overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0c0a0c]/40 via-transparent to-[#0c0a0c]/70" />
+        <div ref={heroInner} className="relative z-10 mx-auto w-full max-w-[1500px] px-5 will-change-transform md:px-10">
           <p className="ah-eyebrow mb-7 font-sans text-[11px] uppercase tracking-[0.4em] text-pink md:text-xs">
             {a.hero.eyebrow}
           </p>
-          <h1 className="font-display font-medium leading-[0.95] tracking-[-0.02em] text-ink">
-            <span className="ah-line block overflow-hidden">
-              <span className="block text-[10.5vw] md:text-[8vw] lg:text-[7vw]">
-                {a.hero.line1}
-              </span>
+          <h1 className="font-display font-medium leading-[0.95] tracking-[-0.02em]">
+            <span className="ah-line block overflow-hidden [perspective:600px]">
+              <span className="block origin-bottom text-[10.5vw] md:text-[8vw] lg:text-[7vw]">{a.hero.line1}</span>
             </span>
-            <span className="ah-line block overflow-hidden">
-              <span className="block text-[10.5vw] italic text-pink md:text-[8vw] lg:text-[7vw]">
+            <span className="ah-line block overflow-hidden [perspective:600px]">
+              <span className="block origin-bottom text-[10.5vw] italic text-pink md:text-[8vw] lg:text-[7vw]">
                 {a.hero.line2}
               </span>
             </span>
           </h1>
         </div>
         <div className="ah-scroll absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2">
-          <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-ink/50">
-            {a.hero.scroll}
-          </span>
-          <span className="relative h-12 w-px overflow-hidden bg-ink/15">
+          <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-creme/50">{a.hero.scroll}</span>
+          <span className="relative h-12 w-px overflow-hidden bg-creme/15">
             <span className="motion-only absolute inset-x-0 top-0 h-4 w-px animate-[scrollLine_2s_ease-in-out_infinite] bg-pink" />
           </span>
         </div>
       </section>
 
-      {/* ════════ ② THE NAME — intimate origin story ════════ */}
-      <section className="relative overflow-hidden bg-creme py-28 text-ink md:py-40">
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -left-6 top-10 select-none font-display text-[34vw] italic leading-none text-pink/[0.05] md:text-[24vw]"
-        >
-          B
-        </span>
-        <div className="relative mx-auto grid max-w-[1400px] items-center gap-14 px-5 md:grid-cols-12 md:px-10">
-          <div className="md:col-span-7">
-            <Reveal as="div">
-              <span className="mb-9 block text-pink">
-                <Kicker>{a.name.kicker}</Kicker>
-              </span>
+      {/* ════════ ② THE NAME — particle illustration forms here ════════ */}
+      <section id="about-name" className="relative flex min-h-[100svh] items-center overflow-hidden py-24 md:py-32">
+        <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-12 px-5 md:grid-cols-2 md:px-10">
+          <div className="rounded-[1.6rem] bg-[#0c0a0c]/45 p-7 backdrop-blur-md ring-1 ring-creme/10 md:p-10">
+            <Reveal>
+              <span className="mb-8 block text-pink"><Kicker>{a.name.kicker}</Kicker></span>
             </Reveal>
-            <Reveal as="h2" y={30} className="max-w-2xl font-display text-4xl font-medium italic leading-[1.05] tracking-[-0.01em] sm:text-5xl md:text-6xl">
+            <Reveal as="h2" y={30} className="font-display text-4xl font-medium italic leading-[1.05] tracking-[-0.01em] sm:text-5xl">
               {a.name.heading}
             </Reveal>
-            <div className="mt-10 max-w-xl space-y-5 font-sans text-lg leading-relaxed text-ink/75">
+            <div className="mt-8 space-y-4 font-sans text-base leading-relaxed text-creme/75 md:text-lg">
               {a.name.paras.map((p, i) => (
-                <Reveal as="p" key={i} delay={i * 0.05} blur={false} y={24}>
-                  {p}
-                </Reveal>
+                <Reveal as="p" key={i} delay={i * 0.05} blur={false} y={20}>{p}</Reveal>
               ))}
             </div>
-            <Reveal as="blockquote" className="mt-10 max-w-xl border-l-2 border-pink pl-6">
-              <p className="font-display text-2xl italic leading-snug text-ink md:text-3xl">
-                “{a.name.quote}”
-              </p>
-              <p className="mt-4 font-sans text-base leading-relaxed text-ink/60">
-                {a.name.quoteSub}
-              </p>
+            <Reveal as="blockquote" className="mt-8 border-l-2 border-pink pl-5">
+              <p className="font-display text-xl italic leading-snug md:text-2xl">“{a.name.quote}”</p>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-creme/55">{a.name.quoteSub}</p>
             </Reveal>
-            <Reveal as="p" className="mt-10 font-display text-2xl text-pink md:text-3xl">
-              {a.name.close}
-            </Reveal>
+            <Reveal as="p" className="mt-8 font-display text-2xl text-pink">{a.name.close}</Reveal>
           </div>
 
-          {/* Illustration slot — the line-art namesake */}
-          <div className="md:col-span-5">
-            <Reveal>
-              <SmartImage
+          {/* Right column: particles form the illustration here. Static fallback
+              only when there is no canvas (reduced-motion / low-tier). */}
+          <div className="relative flex min-h-[40vh] items-center justify-center">
+            {staticIllo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 src="/about/illustration.png"
                 alt={a.name.illoAlt}
-                monogram="Bandita"
-                label={lang === "de" ? "Illustration folgt" : "Illustration"}
-                className="aspect-[4/5] rounded-[1.4rem] ring-1 ring-ink/10"
-                imgClass="object-contain p-2"
+                className="max-h-[70vh] w-auto opacity-90 mix-blend-screen"
               />
-            </Reveal>
+            ) : (
+              <span className="pointer-events-none select-none font-sans text-[10px] uppercase tracking-[0.3em] text-creme/25">
+                {/* particles render in the world behind */}
+              </span>
+            )}
           </div>
         </div>
       </section>
 
-      {/* ════════ ③ WHY US — cinematic, dark ════════ */}
-      <section className="relative overflow-hidden bg-ink py-28 text-creme md:py-44">
+      {/* ════════ ③ WHY US ════════ */}
+      <section className="relative overflow-hidden py-28 md:py-40">
+        <div className="absolute inset-0 bg-[#0c0a0c]/55" />
         <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
-          <Reveal>
-            <span className="mb-9 block text-pink">
-              <Kicker>{a.why.kicker}</Kicker>
-            </span>
-          </Reveal>
+          <Reveal><span className="mb-9 block text-pink"><Kicker>{a.why.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="max-w-4xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-6xl lg:text-7xl">
             {a.why.heading}
           </Reveal>
-
-          <div className="mt-16 grid gap-10 md:grid-cols-2 md:gap-16">
+          <div className="mt-14 grid gap-10 md:grid-cols-2 md:gap-16">
             <div className="space-y-5 font-sans text-lg leading-relaxed text-creme/70 md:text-xl">
               {a.why.lines.map((l, i) => (
-                <Reveal as="p" key={i} delay={i * 0.04} blur={false} y={22}>
-                  {l}
-                </Reveal>
+                <Reveal as="p" key={i} delay={i * 0.04} blur={false} y={20}>{l}</Reveal>
               ))}
             </div>
-            <div className="flex flex-col justify-center gap-8">
-              <Reveal as="p" className="font-display text-3xl leading-tight text-creme md:text-4xl">
-                {a.why.punchA}
-              </Reveal>
-              <Reveal as="p" className="font-display text-3xl leading-tight text-creme md:text-4xl">
-                {a.why.punchB}
-              </Reveal>
+            <div className="flex flex-col justify-center gap-7">
+              <Reveal as="p" className="font-display text-3xl leading-tight md:text-4xl">{a.why.punchA}</Reveal>
+              <Reveal as="p" className="font-display text-3xl leading-tight md:text-4xl">{a.why.punchB}</Reveal>
             </div>
           </div>
-
           <Reveal as="p" className="mt-20 max-w-4xl font-display text-3xl italic leading-tight text-pink sm:text-4xl md:text-5xl">
             {a.why.close}
           </Reveal>
         </div>
       </section>
 
-      {/* ════════ ④ PSYCHOLOGY — minimal, generous space ════════ */}
-      <section className="relative overflow-hidden bg-creme py-32 text-ink md:py-48">
-        <div className="relative mx-auto max-w-[1200px] px-5 text-center md:px-10">
-          <Reveal>
-            <span className="mb-10 inline-block text-pink">
-              <Kicker>{a.psychology.kicker}</Kicker>
-            </span>
-          </Reveal>
-          <Reveal as="h2" y={30} className="mx-auto max-w-4xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-5xl md:text-6xl">
+      {/* ════════ ④ PSYCHOLOGY — minimal, world breathes ════════ */}
+      <section className="relative overflow-hidden py-32 md:py-48">
+        <div className="relative mx-auto max-w-[1100px] px-5 text-center md:px-10">
+          <Reveal><span className="mb-10 inline-block text-pink"><Kicker>{a.psychology.kicker}</Kicker></span></Reveal>
+          <Reveal as="h2" y={30} className="mx-auto max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-5xl md:text-6xl">
             {a.psychology.heading}
           </Reveal>
-          <Reveal as="p" className="mx-auto mt-10 max-w-2xl font-sans text-lg leading-relaxed text-ink/70 md:text-xl">
+          <Reveal as="p" className="mx-auto mt-9 max-w-2xl font-sans text-lg leading-relaxed text-creme/70 md:text-xl">
             {a.psychology.body}
           </Reveal>
-          <Reveal as="p" className="mt-10 font-display text-2xl italic text-ink md:text-3xl">
-            {a.psychology.detail}
-          </Reveal>
-
-          <div className="mt-16 flex flex-col items-center gap-2">
+          <Reveal as="p" className="mt-9 font-display text-2xl italic md:text-3xl">{a.psychology.detail}</Reveal>
+          <div className="mt-14 flex flex-col items-center gap-2">
             {a.psychology.nothing.map((n, i) => (
-              <Reveal as="span" key={i} delay={i * 0.06} className="font-display text-2xl text-ink/40 md:text-3xl">
-                {n}
-              </Reveal>
+              <Reveal as="span" key={i} delay={i * 0.06} className="font-display text-2xl text-creme/35 md:text-3xl">{n}</Reveal>
             ))}
-            <Reveal as="span" className="mt-6 font-display text-3xl font-medium text-pink md:text-4xl">
-              {a.psychology.verdict}
-            </Reveal>
+            <Reveal as="span" className="mt-5 font-display text-3xl font-medium text-pink md:text-4xl">{a.psychology.verdict}</Reveal>
           </div>
         </div>
       </section>
 
-      {/* ════════ ⑤ THE BANDITAS — team gallery ════════ */}
-      <section className="relative overflow-hidden bg-ink py-28 text-creme md:py-40">
+      {/* ════════ ⑤ THE BANDITAS — 3D tilt gallery ════════ */}
+      <section className="relative overflow-hidden py-28 md:py-40">
+        <div className="absolute inset-0 bg-[#0c0a0c]/60" />
         <div className="relative mx-auto max-w-[1500px] px-5 md:px-10">
-          <Reveal>
-            <span className="mb-9 block text-pink">
-              <Kicker>{a.team.kicker}</Kicker>
-            </span>
-          </Reveal>
+          <Reveal><span className="mb-9 block text-pink"><Kicker>{a.team.kicker}</Kicker></span></Reveal>
           <div className="grid items-end gap-8 md:grid-cols-12">
-            <Reveal as="h2" y={30} className="md:col-span-7 font-display text-4xl font-medium leading-[1.06] tracking-[-0.01em] sm:text-5xl md:text-6xl">
+            <Reveal as="h2" y={30} className="font-display text-4xl font-medium leading-[1.06] tracking-[-0.01em] sm:text-5xl md:col-span-7 md:text-6xl">
               {a.team.heading}
             </Reveal>
-            <Reveal as="p" className="md:col-span-5 font-sans text-base leading-relaxed text-creme/65 md:text-lg">
+            <Reveal as="p" className="font-sans text-base leading-relaxed text-creme/65 md:col-span-5 md:text-lg">
               {a.team.intro}
             </Reveal>
           </div>
 
           <div className="mt-16 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {a.team.members.map((m, i) => {
-              const p = PORTRAITS[i] ?? { slug: `member-${i}`, initials: m.name.slice(0, 1) };
+              const slug = ["pia-alice", "dino", "niddl", "noemi-santo"][i] ?? "";
               return (
-                <Reveal key={m.name} delay={i * 0.06} className="group">
-                  <SmartImage
-                    src={`/about/team/${p.slug}.jpg`}
-                    alt={`${m.name} — ${m.role}`}
-                    monogram={p.initials}
-                    className="aspect-[4/5] rounded-[1.1rem] ring-1 ring-creme/10 grayscale transition-all duration-700 group-hover:grayscale-0"
-                  />
-                  <h3 className="mt-5 font-display text-2xl font-medium leading-tight">
-                    {m.name}
-                  </h3>
-                  <p className="mt-1 font-sans text-[11px] uppercase tracking-[0.2em] text-pink">
-                    {m.role}
-                  </p>
-                  <p className="mt-3 font-sans text-sm leading-relaxed text-creme/60">
-                    {m.craft}
-                  </p>
+                <Reveal key={m.name} delay={i * 0.06}>
+                  <TiltCard disabled={r} className="group">
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-[1.1rem] ring-1 ring-creme/15">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`/about/team/${slug}.jpg`}
+                        alt={`${m.name} — ${m.role}`}
+                        loading="lazy"
+                        className="h-full w-full object-cover grayscale transition-all duration-700 [transform:translateZ(0)] group-hover:grayscale-0 group-hover:scale-[1.04]"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a0c]/70 via-transparent to-transparent" />
+                    </div>
+                  </TiltCard>
+                  <h3 className="mt-5 font-display text-2xl font-medium leading-tight">{m.name}</h3>
+                  <p className="mt-1 font-sans text-[11px] uppercase tracking-[0.2em] text-pink">{m.role}</p>
+                  <p className="mt-3 font-sans text-sm leading-relaxed text-creme/60">{m.craft}</p>
                 </Reveal>
               );
             })}
           </div>
-
-          <Reveal as="p" className="mt-14 font-display text-xl italic text-creme/50 md:text-2xl">
-            {a.team.note}
-          </Reveal>
+          <Reveal as="p" className="mt-14 font-display text-xl italic text-creme/45 md:text-2xl">{a.team.note}</Reveal>
         </div>
       </section>
 
-      {/* ════════ ⑥ WHAT WE DO — kinetic service type ════════ */}
-      <section className="relative overflow-hidden bg-creme py-28 text-ink md:py-40">
+      {/* ════════ ⑥ WHAT WE DO — kinetic marquee ════════ */}
+      <section className="relative overflow-hidden py-28 md:py-40">
+        <div className="absolute inset-0 bg-[#0c0a0c]/45" />
         <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
-          <Reveal>
-            <span className="mb-9 block text-pink">
-              <Kicker>{a.services.kicker}</Kicker>
-            </span>
-          </Reveal>
+          <Reveal><span className="mb-9 block text-pink"><Kicker>{a.services.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="max-w-3xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-6xl">
             {a.services.heading}
           </Reveal>
+        </div>
 
-          <div className="mt-14 flex flex-wrap items-baseline gap-x-6 gap-y-2">
-            {a.services.items.map((s, i) => (
-              <Reveal
-                as="span"
-                key={s}
-                delay={i * 0.02}
-                blur={false}
-                y={18}
-                className="cursor-default font-display text-2xl leading-tight text-ink/55 transition-colors duration-300 hover:text-pink sm:text-3xl md:text-4xl"
-              >
-                {s}
-                {i < a.services.items.length - 1 && (
-                  <span className="px-3 text-pink/40">·</span>
-                )}
-              </Reveal>
+        {/* full-bleed running services */}
+        <div className="relative mt-14 overflow-hidden py-3" aria-hidden>
+          <div className={`marquee-track ${r ? "" : "animate-[marquee-left_38s_linear_infinite]"}`}>
+            {[0, 1].map((dup) => (
+              <span key={dup} className="flex shrink-0 items-center">
+                {a.services.items.map((s) => (
+                  <span key={s} className="flex items-center font-display text-3xl text-creme/45 md:text-5xl">
+                    <span className="px-6">{s}</span>
+                    <span className="text-pink/50">✕</span>
+                  </span>
+                ))}
+              </span>
             ))}
           </div>
+        </div>
 
-          <div className="mt-20 flex flex-col gap-1">
-            <Reveal as="span" className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink sm:text-6xl md:text-7xl">
+        <div className="relative mx-auto mt-16 max-w-[1400px] px-5 md:px-10">
+          <div className="flex flex-col gap-1">
+            <Reveal as="span" className="font-display text-5xl font-medium leading-none tracking-[-0.02em] sm:text-6xl md:text-7xl">
               {a.services.everything}
             </Reveal>
             <div className="flex gap-6">
-              <Reveal as="span" delay={0.06} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink/30 sm:text-6xl md:text-7xl">
+              <Reveal as="span" delay={0.06} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-creme/30 sm:text-6xl md:text-7xl">
                 {a.services.online}
               </Reveal>
-              <Reveal as="span" delay={0.12} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink/30 sm:text-6xl md:text-7xl">
+              <Reveal as="span" delay={0.12} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-creme/30 sm:text-6xl md:text-7xl">
                 {a.services.offline}
               </Reveal>
             </div>
           </div>
-
-          <Reveal as="p" className="mt-12 font-display text-2xl italic text-pink md:text-3xl">
-            {a.services.close}
-          </Reveal>
+          <Reveal as="p" className="mt-12 font-display text-2xl italic text-pink md:text-3xl">{a.services.close}</Reveal>
         </div>
       </section>
 
-      {/* ════════ ⑦ VIENNA — atmospheric, full-bleed ════════ */}
-      <section className="relative flex min-h-[80svh] items-end overflow-hidden bg-ink text-creme">
-        <SmartImage
+      {/* ════════ ⑦ VIENNA — full-bleed atmosphere ════════ */}
+      <section className="relative flex min-h-[80svh] items-end overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/about/pia-vineyard.jpg"
           alt={a.vienna.imageAlt}
-          className="absolute inset-0 !bg-ink"
-          imgClass={r ? "" : "kenburns"}
+          className={`absolute inset-0 h-full w-full object-cover ${r ? "" : "kenburns"}`}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/35 to-ink/45" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a0c] via-[#0c0a0c]/40 to-[#0c0a0c]/55" />
         <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-[10vh] md:px-10">
-          <Reveal>
-            <span className="mb-7 block text-creme/70">
-              <Kicker>{a.vienna.kicker}</Kicker>
-            </span>
-          </Reveal>
+          <Reveal><span className="mb-7 block text-creme/70"><Kicker>{a.vienna.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="max-w-4xl font-display text-4xl font-medium leading-[1.0] tracking-[-0.01em] sm:text-6xl md:text-7xl">
             {a.vienna.heading}
           </Reveal>
@@ -406,40 +377,21 @@ export default function AboutStory({
         </div>
       </section>
 
-      {/* ════════ ⑧ THE MANIFESTO — emotional peak ════════ */}
-      <section className="relative overflow-hidden bg-ink py-32 text-creme md:py-52">
-        <span
-          aria-hidden
-          className="pointer-events-none absolute -right-10 top-16 select-none font-display text-[28vw] italic leading-none text-pink/[0.06] md:text-[20vw]"
-        >
-          Bandita
-        </span>
+      {/* ════════ ⑧ THE MANIFESTO — cinematic peak ════════ */}
+      <section id="about-manifesto" className="relative overflow-hidden py-32 md:py-52">
         <div className="relative mx-auto max-w-[1300px] px-5 md:px-10">
-          <Reveal>
-            <span className="mb-12 block text-pink">
-              <Kicker>{a.manifesto.kicker}</Kicker>
-            </span>
-          </Reveal>
+          <Reveal><span className="mb-12 block text-pink"><Kicker>{a.manifesto.kicker}</Kicker></span></Reveal>
           <div className="manifesto-list space-y-3 font-display text-3xl font-medium leading-[1.12] tracking-[-0.01em] sm:text-4xl md:text-5xl lg:text-6xl">
             {a.manifesto.beliefs.map((b, i) => (
-              <p key={i} className="manifesto-belief">
-                {b}
-              </p>
+              <p key={i} className="manifesto-belief">{b}</p>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════════ ⑨ FINAL LINE — provocation + CTA ════════ */}
-      <section className="relative overflow-hidden bg-pink py-32 text-creme md:py-48">
-        <div
-          aria-hidden
-          className="motion-only pointer-events-none absolute inset-0 opacity-30"
-          style={{
-            background:
-              "radial-gradient(60% 60% at 50% 0%, rgba(255,255,255,0.35), transparent 70%)",
-          }}
-        />
+      {/* ════════ ⑨ FINAL ════════ */}
+      <section className="relative overflow-hidden py-32 md:py-48">
+        <div className="absolute inset-0 bg-pink/85" />
         <div className="relative mx-auto max-w-[1300px] px-5 text-center md:px-10">
           <Reveal as="h2" className="mx-auto max-w-4xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-5xl md:text-7xl">
             {a.final.line1}
@@ -457,9 +409,7 @@ export default function AboutStory({
               >
                 {a.final.cta}
               </MagneticButton>
-              <span className="font-sans text-xs uppercase tracking-[0.2em] text-creme/60">
-                {a.final.note}
-              </span>
+              <span className="font-sans text-xs uppercase tracking-[0.2em] text-creme/70">{a.final.note}</span>
             </div>
           </Reveal>
         </div>
