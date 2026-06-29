@@ -46,8 +46,10 @@ export default function AboutSceneLayer() {
     };
   }, []);
 
-  const showCanvas = mounted && !reducedMotion && tier !== "low";
-  const count = tier === "high" ? 12000 : 7000;
+  // Run the canvas on every device — only "reduce motion" disables it.
+  // Mobile/low just gets fewer particles (mirrors the homepage scene).
+  const showCanvas = mounted && !reducedMotion;
+  const count = tier === "high" ? 12000 : tier === "mid" ? 7000 : 4200;
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10">

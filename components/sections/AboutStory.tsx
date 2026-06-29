@@ -7,7 +7,6 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
-import { detectTier } from "@/lib/scene-store";
 import { aboutScene } from "@/lib/about-scene";
 import Reveal from "@/components/anim/Reveal";
 import MagneticButton from "@/components/MagneticButton";
@@ -74,8 +73,9 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
   const heroInner = useRef<HTMLDivElement>(null);
   const [staticIllo, setStaticIllo] = useState(true);
 
+  // Canvas now runs on every device; only reduce-motion uses the static art.
   useEffect(() => {
-    setStaticIllo(r || detectTier() === "low");
+    setStaticIllo(r);
   }, [r]);
 
   /* Hero entrance (after the particle film) + mouse parallax */
