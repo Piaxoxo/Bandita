@@ -24,6 +24,9 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
   const counterRef = useRef<HTMLSpanElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const quoteRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const ghostRef = useRef<HTMLDivElement>(null);
+  const lastMove = useRef(0);
+  const [expanded, setExpanded] = useState(-1);
   const t = dict.portfolio;
 
   // ── ambient sound (WebAudio pad that shifts per station) ──
@@ -110,6 +113,11 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    const onMove = () => {
+      lastMove.current = performance.now();
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    lastMove.current = performance.now();
 
     let raf = 0;
     const quotePoints = QUOTES.map((_, i) => (i + 1) / (QUOTES.length + 1));
@@ -138,15 +146,37 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
         a.oscs.forEach((o, i) => o.frequency.setTargetAtTime(base * (i === 2 ? 2 : 1), a.ctx.currentTime, 0.5));
         a.filter.frequency.setTargetAtTime(portfolio.active >= 0 ? 1200 : 500, a.ctx.currentTime, 0.6);
       }
+      // hidden: the Bandita ghost surfaces when you hold still in the dark
+      if (ghostRef.current) {
+        const idle = performance.now() - lastMove.current;
+        const target = idle > 3500 && p > 0.04 && p < 0.95 ? 1 : 0;
+        const cur = parseFloat(ghostRef.current.style.opacity || "0");
+        ghostRef.current.style.opacity = `${cur + (target - cur) * 0.04}`;
+      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pointermove", onMove);
       detach();
     };
   }, [r, lang]);
+
+  // expand overlay: lock scroll + Esc to close
+  useEffect(() => {
+    if (expanded < 0) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [expanded]);
 
   /* ───────── reduced-motion / no-JS: content-complete lit gallery ───────── */
   if (r) {
@@ -226,7 +256,17 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
           <span className={`inline-block h-1.5 w-1.5 rounded-full ${soundOn ? "bg-pink" : "bg-creme/40"}`} />
           {t.sound}
         </button>
-        <span ref={tagRef} className="text-creme/75" />
+        <button
+          type="button"
+          onClick={() => {
+            if (portfolio.active >= 0) setExpanded(portfolio.active);
+          }}
+          data-cursor="link"
+          className="pointer-events-auto flex items-center gap-2 text-creme/75 transition-colors hover:text-pink"
+        >
+          <span ref={tagRef} />
+          <span className="text-pink">↗</span>
+        </button>
       </div>
 
       {/* end CTA */}
@@ -239,8 +279,92 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
         </div>
       </div>
 
+      {/* hidden: the namesake watches from the fog when you hold still */}
+      <div ref={ghostRef} className="pointer-events-none fixed inset-0 z-[5] flex items-center justify-center" style={{ opacity: 0 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/about/illustration.png" alt="" className="h-[64vh] w-auto opacity-50 mix-blend-screen" />
+      </div>
+
+      {/* click a work → it expands to become the environment */}
+      {expanded >= 0 && (
+        <ExpandOverlay station={STATIONS[expanded]} lang={lang} onClose={() => setExpanded(-1)} />
+      )}
+
       {/* virtual scroll track */}
       <div style={{ height: `${TRACK_VH}vh` }} aria-hidden />
     </>
+  );
+}
+
+/* ───────── in-world expand: the work becomes the whole environment ───────── */
+function ExpandOverlay({
+  station,
+  lang,
+  onClose,
+}: {
+  station: (typeof STATIONS)[number];
+  lang: Locale;
+  onClose: () => void;
+}) {
+  const [i, setI] = useState(0);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const r = requestAnimationFrame(() => setShown(true));
+    if (station.video) return () => cancelAnimationFrame(r);
+    const id = setInterval(() => setI((v) => (v + 1) % station.images.length), 2800);
+    return () => {
+      cancelAnimationFrame(r);
+      clearInterval(id);
+    };
+  }, [station]);
+
+  return (
+    <div
+      className="fixed inset-0 z-40 flex items-center justify-center bg-black/96 transition-opacity duration-500"
+      style={{ opacity: shown ? 1 : 0 }}
+      onClick={onClose}
+    >
+      <div className="relative h-full w-full" style={{ transform: shown ? "scale(1)" : "scale(1.06)", transition: "transform 700ms cubic-bezier(0.16,1,0.3,1)" }}>
+        {station.video
+          ? station.video.map((v, k) => (
+              // eslint-disable-next-line jsx-a11y/media-has-caption
+              <video
+                key={v}
+                src={v}
+                poster={station.images[k]}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 h-full w-full object-contain"
+                style={{ padding: station.orientation === "portrait" ? "4vh 0" : "0" }}
+              />
+            ))
+          : station.images.map((src, k) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={src}
+                src={src}
+                alt={station.tag[lang]}
+                className="absolute inset-0 h-full w-full object-contain transition-opacity duration-[1200ms]"
+                style={{ opacity: k === i ? 1 : 0 }}
+              />
+            ))}
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-8 flex items-center justify-between px-6 font-sans text-[11px] uppercase tracking-[0.22em] text-creme/70 md:px-12">
+        <span>{station.tag[lang]}</span>
+        <span className="text-creme/45">Esc</span>
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        data-cursor="link"
+        aria-label="Close"
+        className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center rounded-full bg-creme/10 text-creme transition-colors hover:bg-pink md:right-10 md:top-10"
+      >
+        ✕
+      </button>
+    </div>
   );
 }
