@@ -47,14 +47,14 @@ export default function AboutSceneLayer() {
   }, []);
 
   const showCanvas = mounted && !reducedMotion && tier !== "low";
-  const count = tier === "high" ? 6500 : 3800;
+  const count = tier === "high" ? 12000 : 7000;
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10">
       <DarkGround />
       {showCanvas && (
         <div className="absolute inset-0">
-          <AboutScene count={count} />
+          <AboutScene count={count} quality={tier === "high" ? "high" : "mid"} />
         </div>
       )}
     </div>

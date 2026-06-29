@@ -78,21 +78,39 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
     setStaticIllo(r || detectTier() === "low");
   }, [r]);
 
-  /* Hero entrance + mouse parallax */
+  /* Hero entrance (after the particle film) + mouse parallax */
   useEffect(() => {
     if (!introDone || !root.current) return;
+    // When the canvas plays the woman→BANDITA film, the headline arrives after it.
+    const filmActive = !staticIllo;
+    const eyebrow = ".ah-eyebrow", lines = ".ah-line span", cue = ".ah-scroll";
+    let revealed = false;
     const ctx = gsap.context(() => {
-      if (!r) {
-        gsap.timeline({ defaults: { ease: "expo.out" } })
-          .from(".ah-eyebrow", { opacity: 0, y: 18, duration: 0.8 })
-          .from(".ah-line span", { yPercent: 120, rotateX: -55, duration: 1.25, stagger: 0.16 }, "-=0.4")
-          .from(".ah-scroll", { opacity: 0, duration: 0.8 }, "-=0.5");
+      if (r) {
+        gsap.set([eyebrow, lines, cue], { opacity: 1, y: 0, yPercent: 0, rotateX: 0 });
+        revealed = true;
+        return;
       }
+      gsap.set(eyebrow, { opacity: 0, y: 18 });
+      gsap.set(lines, { opacity: 0, yPercent: 120, rotateX: -55 });
+      gsap.set(cue, { opacity: 0 });
     }, root);
+
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      gsap
+        .timeline({ defaults: { ease: "expo.out" } })
+        .to(eyebrow, { opacity: 1, y: 0, duration: 0.8 })
+        .to(lines, { opacity: 1, yPercent: 0, rotateX: 0, duration: 1.2, stagger: 0.16 }, "-=0.4")
+        .to(cue, { opacity: 1, duration: 0.8 }, "-=0.5");
+    };
 
     let raf = 0;
     let lx = 0, ly = 0;
     const loop = () => {
+      // headline arrives only once the particle film has dispersed
+      if (!revealed && (!filmActive || aboutScene.heroReleased)) reveal();
       lx += (aboutScene.rawPointerX - lx) * 0.06;
       ly += (aboutScene.rawPointerY - ly) * 0.06;
       if (heroInner.current) {
@@ -101,11 +119,14 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       raf = requestAnimationFrame(loop);
     };
     if (!r) raf = requestAnimationFrame(loop);
+    // safety: never leave the headline hidden if the canvas never starts
+    const safety = window.setTimeout(reveal, 9000);
     return () => {
       cancelAnimationFrame(raf);
+      window.clearTimeout(safety);
       ctx.revert();
     };
-  }, [introDone, r]);
+  }, [introDone, r, staticIllo]);
 
   /* Scroll-driven illustration formation + manifesto intensity + manifesto reveal */
   useEffect(() => {
@@ -131,10 +152,25 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           start: "top 70%",
           end: "bottom bottom",
           onUpdate: (self) => {
-            aboutScene.intensity = Math.sin(self.progress * Math.PI) * 0.8;
+            const bell = Math.sin(self.progress * Math.PI);
+            aboutScene.intensity = bell * 0.9;
+            aboutScene.explode = bell * 0.7; // the particles burst outward at the peak
           },
-          onLeave: () => (aboutScene.intensity = 0),
-          onLeaveBack: () => (aboutScene.intensity = 0),
+          onLeave: () => ((aboutScene.intensity = 0), (aboutScene.explode = 0)),
+          onLeaveBack: () => ((aboutScene.intensity = 0), (aboutScene.explode = 0)),
+        });
+      }
+      const finalEl = document.getElementById("about-final");
+      if (finalEl) {
+        ScrollTrigger.create({
+          trigger: finalEl,
+          start: "top 80%",
+          end: "bottom bottom",
+          onUpdate: (self) => {
+            // re-form the glowing BANDITA wordmark for the closing line
+            aboutScene.finale = Math.min(1, self.progress * 1.6);
+          },
+          onLeaveBack: () => (aboutScene.finale = 0),
         });
       }
       gsap.fromTo(
@@ -152,6 +188,8 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       ctx.revert();
       aboutScene.cohesion = 0;
       aboutScene.intensity = 0;
+      aboutScene.explode = 0;
+      aboutScene.finale = 0;
     };
   }, [r]);
 
@@ -389,14 +427,18 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
         </div>
       </section>
 
-      {/* ════════ ⑨ FINAL ════════ */}
-      <section className="relative overflow-hidden py-32 md:py-48">
-        <div className="absolute inset-0 bg-pink/85" />
+      {/* ════════ ⑨ FINAL — wordmark re-forms in light ════════ */}
+      <section id="about-final" className="relative flex min-h-[92svh] items-center overflow-hidden py-28 md:py-40">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "radial-gradient(60% 50% at 50% 60%, rgba(251,0,63,0.16), transparent 70%)" }}
+        />
         <div className="relative mx-auto max-w-[1300px] px-5 text-center md:px-10">
           <Reveal as="h2" className="mx-auto max-w-4xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-5xl md:text-7xl">
             {a.final.line1}
             <br />
-            <span className="italic">{a.final.line2}</span>
+            <span className="italic text-pink">{a.final.line2}</span>
           </Reveal>
           <Reveal>
             <div className="mt-12 flex flex-col items-center gap-5">
@@ -405,11 +447,11 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
                 as="a"
                 href={`/${lang}#contact`}
                 strength={0.5}
-                className="rounded-full bg-creme px-10 py-5 font-sans text-sm uppercase tracking-[0.14em] text-ink transition-colors hover:bg-ink hover:text-creme"
+                className="rounded-full bg-pink px-10 py-5 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink"
               >
                 {a.final.cta}
               </MagneticButton>
-              <span className="font-sans text-xs uppercase tracking-[0.2em] text-creme/70">{a.final.note}</span>
+              <span className="font-sans text-xs uppercase tracking-[0.2em] text-creme/55">{a.final.note}</span>
             </div>
           </Reveal>
         </div>
