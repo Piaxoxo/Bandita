@@ -155,6 +155,9 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
         <div className="mx-auto max-w-[1500px] px-5 md:px-12">
           <div className="grid items-center gap-10 md:grid-cols-12">
             <Heading reduced={r} className="md:col-span-4">
+              <span className="mb-7 block text-pink">
+                <Label>{s.s2.label}</Label>
+              </span>
               <h2 className="font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-5xl md:text-6xl">
                 {s.s2.heading}
               </h2>
