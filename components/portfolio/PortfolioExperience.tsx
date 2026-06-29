@@ -26,6 +26,74 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
   const quoteRefs = useRef<(HTMLDivElement | null)[]>([]);
   const t = dict.portfolio;
 
+  // ── ambient sound (WebAudio pad that shifts per station) ──
+  const audio = useRef<{
+    ctx: AudioContext;
+    master: GainNode;
+    oscs: OscillatorNode[];
+    filter: BiquadFilterNode;
+  } | null>(null);
+  const [soundOn, setSoundOn] = useState(false);
+  const NOTES = [110, 130.81, 146.83, 164.81, 196, 220, 246.94, 293.66];
+
+  const toggleSound = () => {
+    if (!audio.current) {
+      const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new Ctx();
+      const master = ctx.createGain();
+      master.gain.value = 0.0001;
+      master.connect(ctx.destination);
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 600;
+      filter.Q.value = 3;
+      filter.connect(master);
+      const delay = ctx.createDelay();
+      delay.delayTime.value = 0.38;
+      const fb = ctx.createGain();
+      fb.gain.value = 0.32;
+      filter.connect(delay);
+      delay.connect(fb);
+      fb.connect(delay);
+      delay.connect(master);
+      const oscs: OscillatorNode[] = [];
+      [0, 1, 2].forEach((i) => {
+        const o = ctx.createOscillator();
+        o.type = i === 2 ? "sine" : "sawtooth";
+        o.frequency.value = 110;
+        o.detune.value = (i - 1) * 7;
+        const g = ctx.createGain();
+        g.gain.value = i === 2 ? 0.5 : 0.2;
+        o.connect(g);
+        g.connect(filter);
+        o.start();
+        oscs.push(o);
+      });
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.07;
+      const lg = ctx.createGain();
+      lg.gain.value = 160;
+      lfo.connect(lg);
+      lg.connect(filter.frequency);
+      lfo.start();
+      audio.current = { ctx, master, oscs, filter };
+    }
+    const a = audio.current;
+    const on = !soundOn;
+    setSoundOn(on);
+    portfolio.soundOn = on;
+    a.ctx.resume();
+    a.master.gain.cancelScheduledValues(a.ctx.currentTime);
+    a.master.gain.linearRampToValueAtTime(on ? 0.16 : 0.0001, a.ctx.currentTime + (on ? 1.4 : 0.6));
+  };
+
+  useEffect(
+    () => () => {
+      audio.current?.ctx.close();
+    },
+    [],
+  );
+
   useEffect(() => {
     const tier = detectTier();
     setCompact(tier !== "high");
@@ -62,6 +130,14 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
         el.style.transform = `translate(-50%,-50%) translateY(${(p - qp) * 600}px) scale(${0.9 + vis * 0.1})`;
       });
       if (ctaRef.current) ctaRef.current.style.opacity = `${Math.max(0, (p - 0.965) / 0.035)}`;
+      // ambient pad follows the active station
+      const a = audio.current;
+      if (a && portfolio.soundOn) {
+        const idx = portfolio.active >= 0 ? portfolio.active : 0;
+        const base = NOTES[idx % NOTES.length];
+        a.oscs.forEach((o, i) => o.frequency.setTargetAtTime(base * (i === 2 ? 2 : 1), a.ctx.currentTime, 0.5));
+        a.filter.frequency.setTargetAtTime(portfolio.active >= 0 ? 1200 : 500, a.ctx.currentTime, 0.6);
+      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -140,6 +216,16 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
       {/* HUD */}
       <div className="pointer-events-none fixed inset-x-0 bottom-6 z-20 flex items-center justify-between px-5 font-sans text-[11px] uppercase tracking-[0.2em] text-creme/60 md:px-10">
         <span ref={counterRef} className="tabular-nums" />
+        <button
+          type="button"
+          onClick={toggleSound}
+          data-cursor="link"
+          className="pointer-events-auto flex items-center gap-2 text-creme/55 transition-colors hover:text-pink"
+          aria-pressed={soundOn}
+        >
+          <span className={`inline-block h-1.5 w-1.5 rounded-full ${soundOn ? "bg-pink" : "bg-creme/40"}`} />
+          {t.sound}
+        </button>
         <span ref={tagRef} className="text-creme/75" />
       </div>
 

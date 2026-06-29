@@ -3,6 +3,8 @@
 
 export type Bi = { en: string; de: string };
 
+export type RevealStyle = "develop" | "rise" | "spin" | "glass" | "screen" | "bloom";
+
 export type Station = {
   id: string;
   kind: "photo" | "video";
@@ -13,6 +15,7 @@ export type Station = {
   color: string; // mood accent (light/fog tint, rim)
   side: -1 | 0 | 1; // base horizontal bias
   y: number; // base vertical offset
+  reveal: RevealStyle; // bespoke entrance per station
 };
 
 export const STATIONS: Station[] = [
@@ -23,6 +26,7 @@ export const STATIONS: Station[] = [
     orientation: "portrait",
     tag: { en: "Fine Dining · Vienna", de: "Fine Dining · Wien" },
     color: "#E8B27A",
+    reveal: "glass",
     side: -1,
     y: 0.2,
   },
@@ -37,6 +41,7 @@ export const STATIONS: Station[] = [
     orientation: "landscape",
     tag: { en: "Inn|Sider · Restaurant & Bar", de: "Inn|Sider · Restaurant & Bar" },
     color: "#FF7A4D",
+    reveal: "develop",
     side: 1,
     y: -0.3,
   },
@@ -48,6 +53,7 @@ export const STATIONS: Station[] = [
     orientation: "landscape",
     tag: { en: "Travel Film · Germany", de: "Travel Film · Deutschland" },
     color: "#FB003F",
+    reveal: "screen",
     side: 0,
     y: 0,
   },
@@ -63,6 +69,7 @@ export const STATIONS: Station[] = [
     orientation: "landscape",
     tag: { en: "Bar · Vienna", de: "Bar · Wien" },
     color: "#FF4E8E",
+    reveal: "spin",
     side: -1,
     y: 0.3,
   },
@@ -73,6 +80,7 @@ export const STATIONS: Station[] = [
     orientation: "portrait",
     tag: { en: "Kern · Hospitality", de: "Kern · Hospitality" },
     color: "#7FB0C9",
+    reveal: "rise",
     side: 1,
     y: 0.1,
   },
@@ -87,6 +95,7 @@ export const STATIONS: Station[] = [
     orientation: "portrait",
     tag: { en: "Travel Reels · Portugal", de: "Travel Reels · Portugal" },
     color: "#36C2B4",
+    reveal: "screen",
     side: 0,
     y: 0,
   },
@@ -101,6 +110,7 @@ export const STATIONS: Station[] = [
     orientation: "landscape",
     tag: { en: "Besser Reisen · Skopje", de: "Besser Reisen · Skopje" },
     color: "#E7C66B",
+    reveal: "bloom",
     side: -1,
     y: -0.2,
   },
@@ -115,6 +125,7 @@ export const STATIONS: Station[] = [
     orientation: "landscape",
     tag: { en: "International · Travel", de: "International · Travel" },
     color: "#C9A2FF",
+    reveal: "develop",
     side: 1,
     y: 0.2,
   },
