@@ -43,4 +43,11 @@ projects + the build brief.
 - Category: Film production
 - Note: raw photography (not a designed poster like project assets elsewhere)
 
+### 06 · International tourism client — Image film & photography
+- Folder: `tourism-international/`
+- Files: `01.jpg` (954×636, smaller source), `02.jpg`–`03.jpg` (1536×1024)
+- Brief label: „Image Film und Fotos für internationalen Tourismuskunden"
+- Client name: not given (international tourism client)
+- Category: Image film + photography
+
 _(more projects incoming…)_
