@@ -183,17 +183,31 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
         "about-work-focal",
         "about-manifesto",
       ];
+      // smoothstep helper
+      const ss = (e0: number, e1: number, x: number) => {
+        const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
+        return t * t * (3 - 2 * t);
+      };
       plateSecs.forEach((id, i) => {
         const el = document.getElementById(id);
         if (!el) return;
         ScrollTrigger.create({
           trigger: el,
-          start: "top 78%",
-          end: "bottom 22%",
+          start: "top 80%",
+          end: "bottom 20%",
           onUpdate: (self) => {
+            const p = self.progress;
+            // reveal: ramp up → HOLD fully formed (0.38–0.62) → ramp down,
+            // so the real photo is centred, sharp and recognisable for a beat
+            const reveal = Math.min(ss(0.12, 0.38, p), 1 - ss(0.62, 0.9, p));
+            // pass: ease in from behind → settle centred & still during the hold → fly out
+            let pass: number;
+            if (p <= 0.38) pass = ss(0, 0.38, p) - 1;
+            else if (p >= 0.62) pass = ss(0.62, 1, p);
+            else pass = 0;
             const ps = aboutScene.plates[i];
-            ps.reveal = Math.sin(self.progress * Math.PI);
-            ps.pass = self.progress * 2 - 1;
+            ps.reveal = reveal;
+            ps.pass = pass;
           },
           onLeave: () => (aboutScene.plates[i].reveal = 0),
           onLeaveBack: () => (aboutScene.plates[i].reveal = 0),
