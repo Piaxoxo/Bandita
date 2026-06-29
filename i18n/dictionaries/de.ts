@@ -70,6 +70,8 @@ const de: Dictionary = {
     line: "Essen, Licht, Story — alles in-house.",
     altFood1: "Bandita Foodfotografie — Rote-Bete-Carpaccio mit Feta und Rucola",
     altFood2: "Bandita Foodfotografie — Nahaufnahme von Feta, Roter Bete und Balsamico",
+    altFilm1: "Bandita Filmproduktion — Kameramann on location mit Cinema-Rig",
+    altFilm2: "Bandita Filmproduktion — 6K-Cinema-Kamera in Nahaufnahme",
   },
   cta: {
     eyebrow: "Wien · Weltweit",

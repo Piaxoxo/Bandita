@@ -5,18 +5,18 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { scene as store } from "@/lib/scene-store";
 
-// Restrained, tonal rosé/creme palette — elegant, not confetti.
+// Warm champagne/creme palette with only sparing pink — elegant, not rosa.
 const PALETTE = [
-  new THREE.Color("#FBC9D5"), // soft blush pink
-  new THREE.Color("#FF9DB8"), // muted pink
-  new THREE.Color("#F4C6CE"), // dusty rose
-  new THREE.Color("#FBE3E0"), // blush
-  new THREE.Color("#FF5C9E"), // rosé accent (sparing)
-  new THREE.Color("#F7D2C9"), // warm sand-blush
-  new THREE.Color("#FBC9D5"),
+  new THREE.Color("#EAD9CE"), // warm champagne
+  new THREE.Color("#F0E2D4"), // sand
+  new THREE.Color("#E6D2C2"), // taupe blush
+  new THREE.Color("#F3E7DA"), // creme sand
+  new THREE.Color("#FBE0DC"), // soft blush (subtle)
+  new THREE.Color("#FF9DB8"), // pink accent (rare)
+  new THREE.Color("#EAD9CE"),
 ];
 
-const FOG = new THREE.Color("#FBEFEC");
+const FOG = new THREE.Color("#F7EFE7");
 
 export type Layer = "far" | "mid" | "near";
 
