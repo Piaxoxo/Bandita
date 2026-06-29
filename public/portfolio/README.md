@@ -35,4 +35,12 @@ projects + the build brief.
   full legal name (display as given, or shorten to „Kern", or anonymise?)
 - Category: Social media content
 
+### 05 · Besser Reisen — Film production (Skopje)
+- Folder: `besser-reisen/`
+- Files: `01.jpg`–`03.jpg` (landscape, from 6000×4000 raw stills)
+- Brief label: „Film Produktion Besser Reisen in Skopje"
+- Client name: Besser Reisen (travel agency); location Skopje, North Macedonia
+- Category: Film production
+- Note: raw photography (not a designed poster like project assets elsewhere)
+
 _(more projects incoming…)_
