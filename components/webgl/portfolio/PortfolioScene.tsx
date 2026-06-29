@@ -100,22 +100,48 @@ const planeVert = `
 const planeFrag = `
   precision highp float;
   uniform sampler2D uTex; uniform float uReveal; uniform float uTime; uniform float uOpacity; uniform vec3 uTint;
+  uniform float uGlass; uniform float uScan; uniform float uDevelop; uniform float uBloom;
   varying vec2 vUv;
   float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
   void main(){
     float bias = (1.0-uReveal)*3.0;
     vec3 col = texture2D(uTex, vUv, bias).rgb;
+
+    // particle "develop" dissolve (only when uDevelop)
     float t = hash(floor(vUv*vec2(340.0,220.0)))*0.9;
-    float vis = smoothstep(t-0.05, t+0.05, uReveal);
+    float visD = smoothstep(t-0.05, t+0.05, uReveal);
     float front = (1.0-smoothstep(0.0,0.09,abs(uReveal-t)))*step(0.012,uReveal)*(1.0-step(0.99,uReveal));
-    col += uTint * front * 1.4;
+    col += uTint * front * 1.4 * uDevelop;
+    float vis = mix(smoothstep(0.0,0.18,uReveal), visD, uDevelop);
+
+    // frame rim (extra for glass/vitrine)
     float b = min(min(vUv.x,1.0-vUv.x), min(vUv.y,1.0-vUv.y));
-    col += uTint * smoothstep(0.04,0.0,b) * 0.5;
+    col += uTint * smoothstep(0.05,0.0,b) * (0.5 + uGlass*0.9);
+    col += vec3(1.0) * smoothstep(0.018,0.0,b) * uGlass * 0.5; // bright glass edge
+
+    // screen scanlines + a power-on sync wipe (video)
+    col *= 1.0 - uScan * 0.10 * step(0.5, fract(vUv.y*200.0));
+    float sync = (1.0-smoothstep(0.0,0.06,abs(uReveal - vUv.y))) * (1.0-step(0.99,uReveal));
+    col += vec3(1.0) * sync * uScan * 0.6;
+
+    // bloom-in flare while forming
+    col += col * uBloom * (1.0 - uReveal) * 0.7;
+
+    // sheen sweep
     float sw = abs(fract((vUv.x+vUv.y)*0.5 - uTime*0.05)-0.5);
     col += vec3(1.0)*smoothstep(0.5,0.47,sw)*0.1*vis;
     gl_FragColor = vec4(col, vis*uOpacity);
   }
 `;
+
+const STYLE_FLAGS: Record<string, { glass: number; scan: number; develop: number; bloom: number }> = {
+  develop: { glass: 0, scan: 0, develop: 1, bloom: 0 },
+  rise: { glass: 0, scan: 0, develop: 0, bloom: 0 },
+  spin: { glass: 0, scan: 0, develop: 0, bloom: 0 },
+  glass: { glass: 1, scan: 0, develop: 0, bloom: 0 },
+  screen: { glass: 0, scan: 1, develop: 0, bloom: 0 },
+  bloom: { glass: 0, scan: 0, develop: 0, bloom: 1 },
+};
 
 function Frame({
   texture,
@@ -125,6 +151,7 @@ function Frame({
   tint,
   getFocus,
   rotBias = 0,
+  style = "develop",
 }: {
   texture: THREE.Texture;
   w: number;
@@ -133,10 +160,12 @@ function Frame({
   tint: THREE.Color;
   getFocus: () => { focus: number; pass: number };
   rotBias?: number;
+  style?: string;
 }) {
   const mesh = useRef<THREE.Mesh>(null);
   const matRef = useRef<THREE.ShaderMaterial>(null);
   const eased = useRef(0);
+  const flags = STYLE_FLAGS[style] ?? STYLE_FLAGS.develop;
   const uniforms = useMemo(
     () => ({
       uTex: { value: texture },
@@ -144,8 +173,12 @@ function Frame({
       uTime: { value: 0 },
       uOpacity: { value: 0 },
       uTint: { value: tint },
+      uGlass: { value: flags.glass },
+      uScan: { value: flags.scan },
+      uDevelop: { value: flags.develop },
+      uBloom: { value: flags.bloom },
     }),
-    [texture, tint],
+    [texture, tint, flags],
   );
   useMemo(() => {
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -162,15 +195,19 @@ function Frame({
     m.visible = f > 0.01;
     if (!m.visible) return;
     const t = s.clock.elapsedTime;
+    const e = 1 - f; // 1 when far/unformed, 0 at full reveal — drives the entrance
+    const riseY = style === "rise" ? e * 3.4 : 0;
+    const spin = style === "spin" ? e * (rotBias <= 0 ? 1 : -1) * 1.1 : 0;
+    const bloomScale = style === "bloom" ? 0.55 + f * 0.45 : 1;
     m.position.set(
       pos[0] + portfolio.pointerX * 0.5,
-      pos[1] + Math.sin(t * 0.5 + pos[0]) * 0.08 + portfolio.pointerY * 0.35,
+      pos[1] + riseY + Math.sin(t * 0.5 + pos[0]) * 0.08 + portfolio.pointerY * 0.35,
       pos[2],
     );
-    m.rotation.y = rotBias + portfolio.pointerX * 0.12 - pass * 0.12;
+    m.rotation.y = rotBias + spin + portfolio.pointerX * 0.12 - pass * 0.12;
     m.rotation.x = portfolio.pointerY * 0.08;
     m.rotation.z = Math.sin(t * 0.4 + pos[0]) * 0.01;
-    const sc = 0.94 + f * 0.08;
+    const sc = (0.94 + f * 0.08) * bloomScale;
     m.scale.set(sc, sc, 1);
     u.uReveal.value = f;
     u.uTime.value = t;
@@ -283,6 +320,7 @@ function StationGroup({ station, index, compact }: { station: Station; index: nu
           tint={tint}
           getFocus={focusFor(0)}
           rotBias={-station.side * 0.12}
+          style={station.reveal}
         />
       ) : (
         <PhotoFrame
@@ -293,6 +331,7 @@ function StationGroup({ station, index, compact }: { station: Station; index: nu
           tint={tint}
           getFocus={focusFor(0)}
           rotBias={-station.side * 0.12}
+          style={station.reveal}
         />
       )}
 
@@ -306,6 +345,7 @@ function StationGroup({ station, index, compact }: { station: Station; index: nu
           tint={tint}
           getFocus={focusFor(-2.2)}
           rotBias={-station.side * 0.05}
+          style={station.reveal}
         />
       )}
       {!station.video &&
@@ -323,6 +363,7 @@ function StationGroup({ station, index, compact }: { station: Station; index: nu
             tint={tint}
             getFocus={focusFor(-(k + 1) * 2.6)}
             rotBias={-station.side * 0.04}
+            style={station.reveal}
           />
         ))}
     </group>
