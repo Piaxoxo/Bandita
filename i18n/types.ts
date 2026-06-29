@@ -112,6 +112,11 @@ export interface Dictionary {
       body: string;
       imageAlt: string;
     };
+    work: {
+      kicker: string;
+      heading: string;
+      items: { caption: string; alt: string }[];
+    };
     manifesto: {
       kicker: string;
       heading: string;

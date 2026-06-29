@@ -14,6 +14,8 @@ type AboutSceneState = {
   rawPointerY: number;
   pointerX: number; // smoothed
   pointerY: number;
+  // floating campaign plates: reveal (bell 0..1) + pass (signed -1..1 fly-through)
+  plates: { reveal: number; pass: number }[];
 };
 
 export const aboutScene: AboutSceneState = {
@@ -28,6 +30,7 @@ export const aboutScene: AboutSceneState = {
   rawPointerY: 0,
   pointerX: 0,
   pointerY: 0,
+  plates: Array.from({ length: 6 }, () => ({ reveal: 0, pass: 0 })),
 };
 
 let attached = 0;

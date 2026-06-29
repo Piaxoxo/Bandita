@@ -202,6 +202,18 @@ const de: Dictionary = {
       body: "Wir sind in Wien verwurzelt und arbeiten mit ambitionierten Marken weltweit. Der Akzent ist österreichisch. Der Anspruch ist es nicht.",
       imageAlt: "Bandita — Content-Produktion on location",
     },
+    work: {
+      kicker: "Aus dem Feld",
+      heading: "Echte Kampagnen. Kein Stockfoto.",
+      items: [
+        { caption: "Film · Nordmazedonien", alt: "Bandita Kampagne — Kameramann Dino Stelzl bei einer Filmproduktion in Nordmazedonien" },
+        { caption: "Content · Großkunde", alt: "Bandita Kampagne — Content-Produktion am MacBook für einen Großkunden" },
+        { caption: "Behind the Scenes · Studio", alt: "Bandita Kampagne — Content-Produktion hinter den Kulissen im Studio" },
+        { caption: "Fashion · Backstage", alt: "Bandita Kampagne — Social-Media-Content und Imagefilm für eine Fashion-Marke, Backstage" },
+        { caption: "Content · Fashion Brands", alt: "Bandita Kampagne — Beauty- und Make-up-Content für Fashion-Marken" },
+        { caption: "Drohne · Nordmazedonien", alt: "Bandita Kampagne — Drohnen-Filmproduktion für einen internationalen Reisekunden in Nordmazedonien" },
+      ],
+    },
     manifesto: {
       kicker: "Das Manifest",
       heading: "Wir glauben nicht an Durchschnitt.",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   EffectComposer,
@@ -11,6 +11,7 @@ import {
 } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { aboutScene, tickAboutInputs } from "@/lib/about-scene";
+import CampaignPlates from "./CampaignPlates";
 
 // HDR-ish colours (>1) so Bloom catches them as glow.
 const WHITE: [number, number, number] = [1.7, 1.62, 1.5];
@@ -316,6 +317,9 @@ export default function AboutScene({
       gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
     >
       <Particles count={count} />
+      <Suspense fallback={null}>
+        <CampaignPlates />
+      </Suspense>
       <EffectComposer multisampling={0}>
         <Bloom
           intensity={quality === "high" ? 1.4 : 0.9}
