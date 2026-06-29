@@ -13,17 +13,17 @@ function GradientFallback() {
     <div className="absolute inset-0 overflow-hidden">
       <div className="absolute inset-0 bg-creme" />
       <div
-        className="absolute right-0 top-0 h-[70vmax] w-[70vmax] translate-x-1/4 -translate-y-1/4 rounded-full opacity-45 blur-[110px]"
+        className="absolute right-0 top-0 h-[70vmax] w-[70vmax] translate-x-1/4 -translate-y-1/4 rounded-full opacity-40 blur-[110px]"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(255,110,158,0.28), rgba(255,157,184,0.15) 45%, transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(234,217,206,0.55), rgba(255,157,184,0.12) 45%, transparent 70%)",
         }}
       />
       <div
-        className="absolute bottom-0 left-0 h-[55vmax] w-[55vmax] -translate-x-1/4 translate-y-1/4 rounded-full opacity-35 blur-[110px]"
+        className="absolute bottom-0 left-0 h-[55vmax] w-[55vmax] -translate-x-1/4 translate-y-1/4 rounded-full opacity-30 blur-[110px]"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(246,228,224,0.6), transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(242,236,226,0.6), transparent 70%)",
         }}
       />
     </div>

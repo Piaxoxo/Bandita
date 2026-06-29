@@ -55,6 +55,8 @@ export interface Dictionary {
     line: string;
     altFood1: string;
     altFood2: string;
+    altFilm1: string;
+    altFilm2: string;
   };
   cta: {
     eyebrow: string;
