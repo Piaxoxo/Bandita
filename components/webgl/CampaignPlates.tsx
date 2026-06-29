@@ -47,8 +47,9 @@ const fragment = /* glsl */ `
     float bias = (1.0 - uReveal) * 3.2;
     vec3 col = texture2D(uTex, vUv, bias).rgb;
 
-    // dissolve "develop": per-pixel threshold crossed by uReveal (fine grain)
-    float t = hash(floor(vUv * vec2(360.0, 240.0)));
+    // dissolve "develop": per-pixel threshold crossed by uReveal (fine grain).
+    // threshold capped < 1 so the full image is 100% solid while held.
+    float t = hash(floor(vUv * vec2(360.0, 240.0))) * 0.88;
     float vis = smoothstep(t - 0.05, t + 0.05, uReveal);
     float front = (1.0 - smoothstep(0.0, 0.08, abs(uReveal - t)))
                   * step(0.012, uReveal) * (1.0 - step(0.99, uReveal));
