@@ -138,6 +138,9 @@ export interface Dictionary {
     fallbackKicker: string;
     fallbackHeading: string;
   };
+  studio: {
+    meta: { title: string; description: string };
+  };
   cta: {
     eyebrow: string;
     heading: string;

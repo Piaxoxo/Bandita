@@ -247,6 +247,13 @@ const en: Dictionary = {
     fallbackKicker: "Selected work",
     fallbackHeading: "Look. That's the whole point.",
   },
+  studio: {
+    meta: {
+      title: "The Studio — Bandita",
+      description:
+        "Not a services page. Step inside Bandita's studio — six creative departments under one roof: brand, web, social, film, and everything else.",
+    },
+  },
   cta: {
     eyebrow: "Vienna · Worldwide",
     heading: "Let's build something the world can't ignore.",

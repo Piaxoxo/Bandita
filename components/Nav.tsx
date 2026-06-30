@@ -39,7 +39,7 @@ export default function Nav({
     ready: boolean;
   }[] = [
     { key: "about", label: dict.nav.about, href: `/${lang}/about`, ready: true },
-    { key: "services", label: dict.nav.services, anchor: "capabilities", ready: true },
+    { key: "studio", label: "The Studio", href: `/${lang}/studio`, ready: true },
     { key: "portfolio", label: dict.nav.portfolio, href: `/${lang}/portfolio`, ready: true },
     { key: "journal", label: dict.nav.journal, ready: false },
     { key: "contact", label: dict.nav.contact, anchor: "contact", ready: true },

@@ -247,6 +247,13 @@ const de: Dictionary = {
     fallbackKicker: "Ausgewählte Arbeiten",
     fallbackHeading: "Schau. Mehr braucht es nicht.",
   },
+  studio: {
+    meta: {
+      title: "The Studio — Bandita",
+      description:
+        "Keine Leistungsseite. Tritt ein in Banditas Studio — sechs Kreativ-Abteilungen unter einem Dach: Brand, Web, Social, Film und alles andere.",
+    },
+  },
   cta: {
     eyebrow: "Wien · Weltweit",
     heading: "Lass uns etwas bauen, das die Welt nicht ignorieren kann.",
