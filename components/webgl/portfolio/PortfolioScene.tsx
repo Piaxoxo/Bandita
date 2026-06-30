@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
+import { useTexture, AdaptiveDpr } from "@react-three/drei";
 import {
   EffectComposer,
   Bloom,
@@ -344,6 +344,7 @@ function Inner({ compact, dust }: { compact: boolean; dust: number }) {
   return (
     <>
       <color attach="background" args={["#08070a"]} />
+      <AdaptiveDpr pixelated />
       <ambientLight intensity={0.7} />
       <Rig />
       <Dust count={dust} />
@@ -366,7 +367,8 @@ export default function PortfolioScene({ compact = false }: { compact?: boolean 
   const dust = compact ? 1600 : 3200;
   return (
     <Canvas
-      dpr={[1, compact ? 1.4 : 1.8]}
+      dpr={[1, compact ? 1.3 : 1.6]}
+      performance={{ min: 0.5 }}
       camera={{ position: [0, 0, TRAVEL_START], fov: 52 }}
       gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
     >

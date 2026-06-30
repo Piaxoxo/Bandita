@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { AdaptiveDpr } from "@react-three/drei";
 import {
   EffectComposer,
   Bloom,
@@ -312,10 +313,12 @@ export default function AboutScene({
 }) {
   return (
     <Canvas
-      dpr={[1, quality === "high" ? 1.85 : 1.4]}
+      dpr={[1, quality === "high" ? 1.6 : 1.35]}
+      performance={{ min: 0.5 }}
       camera={{ position: [0, 0, 12], fov: 46 }}
       gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
     >
+      <AdaptiveDpr pixelated />
       <Particles count={count} />
       <Suspense fallback={null}>
         <CampaignPlates />

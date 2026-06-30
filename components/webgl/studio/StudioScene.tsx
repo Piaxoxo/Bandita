@@ -2,12 +2,95 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { AdaptiveDpr } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette, Noise } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { studio, tickStudio } from "@/lib/studio-scene";
+import { ROOMS } from "@/components/studio/studio-data";
 
 const CREME = new THREE.Color("#FCF6EC");
 const PINK = new THREE.Color("#FB003F");
+
+/* glowing wireframe holo-object per room — appears when its room is active */
+function Motif({ kind, color, sectionIndex, compact }: { kind: string; color: string; sectionIndex: number; compact: boolean }) {
+  const g = useRef<THREE.Group>(null);
+  const str = useRef(0);
+  const c = useMemo(() => new THREE.Color(color).multiplyScalar(1.6), [color]);
+  useFrame((s, delta) => {
+    if (!g.current) return;
+    const target = studio.active === sectionIndex ? 1 : 0;
+    str.current += (target - str.current) * Math.min(1, delta * 2.4);
+    const v = str.current;
+    g.current.visible = v > 0.01;
+    if (!g.current.visible) return;
+    const t = s.clock.elapsedTime;
+    g.current.position.set((compact ? 0 : 2.0) + studio.pointerX * 0.7, studio.pointerY * 0.45 + Math.sin(t * 0.5) * 0.18, 0);
+    g.current.rotation.y = t * 0.25 + studio.pointerX * 0.35;
+    g.current.rotation.x = Math.sin(t * 0.3) * 0.22 - studio.pointerY * 0.25;
+    g.current.scale.setScalar(v * (compact ? 1.5 : 2.1));
+  });
+  const M = () => <meshBasicMaterial color={c} wireframe transparent opacity={0.92} blending={THREE.AdditiveBlending} depthWrite={false} />;
+  return (
+    <group ref={g} visible={false}>
+      {kind === "spark" && (
+        <mesh>
+          <icosahedronGeometry args={[1.0, 1]} />
+          <M />
+        </mesh>
+      )}
+      {kind === "heist" &&
+        [-0.7, 0, 0.7].map((z, i) => (
+          <mesh key={i} position={[i * 0.25, -i * 0.2, z]} rotation={[0, 0.2, 0]}>
+            <planeGeometry args={[1.7, 1.05, 3, 2]} />
+            <M />
+          </mesh>
+        ))}
+      {kind === "takeover" &&
+        [
+          [0, 0.7, 0],
+          [-0.9, -0.2, 0.4],
+          [0.9, -0.1, -0.3],
+          [0.2, -0.9, 0.5],
+          [-0.5, 0.4, -0.5],
+        ].map((p, i) => (
+          <mesh key={i} position={p as [number, number, number]} rotation={[0, i * 0.4, i * 0.2]}>
+            <planeGeometry args={[0.62, 1.05, 2, 3]} />
+            <M />
+          </mesh>
+        ))}
+      {kind === "experience" && (
+        <>
+          <mesh rotation={[Math.PI / 2.4, 0, 0]}>
+            <torusGeometry args={[1.1, 0.34, 10, 28]} />
+            <M />
+          </mesh>
+          <mesh>
+            <ringGeometry args={[0.2, 0.28, 24]} />
+            <M />
+          </mesh>
+        </>
+      )}
+      {kind === "vault" &&
+        [-0.85, 0, 0.85].map((y, i) => (
+          <mesh key={i} position={[0, y, 0]}>
+            <boxGeometry args={[1.6, 0.62, 1.2]} />
+            <M />
+          </mesh>
+        ))}
+    </group>
+  );
+}
+
+function RoomMotifs({ compact }: { compact: boolean }) {
+  return (
+    <>
+      {ROOMS.filter((r) => r.id !== "partnership").map((r, i) => {
+        const idx = 2 + ROOMS.findIndex((x) => x.id === r.id);
+        return <Motif key={r.id} kind={r.id} color={r.color} sectionIndex={idx} compact={compact} />;
+      })}
+    </>
+  );
+}
 
 /* sample "BANDITA" into evenly spaced points (the Partnership climax target) */
 function sampleWord(count: number): [number, number][] | null {
@@ -107,7 +190,9 @@ function World({ count, compact }: { count: number; compact: boolean }) {
           depthWrite={false}
           vertexShader={`varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`}
           fragmentShader={`precision mediump float; varying vec2 vUv; uniform vec3 uColor;
-            void main(){ float d=distance(vUv,vec2(0.5)); vec3 c=uColor*(1.0-d*0.35); gl_FragColor=vec4(c,1.0); }`}
+            void main(){ float d=distance(vUv,vec2(0.5));
+              vec3 c=uColor*(1.0-d*0.45) + uColor*smoothstep(0.45,0.0,d)*0.35 + vec3(1.0)*smoothstep(0.28,0.0,d)*0.12;
+              gl_FragColor=vec4(c,1.0); }`}
         />
       </mesh>
       <group ref={group}>
@@ -146,8 +231,9 @@ function World({ count, compact }: { count: number; compact: boolean }) {
           />
         </points>
       </group>
+      <RoomMotifs compact={compact} />
       <EffectComposer multisampling={0}>
-        <Bloom intensity={compact ? 0.5 : 0.8} luminanceThreshold={0.5} luminanceSmoothing={0.6} mipmapBlur />
+        <Bloom intensity={compact ? 0.7 : 1.1} luminanceThreshold={0.45} luminanceSmoothing={0.6} mipmapBlur />
         <Vignette eskil={false} offset={0.25} darkness={0.5} />
         <Noise premultiply opacity={0.035} />
       </EffectComposer>
@@ -157,8 +243,14 @@ function World({ count, compact }: { count: number; compact: boolean }) {
 
 export default function StudioScene({ compact = false }: { compact?: boolean }) {
   return (
-    <Canvas dpr={[1, compact ? 1.4 : 1.8]} camera={{ position: [0, 0, 12], fov: 48 }} gl={{ antialias: false, alpha: false }}>
-      <World count={compact ? 4000 : 7000} compact={compact} />
+    <Canvas
+      dpr={[1, compact ? 1.3 : 1.6]}
+      performance={{ min: 0.5 }}
+      camera={{ position: [0, 0, 12], fov: 48 }}
+      gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
+    >
+      <AdaptiveDpr pixelated />
+      <World count={compact ? 3500 : 6000} compact={compact} />
     </Canvas>
   );
 }
