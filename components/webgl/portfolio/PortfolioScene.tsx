@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import {
@@ -335,7 +335,63 @@ function Halo({
   );
 }
 
-/* ───────── a station = a small floating cluster ───────── */
+/* a slowly rotating carousel — the orbit "world" (tourism finale) */
+function OrbitGroup({ children }: { children: ReactNode }) {
+  const g = useRef<THREE.Group>(null);
+  useFrame((s) => {
+    if (g.current) g.current.rotation.y = s.clock.elapsedTime * 0.12 + portfolio.pointerX * 0.3;
+  });
+  return <group ref={g}>{children}</group>;
+}
+
+type Spec = { src: string; isVideo?: boolean; w: number; h: number; x: number; y: number; dz: number; rot: number };
+
+// Each station gets its own spatial "world" — a distinct arrangement of its media.
+function layoutFor(st: Station, W: number, H: number, sideX: number, compact: boolean): { specs: Spec[]; orbit: boolean } {
+  const img = st.images;
+  const vid = st.video ?? [];
+  switch (st.id) {
+    case "wiener-restaurant": // glass vitrines — two tall cases
+      return { orbit: false, specs: [
+        { src: img[0], w: W, h: H, x: -W * 0.62, y: 0, dz: 0, rot: 0.18 },
+        { src: img[1], w: W, h: H, x: W * 0.62, y: 0, dz: -0.5, rot: -0.18 },
+      ] };
+    case "innsider": // light-cone tasting — dishes stacked in a beam
+      return { orbit: false, specs: [
+        { src: img[0], w: W, h: H, x: sideX, y: H * 0.62, dz: 0, rot: -st.side * 0.1 },
+        { src: img[1], w: W * 0.82, h: H * 0.82, x: sideX, y: -H * 0.18, dz: -1.4, rot: -st.side * 0.06 },
+        { src: img[2], w: W * 0.66, h: H * 0.66, x: sideX, y: -H * 0.92, dz: -2.8, rot: -st.side * 0.04 },
+      ] };
+    case "deutschland": // cinema void — one big screen
+      return { orbit: false, specs: [{ src: vid[0], isVideo: true, w: W * 1.5, h: H * 1.5, x: 0, y: 0, dz: 0, rot: 0 }] };
+    case "wiener-bar": // neon fan — frames in an arc
+      return { orbit: false, specs: (compact ? img.slice(0, 3) : img).map((src, k, a) => {
+        const c = (a.length - 1) / 2;
+        return { src, w: W * 0.6, h: H * 0.6, x: (k - c) * W * 0.4, y: Math.abs(k - c) * 0.5 - 0.4, dz: -Math.abs(k - c) * 1.4, rot: (k - c) * 0.16 };
+      }) };
+    case "kern": // calm atrium — banners spread wide
+      return { orbit: false, specs: img.map((src, k) => ({ src, w: W * 0.78, h: H * 0.78, x: (k - 1) * (compact ? 2.4 : 4.2), y: 0, dz: -Math.abs(k - 1) * 1.0, rot: -(k - 1) * 0.12 })) };
+    case "portugal": { // reels swarm — vertical panels in an arc
+      const four = compact ? [vid[0], vid[1]] : [vid[0], vid[1], vid[0], vid[1]];
+      const c = (four.length - 1) / 2;
+      return { orbit: false, specs: four.map((src, k) => ({ src, isVideo: true, w: W * 0.72, h: H * 0.72, x: (k - c) * (compact ? 2.0 : 2.5), y: k % 2 ? 0.4 : -0.4, dz: -Math.abs(k - c) * 1.5, rot: (k - c) * 0.14 })) };
+    }
+    case "besser-reisen": // film stills staggered into depth
+      return { orbit: false, specs: img.map((src, k) => ({ src, w: W * (1 - k * 0.14), h: H * (1 - k * 0.14), x: sideX + k * (compact ? 0.8 : 1.5), y: k * 0.5 - 0.3, dz: -k * 3.2, rot: -st.side * 0.06 })) };
+    case "tourism-international": { // orbit finale — frames circling
+      const n = img.length;
+      const R = compact ? 3.2 : 5;
+      return { orbit: true, specs: img.map((src, k) => {
+        const a = (k / n) * Math.PI * 2;
+        return { src, w: W * 0.72, h: H * 0.72, x: Math.cos(a) * R, y: 0, dz: Math.sin(a) * R, rot: -a + Math.PI };
+      }) };
+    }
+    default:
+      return { orbit: false, specs: [{ src: img[0], w: W, h: H, x: sideX, y: 0, dz: 0, rot: -st.side * 0.12 }] };
+  }
+}
+
+/* ───────── a station = its own spatial world ───────── */
 function StationGroup({ station, index, compact }: { station: Station; index: number; compact: boolean }) {
   const { camera } = useThree();
   const z = stationZ(index);
@@ -351,68 +407,29 @@ function StationGroup({ station, index, compact }: { station: Station; index: nu
     return { focus, pass };
   };
 
-  // hero + up to two satellites from the remaining images
-  const hero = station.video ? station.video[0] : station.images[0];
-  const heroIsVideo = !!station.video;
+  const lay = useMemo(() => layoutFor(station, baseW, baseH, sideX, compact), [station, baseW, baseH, sideX, compact]);
+
+  const frames = lay.specs.map((sp, k) => {
+    const F = sp.isVideo ? VideoFrame : PhotoFrame;
+    return (
+      <F
+        key={`${station.id}-${k}`}
+        url={sp.src}
+        w={sp.w}
+        h={sp.h}
+        pos={[sp.x, station.y + sp.y, z + sp.dz]}
+        tint={tint}
+        getFocus={focusFor(lay.orbit ? 0 : sp.dz)}
+        rotBias={sp.rot}
+        style={station.reveal}
+      />
+    );
+  });
 
   return (
     <group>
-      <Halo getFocus={focusFor(0)} color={station.color} size={Math.max(baseW, baseH) * 2.6} pos={[sideX, station.y, z]} />
-      {heroIsVideo ? (
-        <VideoFrame
-          url={hero}
-          w={baseW}
-          h={baseH}
-          pos={[sideX, station.y, z]}
-          tint={tint}
-          getFocus={focusFor(0)}
-          rotBias={-station.side * 0.12}
-          style={station.reveal}
-        />
-      ) : (
-        <PhotoFrame
-          url={hero}
-          w={baseW}
-          h={baseH}
-          pos={[sideX, station.y, z]}
-          tint={tint}
-          getFocus={focusFor(0)}
-          rotBias={-station.side * 0.12}
-          style={station.reveal}
-        />
-      )}
-
-      {/* second video (portugal) or satellite stills */}
-      {station.video && station.video[1] && (
-        <VideoFrame
-          url={station.video[1]}
-          w={baseW * 0.78}
-          h={baseH * 0.78}
-          pos={[sideX - station.side * (compact ? 2.0 : 3.4), station.y - 0.6, z - 2.2]}
-          tint={tint}
-          getFocus={focusFor(-2.2)}
-          rotBias={-station.side * 0.05}
-          style={station.reveal}
-        />
-      )}
-      {!station.video &&
-        station.images.slice(1, 3).map((url, k) => (
-          <PhotoFrame
-            key={url}
-            url={url}
-            w={baseW * (0.6 - k * 0.08)}
-            h={baseH * (0.6 - k * 0.08)}
-            pos={[
-              sideX - station.side * (compact ? 1.8 : 3.2) * (k + 1) * 0.7,
-              station.y + (k === 0 ? 1.4 : -1.6),
-              z - (k + 1) * 2.6,
-            ]}
-            tint={tint}
-            getFocus={focusFor(-(k + 1) * 2.6)}
-            rotBias={-station.side * 0.04}
-            style={station.reveal}
-          />
-        ))}
+      <Halo getFocus={focusFor(0)} color={station.color} size={Math.max(baseW, baseH) * 2.6} pos={[lay.orbit ? 0 : sideX, station.y, z]} />
+      {lay.orbit ? <OrbitGroup>{frames}</OrbitGroup> : frames}
     </group>
   );
 }

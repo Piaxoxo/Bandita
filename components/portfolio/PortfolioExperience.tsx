@@ -35,7 +35,8 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
     filter: BiquadFilterNode;
   } | null>(null);
   const [soundOn, setSoundOn] = useState(false);
-  const NOTES = [110, 130.81, 146.83, 164.81, 196, 220, 246.94, 293.66];
+  // higher register so it's audible on phone speakers (G3–D5 pentatonic)
+  const NOTES = [196, 233.08, 261.63, 293.66, 349.23, 392, 440, 523.25];
 
   const toggleSound = () => {
     if (!audio.current) {
@@ -46,13 +47,13 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
       master.connect(ctx.destination);
       const filter = ctx.createBiquadFilter();
       filter.type = "lowpass";
-      filter.frequency.value = 600;
-      filter.Q.value = 3;
+      filter.frequency.value = 1600;
+      filter.Q.value = 2;
       filter.connect(master);
       const delay = ctx.createDelay();
-      delay.delayTime.value = 0.38;
+      delay.delayTime.value = 0.4;
       const fb = ctx.createGain();
-      fb.gain.value = 0.32;
+      fb.gain.value = 0.3;
       filter.connect(delay);
       delay.connect(fb);
       fb.connect(delay);
@@ -60,20 +61,20 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
       const oscs: OscillatorNode[] = [];
       [0, 1, 2].forEach((i) => {
         const o = ctx.createOscillator();
-        o.type = i === 2 ? "sine" : "sawtooth";
-        o.frequency.value = 110;
-        o.detune.value = (i - 1) * 7;
+        o.type = i === 0 ? "sawtooth" : "sine";
+        o.frequency.value = 220;
+        o.detune.value = (i - 1) * 6;
         const g = ctx.createGain();
-        g.gain.value = i === 2 ? 0.5 : 0.2;
+        g.gain.value = i === 0 ? 0.16 : 0.34;
         o.connect(g);
         g.connect(filter);
         o.start();
         oscs.push(o);
       });
       const lfo = ctx.createOscillator();
-      lfo.frequency.value = 0.07;
+      lfo.frequency.value = 0.08;
       const lg = ctx.createGain();
-      lg.gain.value = 160;
+      lg.gain.value = 300;
       lfo.connect(lg);
       lg.connect(filter.frequency);
       lfo.start();
@@ -83,9 +84,19 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
     const on = !soundOn;
     setSoundOn(on);
     portfolio.soundOn = on;
+    // iOS unlock: resume inside the gesture + kick a 1-sample silent buffer
     a.ctx.resume();
+    try {
+      const buf = a.ctx.createBuffer(1, 1, 22050);
+      const src = a.ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(a.ctx.destination);
+      src.start(0);
+    } catch {
+      /* ignore */
+    }
     a.master.gain.cancelScheduledValues(a.ctx.currentTime);
-    a.master.gain.linearRampToValueAtTime(on ? 0.16 : 0.0001, a.ctx.currentTime + (on ? 1.4 : 0.6));
+    a.master.gain.linearRampToValueAtTime(on ? 0.22 : 0.0001, a.ctx.currentTime + (on ? 1.4 : 0.6));
   };
 
   useEffect(
@@ -137,7 +148,7 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
         const idx = portfolio.active >= 0 ? portfolio.active : 0;
         const base = NOTES[idx % NOTES.length];
         a.oscs.forEach((o, i) => o.frequency.setTargetAtTime(base * (i === 2 ? 2 : 1), a.ctx.currentTime, 0.5));
-        a.filter.frequency.setTargetAtTime(portfolio.active >= 0 ? 1200 : 500, a.ctx.currentTime, 0.6);
+        a.filter.frequency.setTargetAtTime(portfolio.active >= 0 ? 2400 : 900, a.ctx.currentTime, 0.6);
       }
       raf = requestAnimationFrame(loop);
     };
