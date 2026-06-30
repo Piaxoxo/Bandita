@@ -24,8 +24,6 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
   const counterRef = useRef<HTMLSpanElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const quoteRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const ghostRef = useRef<HTMLDivElement>(null);
-  const lastMove = useRef(0);
   const [expanded, setExpanded] = useState(-1);
   const t = dict.portfolio;
 
@@ -113,11 +111,6 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    const onMove = () => {
-      lastMove.current = performance.now();
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    lastMove.current = performance.now();
 
     let raf = 0;
     const quotePoints = QUOTES.map((_, i) => (i + 1) / (QUOTES.length + 1));
@@ -146,20 +139,12 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
         a.oscs.forEach((o, i) => o.frequency.setTargetAtTime(base * (i === 2 ? 2 : 1), a.ctx.currentTime, 0.5));
         a.filter.frequency.setTargetAtTime(portfolio.active >= 0 ? 1200 : 500, a.ctx.currentTime, 0.6);
       }
-      // hidden: the Bandita ghost surfaces when you hold still in the dark
-      if (ghostRef.current) {
-        const idle = performance.now() - lastMove.current;
-        const target = idle > 3500 && p > 0.04 && p < 0.95 ? 1 : 0;
-        const cur = parseFloat(ghostRef.current.style.opacity || "0");
-        ghostRef.current.style.opacity = `${cur + (target - cur) * 0.04}`;
-      }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("pointermove", onMove);
       detach();
     };
   }, [r, lang]);
@@ -277,12 +262,6 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
             {t.cta}
           </MagneticButton>
         </div>
-      </div>
-
-      {/* hidden: the namesake watches from the fog when you hold still */}
-      <div ref={ghostRef} className="pointer-events-none fixed inset-0 z-[5] flex items-center justify-center" style={{ opacity: 0 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/about/illustration.png" alt="" className="h-[64vh] w-auto opacity-50 mix-blend-screen" />
       </div>
 
       {/* click a work → it expands to become the environment */}
