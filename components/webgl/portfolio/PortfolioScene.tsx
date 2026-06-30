@@ -289,6 +289,52 @@ function VideoFrame(
   return <Frame {...props} texture={tex} />;
 }
 
+/* ───────── volumetric halo — a spotlight glow behind a work ───────── */
+function Halo({
+  getFocus,
+  color,
+  size,
+  pos,
+}: {
+  getFocus: () => { focus: number; pass: number };
+  color: string;
+  size: number;
+  pos: [number, number, number];
+}) {
+  const mesh = useRef<THREE.Mesh>(null);
+  const matRef = useRef<THREE.ShaderMaterial>(null);
+  const eased = useRef(0);
+  const uniforms = useMemo(() => ({ uColor: { value: new THREE.Color(color) }, uOpacity: { value: 0 } }), [color]);
+  useFrame((s, delta) => {
+    const m = mesh.current,
+      u = matRef.current?.uniforms;
+    if (!m || !u) return;
+    const { focus } = getFocus();
+    eased.current += (focus - eased.current) * Math.min(1, delta * 3);
+    m.visible = eased.current > 0.01;
+    if (!m.visible) return;
+    const t = s.clock.elapsedTime;
+    m.position.set(pos[0] + portfolio.pointerX * 0.5, pos[1] + portfolio.pointerY * 0.35, pos[2] - 1.4);
+    m.scale.setScalar((0.9 + eased.current * 0.35) * (1 + Math.sin(t * 0.6 + pos[0]) * 0.03));
+    u.uOpacity.value = eased.current * 0.5;
+  });
+  return (
+    <mesh ref={mesh} visible={false}>
+      <planeGeometry args={[size, size]} />
+      <shaderMaterial
+        ref={matRef}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        vertexShader={`varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`}
+        fragmentShader={`precision mediump float; varying vec2 vUv; uniform vec3 uColor; uniform float uOpacity;
+          void main(){ float d=length(vUv-0.5); float a=smoothstep(0.5,0.0,d); gl_FragColor=vec4(uColor, a*a*uOpacity); }`}
+      />
+    </mesh>
+  );
+}
+
 /* ───────── a station = a small floating cluster ───────── */
 function StationGroup({ station, index, compact }: { station: Station; index: number; compact: boolean }) {
   const { camera } = useThree();
@@ -311,6 +357,7 @@ function StationGroup({ station, index, compact }: { station: Station; index: nu
 
   return (
     <group>
+      <Halo getFocus={focusFor(0)} color={station.color} size={Math.max(baseW, baseH) * 2.6} pos={[sideX, station.y, z]} />
       {heroIsVideo ? (
         <VideoFrame
           url={hero}
