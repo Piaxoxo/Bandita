@@ -38,7 +38,7 @@ export default function SceneLayer() {
 
   // About & Portfolio render their own bespoke worlds, so the homepage
   // champagne scene must not paint there.
-  const isAbout = /^\/(en|de)\/(about|portfolio)(\/|$)/.test(pathname);
+  const isAbout = /^\/(en|de)\/(about|portfolio|studio)(\/|$)/.test(pathname);
 
   useEffect(() => {
     const dispose = initSceneInputs();
