@@ -131,6 +131,23 @@ export const STATIONS: Station[] = [
   },
 ];
 
+// Flattened journey: every image / video gets its own clean head-on frame,
+// grouped by project (mood colour, reveal style, tag, sound carry over).
+export type Item = {
+  station: Station;
+  stationIndex: number;
+  src: string;
+  isVideo: boolean;
+  first: boolean; // first frame of its project group
+};
+
+export const ITEMS: Item[] = STATIONS.flatMap((st, si) => {
+  const media = st.video
+    ? st.video.map((src) => ({ src, isVideo: true }))
+    : st.images.map((src) => ({ src, isVideo: false }));
+  return media.map((m, k) => ({ station: st, stationIndex: si, src: m.src, isVideo: m.isVideo, first: k === 0 }));
+});
+
 // Provocative advertising quotes — Bandita voice, the only typography in the void.
 export const QUOTES: Bi[] = [
   { en: "Ordinary is expensive.", de: "Gewöhnlich ist teuer." },

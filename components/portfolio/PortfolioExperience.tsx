@@ -7,13 +7,13 @@ import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { detectTier } from "@/lib/scene-store";
 import { portfolio, attachPortfolioInputs } from "@/lib/portfolio-scene";
-import { STATIONS, QUOTES } from "./portfolio-data";
+import { STATIONS, QUOTES, ITEMS } from "./portfolio-data";
 import MagneticButton from "@/components/MagneticButton";
 import { scrollToId } from "@/lib/scroll";
 
 const PortfolioScene = dynamic(() => import("@/components/webgl/portfolio/PortfolioScene"), { ssr: false });
 
-const TRACK_VH = (STATIONS.length + 1) * 200; // virtual scroll length (slow, cinematic travel)
+const TRACK_VH = (ITEMS.length + 1) * 120; // one clean frame per image — slow cinematic travel
 
 export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const { reducedMotion: r } = useSite();
@@ -141,7 +141,7 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
         el.style.opacity = `${vis}`;
         el.style.transform = `translate(-50%,-50%) translateY(${(p - qp) * 600}px) scale(${0.9 + vis * 0.1})`;
       });
-      if (ctaRef.current) ctaRef.current.style.opacity = `${Math.max(0, (p - 0.965) / 0.035)}`;
+      if (ctaRef.current) ctaRef.current.style.opacity = `${Math.max(0, (p - 0.975) / 0.025)}`;
       // ambient pad follows the active station
       const a = audio.current;
       if (a && portfolio.soundOn) {
