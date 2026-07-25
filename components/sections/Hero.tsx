@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
+import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
 import MagneticButton from "@/components/MagneticButton";
 
-export default function Hero({ dict }: { dict: Dictionary }) {
+export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale }) {
+  const router = useRouter();
   const { introDone, reducedMotion } = useSite();
   const root = useRef<HTMLDivElement>(null);
 
@@ -77,13 +80,13 @@ export default function Hero({ dict }: { dict: Dictionary }) {
 
         <div className="mt-12 flex flex-wrap items-center gap-4">
           <MagneticButton
-            onClick={() => scrollToId("manifesto")}
+            onClick={() => scrollToId("contact")}
             className="hero-cta rounded-full bg-pink px-8 py-4 font-sans text-sm uppercase tracking-[0.12em] text-creme transition-colors hover:bg-ink"
           >
             {dict.hero.ctaPrimary}
           </MagneticButton>
           <MagneticButton
-            onClick={() => scrollToId("philosophy")}
+            onClick={() => router.push(`/${lang}/about`)}
             cursor="link"
             className="hero-cta rounded-full border border-ink/20 px-8 py-4 font-sans text-sm uppercase tracking-[0.12em] text-ink transition-colors hover:border-pink hover:text-pink"
           >

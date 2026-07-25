@@ -6,25 +6,24 @@ import { usePathname } from "next/navigation";
 import { useSite } from "@/lib/site-context";
 import { initSceneInputs } from "@/lib/scene-store";
 
-const SceneRoot = dynamic(() => import("./SceneRoot"), { ssr: false });
+const MarbleScene = dynamic(() => import("./MarbleScene"), { ssr: false });
 
-/* Static brand-toned atmosphere — reduced-motion & pre-mount fallback */
+/* Static white + soft-pink marble tone — reduced-motion & pre-mount fallback */
 function GradientFallback() {
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0 bg-creme" />
+    <div className="absolute inset-0 overflow-hidden bg-[#FDFAF6]">
       <div
-        className="absolute right-0 top-0 h-[70vmax] w-[70vmax] translate-x-1/4 -translate-y-1/4 rounded-full opacity-40 blur-[110px]"
+        className="absolute right-0 top-0 h-[70vmax] w-[70vmax] translate-x-1/4 -translate-y-1/4 rounded-full opacity-50 blur-[120px]"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(234,217,206,0.55), rgba(255,157,184,0.12) 45%, transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(255,140,176,0.30), rgba(255,92,158,0.10) 45%, transparent 72%)",
         }}
       />
       <div
-        className="absolute bottom-0 left-0 h-[55vmax] w-[55vmax] -translate-x-1/4 translate-y-1/4 rounded-full opacity-30 blur-[110px]"
+        className="absolute bottom-0 left-0 h-[55vmax] w-[55vmax] -translate-x-1/4 translate-y-1/4 rounded-full opacity-40 blur-[120px]"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(242,236,226,0.6), transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(255,192,210,0.35), transparent 70%)",
         }}
       />
     </div>
@@ -56,7 +55,7 @@ export default function SceneLayer() {
       <GradientFallback />
       {mounted && !reducedMotion && (
         <div className="absolute inset-0">
-          <SceneRoot />
+          <MarbleScene />
         </div>
       )}
     </div>

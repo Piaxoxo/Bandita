@@ -17,7 +17,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
 
   return (
     <>
-      <Hero dict={dict} />
+      <Hero dict={dict} lang={lang} />
       <Manifesto dict={dict} />
       <Capabilities dict={dict} />
       <Philosophy dict={dict} />

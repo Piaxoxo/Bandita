@@ -10,12 +10,8 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
   return (
     <section
       id="capabilities"
-      className="relative overflow-hidden py-32 text-creme md:py-44"
+      className="relative overflow-hidden py-32 text-ink md:py-44"
     >
-      {/* Immersive dark moment — the WebGL world darkens behind this section.
-          A scrim guarantees text contrast even before the scene fully dims. */}
-      <div className="pointer-events-none absolute inset-0 -z-[1] bg-ink/45" />
-
       {/* subtle radial depth glow */}
       <div
         aria-hidden
@@ -28,7 +24,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
 
       <div className="relative mx-auto mb-10 max-w-[1400px] px-5 md:mb-14 md:px-10">
         <Reveal>
-          <p className="mb-8 font-sans text-[11px] uppercase tracking-[0.4em] text-rose">
+          <p className="mb-8 font-sans text-[11px] uppercase tracking-[0.4em] text-pink">
             {dict.capabilities.eyebrow}
           </p>
         </Reveal>
@@ -49,7 +45,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
           {items.map((item) => (
             <span
               key={`s-${item}`}
-              className="font-display text-4xl italic text-creme/90 md:text-6xl"
+              className="font-display text-4xl italic text-ink/90 md:text-6xl"
             >
               {item}.
             </span>
@@ -66,7 +62,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
 
       <div className="relative mx-auto mt-10 max-w-[1400px] px-5 md:mt-16 md:px-10">
         <Reveal>
-          <p className="max-w-2xl font-sans text-lg leading-relaxed text-creme/70">
+          <p className="max-w-2xl font-sans text-lg leading-relaxed text-ink/70">
             {dict.capabilities.body}
           </p>
         </Reveal>
