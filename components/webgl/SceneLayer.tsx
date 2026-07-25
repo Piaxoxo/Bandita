@@ -7,6 +7,7 @@ import { useSite } from "@/lib/site-context";
 import { initSceneInputs } from "@/lib/scene-store";
 
 const MarbleScene = dynamic(() => import("./MarbleScene"), { ssr: false });
+const OneLineArt = dynamic(() => import("./OneLineArt"), { ssr: false });
 
 /* Static white + soft-pink marble tone — reduced-motion & pre-mount fallback */
 function GradientFallback() {
@@ -56,6 +57,7 @@ export default function SceneLayer() {
       {mounted && !reducedMotion && (
         <div className="absolute inset-0">
           <MarbleScene />
+          <OneLineArt />
         </div>
       )}
     </div>

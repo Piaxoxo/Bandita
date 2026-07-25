@@ -119,60 +119,6 @@ function Marble() {
   );
 }
 
-// ---- flowing "one-line" ribbons -------------------------------------------
-
-function Ribbon({
-  seed,
-  z,
-  color,
-  radius,
-}: {
-  seed: number;
-  z: number;
-  color: string;
-  radius: number;
-}) {
-  const group = useRef<THREE.Group>(null);
-
-  const geometry = useMemo(() => {
-    // a smooth wandering curve → one continuous line
-    const pts: THREE.Vector3[] = [];
-    const n = 9;
-    for (let i = 0; i <= n; i++) {
-      const a = (i / n) * Math.PI * 2 + seed * 6.28;
-      pts.push(
-        new THREE.Vector3(
-          Math.cos(a * 1.3 + seed) * (3.4 + seed) + Math.sin(a * 2.1) * 1.2,
-          Math.sin(a * 1.6 + seed * 2.0) * (2.6 + seed * 0.5),
-          Math.sin(a * 1.1 + seed) * 1.4,
-        ),
-      );
-    }
-    const curve = new THREE.CatmullRomCurve3(pts, true, "catmullrom", 0.6);
-    return new THREE.TubeGeometry(curve, 220, radius, 10, true);
-  }, [seed, radius]);
-
-  useFrame((state) => {
-    if (!group.current) return;
-    const t = state.clock.elapsedTime;
-    const s = store.scroll;
-    // 3D scroll: ribbons drift up and rotate as the page scrolls; depth → parallax
-    const depth = (z + 12) / 12; // 0 (far) .. 1 (near)
-    group.current.position.y = Math.sin(t * 0.18 + seed) * 0.5 + s * (2 + depth * 8);
-    group.current.position.x = Math.cos(t * 0.14 + seed) * 0.6 + store.pointerX * depth * 1.6;
-    group.current.rotation.z = t * 0.03 + s * (0.6 + depth) + seed;
-    group.current.rotation.x = Math.sin(t * 0.1 + seed) * 0.2 + s * 0.4;
-  });
-
-  return (
-    <group ref={group} position={[0, 0, z]}>
-      <mesh geometry={geometry}>
-        <meshBasicMaterial color={color} transparent opacity={0.9} toneMapped={false} />
-      </mesh>
-    </group>
-  );
-}
-
 function CameraRig() {
   const { camera, size } = useThree();
   useFrame((state) => {
@@ -192,17 +138,9 @@ function CameraRig() {
   return null;
 }
 
-const RIBBONS = [
-  { seed: 0.15, z: -1.5, color: "#FB003F", radius: 0.028 },
-  { seed: 0.55, z: -5.0, color: "#FF5C9E", radius: 0.036 },
-  { seed: 0.85, z: -9.0, color: "#FF8FB0", radius: 0.05 },
-  { seed: 1.35, z: -3.2, color: "#FFC0D2", radius: 0.03 },
-];
-
 export default function MarbleScene() {
   const tier: DeviceTier = store.tier;
   const cfg = TIER_CONFIG[tier];
-  const ribbons = tier === "low" ? RIBBONS.slice(0, 2) : RIBBONS;
 
   return (
     <Canvas
@@ -213,9 +151,6 @@ export default function MarbleScene() {
       <AdaptiveDpr pixelated />
       <color attach="background" args={["#FDFAF6"]} />
       <Marble />
-      {ribbons.map((r) => (
-        <Ribbon key={r.seed} {...r} />
-      ))}
       <CameraRig />
     </Canvas>
   );
