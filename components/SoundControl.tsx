@@ -35,6 +35,9 @@ export default function SoundControl() {
     ["pointerdown", "keydown", "touchstart", "wheel"].forEach((e) =>
       window.addEventListener(e, start, { passive: true }),
     );
+    // try to start with the intro right away; if the browser blocks autoplay,
+    // the first gesture above kicks it off instead.
+    start();
 
     const onVis = () => {
       if (document.hidden) a.pause();

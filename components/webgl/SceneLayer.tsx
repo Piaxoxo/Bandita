@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSite } from "@/lib/site-context";
 import { initSceneInputs } from "@/lib/scene-store";
 
-const MercuryScene = dynamic(() => import("./MercuryScene"), { ssr: false });
+const LiquidScene = dynamic(() => import("./LiquidScene"), { ssr: false });
 
 /* Static white + soft-pink marble tone — reduced-motion & pre-mount fallback */
 function GradientFallback() {
@@ -55,7 +55,7 @@ export default function SceneLayer() {
       <GradientFallback />
       {mounted && !reducedMotion && (
         <div className="absolute inset-0">
-          <MercuryScene />
+          <LiquidScene />
         </div>
       )}
     </div>
