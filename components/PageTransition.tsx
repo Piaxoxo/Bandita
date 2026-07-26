@@ -25,13 +25,10 @@ export default function PageTransition() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const tl = gsap.timeline();
-    tl.set(el, { display: "block", yPercent: 0 })
-      .fromTo(
-        el,
-        { yPercent: 100 },
-        { yPercent: 0, duration: 0.42, ease: "power4.inOut" },
-      )
-      .to(el, { yPercent: -100, duration: 0.5, ease: "power4.inOut" }, "+=0.04")
+    // clean, quick pink sweep: covers, then slides away to reveal the new page
+    tl.set(el, { display: "block" })
+      .fromTo(el, { yPercent: 100 }, { yPercent: 0, duration: 0.38, ease: "power3.inOut" })
+      .to(el, { yPercent: -100, duration: 0.45, ease: "power3.inOut" }, "+=0.02")
       .set(el, { display: "none" });
 
     return () => {
@@ -45,12 +42,6 @@ export default function PageTransition() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-[85] hidden bg-pink"
       style={{ transform: "translateY(100%)" }}
-    >
-      <div className="flex h-full w-full items-center justify-center">
-        <span className="font-display text-3xl italic tracking-tight text-creme md:text-5xl">
-          Bandita
-        </span>
-      </div>
-    </div>
+    />
   );
 }

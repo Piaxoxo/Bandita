@@ -15,7 +15,7 @@ type Props = {
   y?: number;
   blur?: boolean;
   stagger?: boolean;
-};
+} & Record<string, unknown>;
 
 export default function Reveal({
   children,
@@ -25,6 +25,7 @@ export default function Reveal({
   y = 44,
   blur = true,
   stagger = false,
+  ...rest
 }: Props) {
   const ref = useRef<HTMLElement>(null);
   const { reducedMotion } = useSite();
@@ -68,7 +69,7 @@ export default function Reveal({
   }, [reducedMotion, delay, y, blur, stagger]);
 
   return (
-    <Tag ref={ref as React.Ref<HTMLElement>} className={className}>
+    <Tag ref={ref as React.Ref<HTMLElement>} className={className} {...rest}>
       {children}
     </Tag>
   );

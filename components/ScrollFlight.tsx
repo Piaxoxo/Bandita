@@ -37,6 +37,23 @@ export default function ScrollFlight() {
         el.style.transformStyle = "preserve-3d";
         el.style.willChange = "transform, opacity";
       });
+
+      // headlines grow + shift ink → pink as they cross the viewport centre
+      const heads = document.querySelectorAll<HTMLElement>("[data-hl]");
+      heads.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.height === 0) return;
+        const centre = rect.top + rect.height / 2;
+        const r = Math.max(-1, Math.min(1, (centre - mid) / vh));
+        const k = Math.max(0, 1 - Math.abs(r) * 1.25); // 0 at edges, 1 at centre
+        el.style.transformOrigin = "left center";
+        el.style.transform = `scale(${(1 + k * 0.07).toFixed(3)})`;
+        const R = Math.round(18 + (251 - 18) * k);
+        const G = Math.round(14 + (0 - 14) * k);
+        const B = Math.round(18 + (63 - 18) * k);
+        el.style.color = `rgb(${R},${G},${B})`;
+      });
+
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);

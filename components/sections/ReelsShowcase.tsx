@@ -63,7 +63,7 @@ export default function ReelsShowcase({ lang }: { lang: Locale }) {
         <Reveal>
           <p className="mb-6 font-sans text-[11px] uppercase tracking-[0.4em] text-pink">{t.eyebrow}</p>
         </Reveal>
-        <Reveal as="h2" className="max-w-4xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] text-ink sm:text-5xl md:text-6xl">
+        <Reveal as="h2" data-hl className="max-w-4xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] text-ink sm:text-5xl md:text-6xl">
           {t.heading}
         </Reveal>
         <Reveal>

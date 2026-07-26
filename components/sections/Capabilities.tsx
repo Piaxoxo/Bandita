@@ -28,7 +28,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
             {dict.capabilities.eyebrow}
           </p>
         </Reveal>
-        <Reveal as="h2" className="max-w-4xl font-display text-4xl font-medium leading-[1.05] md:text-6xl lg:text-7xl">
+        <Reveal as="h2" data-hl className="max-w-4xl font-display text-4xl font-medium leading-[1.05] md:text-6xl lg:text-7xl">
           {dict.capabilities.heading}{" "}
           <span className="italic text-pink">
             {dict.capabilities.headingAccent}

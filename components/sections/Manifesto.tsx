@@ -88,7 +88,7 @@ export default function Manifesto({ dict }: { dict: Dictionary }) {
           {dict.manifesto.eyebrow}
         </p>
 
-        <h2 className="mf-heading max-w-5xl font-display text-4xl font-medium leading-[1.08] tracking-[-0.01em] text-ink sm:text-5xl md:text-6xl lg:text-7xl">
+        <h2 data-hl className="mf-heading max-w-5xl font-display text-4xl font-medium leading-[1.08] tracking-[-0.01em] text-ink sm:text-5xl md:text-6xl lg:text-7xl">
           {words.map((w, i) => (
             <span key={i} className="mf-word inline-block">
               {w}&nbsp;
