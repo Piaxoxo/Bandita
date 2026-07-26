@@ -278,3 +278,21 @@ html[data-reduced-motion="true"] .reduced-only {
   0%, 100% { height: 4px; }
   50% { height: 15px; }
 }
+
+/* Ambient background drift (SceneLayer) */
+@keyframes glowDriftA { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6%, 8%) scale(1.12); } }
+@keyframes glowDriftB { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(8%, -6%) scale(1.15); } }
+.scene-glow-a { animation: glowDriftA 22s ease-in-out infinite; }
+.scene-glow-b { animation: glowDriftB 28s ease-in-out infinite; }
+
+/* Reels marquee */
+@keyframes reelMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.reel-marquee { animation: reelMarquee 40s linear infinite; will-change: transform; }
+.reel-marquee:hover { animation-play-state: paused; }
+
+/* Floating 3D cocktail film (Manifesto) */
+@keyframes cocktailFloat {
+  0%, 100% { transform: perspective(900px) translateY(-50%) rotateY(-11deg) rotateX(3deg) translateZ(0); }
+  50%      { transform: perspective(900px) translateY(-56%) rotateY(7deg)  rotateX(-2deg) translateZ(24px); }
+}
+.hero-cocktail { animation: cocktailFloat 8s ease-in-out infinite; transform-style: preserve-3d; }

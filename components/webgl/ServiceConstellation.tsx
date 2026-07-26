@@ -90,7 +90,7 @@ export default function ServiceConstellation({ items }: { items: string[] }) {
           ref={(el) => {
             wordsRef.current[i] = el;
           }}
-          className="absolute left-1/2 top-1/2 whitespace-nowrap font-display text-4xl italic text-creme will-change-transform md:text-7xl"
+          className="absolute left-1/2 top-1/2 whitespace-nowrap font-display text-4xl italic text-ink will-change-transform md:text-7xl"
         >
           {w}
           <span className="text-pink">.</span>

@@ -3,6 +3,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import Hero from "@/components/sections/Hero";
 import Manifesto from "@/components/sections/Manifesto";
 import Capabilities from "@/components/sections/Capabilities";
+import ReelsShowcase from "@/components/sections/ReelsShowcase";
 import Philosophy from "@/components/sections/Philosophy";
 import EditorialShowcase from "@/components/sections/EditorialShowcase";
 import ContactCTA from "@/components/sections/ContactCTA";
@@ -20,6 +21,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
       <Hero dict={dict} lang={lang} />
       <Manifesto dict={dict} />
       <Capabilities dict={dict} />
+      <ReelsShowcase lang={lang} />
       <Philosophy dict={dict} />
       <EditorialShowcase dict={dict} />
       <ContactCTA dict={dict} />

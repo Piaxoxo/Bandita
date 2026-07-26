@@ -69,10 +69,21 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
       ref={root}
       className="relative flex min-h-[100svh] items-center overflow-hidden"
     >
-      {/* The persistent WebGL layer (SceneLayer) renders behind the whole page.
-          A vignette keeps the headline legible over it — stronger on mobile
-          where the scene fills more of the small viewport. */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#070406]/85 via-[#070406]/35 to-[#070406]/75 md:from-[#070406]/55 md:via-[#070406]/15 md:to-[#070406]/70" />
+      {/* Cinematic content-film hero — one of BANDITA's own reels, graded dark
+          so the headline stays legible. */}
+      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        src="/video/reel-mojito.mp4"
+        poster="/video/reel-mojito.jpg"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#070406]/80 via-[#070406]/45 to-[#070406]/85" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#070406]/85 via-[#070406]/30 to-transparent" />
 
       <div data-fly className="relative z-10 mx-auto w-full max-w-[1600px] px-5 md:px-10">
         <p className="hero-eyebrow mb-6 font-sans text-[11px] uppercase tracking-[0.4em] text-pink md:text-xs">

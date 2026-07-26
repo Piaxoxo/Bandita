@@ -64,11 +64,11 @@ export default function Philosophy({ dict }: { dict: Dictionary }) {
               <SplitText
                 as="h2"
                 text={dict.philosophy.heading}
-                className="font-display text-3xl font-medium leading-[1.12] tracking-[-0.01em] text-creme sm:text-4xl md:text-5xl lg:text-6xl"
+                className="font-display text-3xl font-medium leading-[1.12] tracking-[-0.01em] text-ink sm:text-4xl md:text-5xl lg:text-6xl"
               />
             </Parallax>
             <Reveal>
-              <p className="mt-10 max-w-md font-sans text-lg leading-relaxed text-creme/70">
+              <p className="mt-10 max-w-md font-sans text-lg leading-relaxed text-ink/70">
                 {dict.philosophy.body}
               </p>
             </Reveal>
