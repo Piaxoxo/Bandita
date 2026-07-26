@@ -11,6 +11,8 @@ import Footer from "./Footer";
 import AccessibilityPanel from "./AccessibilityPanel";
 import SceneLayer from "./webgl/SceneLayer";
 import CinemaOverlay from "./CinemaOverlay";
+import SoundControl from "./SoundControl";
+import PageTransition from "./PageTransition";
 
 export default function SiteShell({
   lang,
@@ -31,6 +33,8 @@ export default function SiteShell({
       <main id="main">{children}</main>
       <Footer dict={dict} />
       <AccessibilityPanel lang={lang} dict={dict} />
+      <SoundControl />
+      <PageTransition />
       <CinemaOverlay />
     </SiteProvider>
   );

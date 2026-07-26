@@ -9,6 +9,24 @@ import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
 import MagneticButton from "@/components/MagneticButton";
 
+/* split a line into per-letter spans so each character can rise on its own */
+function Chars({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(" ").map((word, wi, arr) => (
+        <span key={wi} className="inline-block whitespace-nowrap">
+          {Array.from(word).map((ch, ci) => (
+            <span key={ci} className="hero-char inline-block will-change-transform">
+              {ch}
+            </span>
+          ))}
+          {wi < arr.length - 1 && <span className="hero-char inline-block w-[0.28em]" />}
+        </span>
+      ))}
+    </>
+  );
+}
+
 export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const router = useRouter();
   const { introDone, reducedMotion } = useSite();
@@ -21,7 +39,7 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
 
     if (reducedMotion) {
       gsap.set(el.querySelectorAll(".hero-anim"), { opacity: 1, y: 0 });
-      gsap.set(el.querySelectorAll(".hero-line span"), { yPercent: 0 });
+      gsap.set(el.querySelectorAll(".hero-char"), { yPercent: 0 });
       return;
     }
 
@@ -29,11 +47,11 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
       tl.from(".hero-eyebrow", { opacity: 0, y: 20, duration: 0.8 })
         .from(
-          ".hero-line span",
-          { yPercent: 115, duration: 1.2, stagger: 0.12 },
+          ".hero-char",
+          { yPercent: 115, duration: 1.0, stagger: 0.035 },
           "-=0.4",
         )
-        .from(".hero-sub", { opacity: 0, y: 24, duration: 0.9 }, "-=0.7")
+        .from(".hero-sub", { opacity: 0, y: 24, duration: 0.9 }, "-=0.6")
         .from(
           ".hero-cta",
           { opacity: 0, y: 24, duration: 0.8, stagger: 0.1 },
@@ -64,12 +82,12 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
         <h1 className="font-display font-medium leading-[0.92] tracking-[-0.02em] text-ink">
           <span className="hero-line block overflow-hidden">
             <span className="block text-[16vw] md:text-[12vw] lg:text-[10.5vw]">
-              {dict.hero.line1}
+              <Chars text={dict.hero.line1} />
             </span>
           </span>
           <span className="hero-line block overflow-hidden">
             <span className="block text-[16vw] italic text-pink md:text-[12vw] lg:text-[10.5vw]">
-              {dict.hero.line2}
+              <Chars text={dict.hero.line2} />
             </span>
           </span>
         </h1>

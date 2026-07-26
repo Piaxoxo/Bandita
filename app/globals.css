@@ -272,3 +272,9 @@ html[data-reduced-motion="true"] .reduced-only {
 .cinema-grain {
   animation: cinemaGrain 0.7s steps(4) infinite;
 }
+
+/* SoundControl equalizer bars */
+@keyframes soundbar {
+  0%, 100% { height: 4px; }
+  50% { height: 15px; }
+}

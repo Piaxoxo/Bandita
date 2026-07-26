@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import Reveal from "@/components/anim/Reveal";
+import SplitText from "@/components/anim/SplitText";
 import Parallax from "@/components/anim/Parallax";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
@@ -60,9 +61,11 @@ export default function Philosophy({ dict }: { dict: Dictionary }) {
               </p>
             </Reveal>
             <Parallax speed={-50}>
-              <Reveal as="h2" className="font-display text-3xl font-medium leading-[1.12] tracking-[-0.01em] text-ink sm:text-4xl md:text-5xl lg:text-6xl">
-                {dict.philosophy.heading}
-              </Reveal>
+              <SplitText
+                as="h2"
+                text={dict.philosophy.heading}
+                className="font-display text-3xl font-medium leading-[1.12] tracking-[-0.01em] text-ink sm:text-4xl md:text-5xl lg:text-6xl"
+              />
             </Parallax>
             <Reveal>
               <p className="mt-10 max-w-md font-sans text-lg leading-relaxed text-ink/70">
