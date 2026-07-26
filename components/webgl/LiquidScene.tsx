@@ -13,6 +13,7 @@ import {
 import { BlendFunction } from "postprocessing";
 import * as THREE from "three";
 import { scene as store, tickScene, TIER_CONFIG, type DeviceTier } from "@/lib/scene-store";
+import { audioState } from "@/lib/audio-store";
 
 /*
   BANDITA — flowing 3D liquid-gradient world.
@@ -27,6 +28,7 @@ import { scene as store, tickScene, TIER_CONFIG, type DeviceTier } from "@/lib/s
 const vert = /* glsl */ `
   uniform float uTime;
   uniform float uScroll;
+  uniform float uBeat;
   uniform vec2 uPointer;
   varying vec3 vNormal;
   varying float vH;
@@ -52,12 +54,14 @@ const vert = /* glsl */ `
   void main(){
     vec3 pos = position;
     vec2 p = pos.xy * 0.16;
-    float amp = 3.8;
+    float amp = 3.8 * (1.0 + uBeat * 0.9);
     float h = height(p);
     float e = 0.05;
     float hx = height(p + vec2(e,0.0));
     float hy = height(p + vec2(0.0,e));
     pos.z += (h-0.5)*amp;
+    // beat-driven ripple pulsing out through the surface
+    pos.z += sin(length(p)*3.5 - uTime*2.2) * uBeat * 0.6;
     vec3 n = normalize(vec3(-(hx-h)/e*0.16*amp, -(hy-h)/e*0.16*amp, 1.0));
     vNormal = n; vH = h; vPos = pos;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
@@ -67,6 +71,8 @@ const vert = /* glsl */ `
 const frag = /* glsl */ `
   precision highp float;
   uniform float uTime;
+  uniform float uBeat;
+  uniform float uScroll;
   varying vec3 vNormal;
   varying float vH;
   varying vec3 vPos;
@@ -92,7 +98,9 @@ const frag = /* glsl */ `
     // shadows fall to deep rosé (never muddy grey), crests catch a pink sparkle
     float lit = clamp(0.5 + diff * 0.62, 0.0, 1.0);
     col = mix(rose * 0.55, col, lit);
-    col += pink * spec * 1.0;
+    col += pink * spec * (1.0 + uBeat * 1.8);   // crests flare on the beat
+    col += rose * uBeat * 0.14;                  // whole surface breathes with the music
+    col = mix(col, pink, uScroll * 0.12);        // world deepens toward pink as you travel
     col = mix(col, vec3(1.0, 0.95, 0.97), fres * 0.14);
     gl_FragColor = vec4(col, 1.0);
   }
@@ -106,6 +114,7 @@ function LiquidSurface({ tier }: { tier: DeviceTier }) {
     () => ({
       uTime: { value: 0 },
       uScroll: { value: 0 },
+      uBeat: { value: 0 },
       uPointer: { value: new THREE.Vector2(0, 0) },
     }),
     [],
@@ -115,6 +124,7 @@ function LiquidSurface({ tier }: { tier: DeviceTier }) {
     if (!u) return;
     u.uTime.value += delta;
     u.uScroll.value += (store.scroll - u.uScroll.value) * 0.05;
+    u.uBeat.value += (audioState.level - u.uBeat.value) * 0.3;
     (u.uPointer.value as THREE.Vector2).set(store.pointerX, store.pointerY);
   });
   // size to more than cover the frame at this depth
@@ -158,13 +168,19 @@ function Rig() {
   useFrame((state) => {
     tickScene();
     const t = state.clock.elapsedTime;
+    const s = store.scroll;
+    const beat = audioState.level;
     const compact = size.width < 768;
     const baseZ = compact ? 15 : 12.5;
-    camera.position.x += (store.pointerX * 1.3 + Math.sin(t * 0.08) * 0.4 - camera.position.x) * 0.045;
-    camera.position.y += (store.pointerY * 0.9 - store.scroll * 0.6 - camera.position.y) * 0.045;
-    camera.position.z += (baseZ - store.scroll * 2.0 - camera.position.z) * 0.045;
-    camera.lookAt(0, 0, 0);
-    camera.rotation.z += (Math.sin(t * 0.05) * 0.015 + store.pointerX * 0.02 - camera.rotation.z) * 0.05;
+    // a continuous flight: sway across, climb, and dolly in/out through the scroll
+    const flyX = Math.sin(s * Math.PI * 2.0) * (compact ? 1.2 : 2.4) + store.pointerX * 1.3;
+    const flyY = s * 3.2 + store.pointerY * 0.9 + Math.sin(t * 0.1) * 0.3;
+    const flyZ = baseZ - Math.sin(s * Math.PI) * 5.0 - beat * 0.6; // push deep at mid-page
+    camera.position.x += (flyX - camera.position.x) * 0.045;
+    camera.position.y += (flyY - camera.position.y) * 0.045;
+    camera.position.z += (flyZ - camera.position.z) * 0.045;
+    camera.lookAt(store.pointerX * 0.6, s * 1.2, 0);
+    camera.rotation.z += (Math.sin(t * 0.05) * 0.02 + store.pointerX * 0.02 + s * 0.05 - camera.rotation.z) * 0.05;
   });
   return null;
 }

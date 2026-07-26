@@ -90,7 +90,9 @@ export default function Nav({
     <header
       ref={barRef}
       className={`fixed inset-x-0 top-0 z-[55] transition-all duration-500 ease-bandita ${
-        scrolled ? "py-3" : "py-5"
+        scrolled
+          ? "border-b border-ink/10 bg-creme/80 py-3 shadow-[0_1px_24px_rgba(20,12,18,0.05)] backdrop-blur-md"
+          : "py-5"
       }`}
       style={{ opacity: introDone ? undefined : 0 }}
     >
