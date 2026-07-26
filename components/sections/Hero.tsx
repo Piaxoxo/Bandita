@@ -72,14 +72,14 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
       {/* The persistent WebGL layer (SceneLayer) renders behind the whole page.
           A vignette keeps the headline legible over it — stronger on mobile
           where the scene fills more of the small viewport. */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-creme/70 via-creme/25 to-creme/70 md:from-creme/30 md:via-transparent md:to-creme/55" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#070406]/85 via-[#070406]/35 to-[#070406]/75 md:from-[#070406]/55 md:via-[#070406]/15 md:to-[#070406]/70" />
 
       <div data-fly className="relative z-10 mx-auto w-full max-w-[1600px] px-5 md:px-10">
         <p className="hero-eyebrow mb-6 font-sans text-[11px] uppercase tracking-[0.4em] text-pink md:text-xs">
           {dict.hero.eyebrow}
         </p>
 
-        <h1 className="font-display font-medium leading-[0.92] tracking-[-0.02em] text-ink">
+        <h1 className="font-display font-medium leading-[0.92] tracking-[-0.02em] text-creme">
           <span className="hero-line block overflow-hidden">
             <span className="block text-[16vw] md:text-[12vw] lg:text-[10.5vw]">
               <Chars text={dict.hero.line1} />
@@ -92,7 +92,7 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
           </span>
         </h1>
 
-        <p className="hero-sub mt-8 max-w-xl font-sans text-lg leading-relaxed text-ink/70 md:text-xl">
+        <p className="hero-sub mt-8 max-w-xl font-sans text-lg leading-relaxed text-creme/75 md:text-xl">
           {dict.hero.sub}
         </p>
 
@@ -106,7 +106,7 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
           <MagneticButton
             onClick={() => router.push(`/${lang}/about`)}
             cursor="link"
-            className="hero-cta rounded-full border border-ink/20 px-8 py-4 font-sans text-sm uppercase tracking-[0.12em] text-ink transition-colors hover:border-pink hover:text-pink"
+            className="hero-cta rounded-full border border-creme/25 px-8 py-4 font-sans text-sm uppercase tracking-[0.12em] text-creme transition-colors hover:border-pink hover:text-pink"
           >
             {dict.hero.ctaSecondary}
           </MagneticButton>
@@ -115,10 +115,10 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
 
       {/* scroll cue */}
       <div className="hero-scroll absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2">
-        <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-ink/50">
+        <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-creme/50">
           {dict.hero.scroll}
         </span>
-        <span className="relative h-12 w-px overflow-hidden bg-ink/15">
+        <span className="relative h-12 w-px overflow-hidden bg-creme/15">
           <span className="motion-only absolute inset-x-0 top-0 h-4 w-px animate-[scrollLine_2s_ease-in-out_infinite] bg-pink" />
         </span>
       </div>

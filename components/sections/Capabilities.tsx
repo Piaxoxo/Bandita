@@ -10,7 +10,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
   return (
     <section
       id="capabilities"
-      className="relative overflow-hidden py-32 text-ink md:py-44"
+      className="relative overflow-hidden py-32 text-creme md:py-44"
     >
       {/* subtle radial depth glow */}
       <div
@@ -45,7 +45,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
           {items.map((item) => (
             <span
               key={`s-${item}`}
-              className="font-display text-4xl italic text-ink/90 md:text-6xl"
+              className="font-display text-4xl italic text-creme/90 md:text-6xl"
             >
               {item}.
             </span>
@@ -62,7 +62,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
 
       <div data-fly className="relative mx-auto mt-10 max-w-[1400px] px-5 md:mt-16 md:px-10">
         <Reveal>
-          <p className="max-w-2xl font-sans text-lg leading-relaxed text-ink/70">
+          <p className="max-w-2xl font-sans text-lg leading-relaxed text-creme/70">
             {dict.capabilities.body}
           </p>
         </Reveal>

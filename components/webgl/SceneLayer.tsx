@@ -6,24 +6,17 @@ import { usePathname } from "next/navigation";
 import { useSite } from "@/lib/site-context";
 import { initSceneInputs } from "@/lib/scene-store";
 
-const LiquidScene = dynamic(() => import("./LiquidScene"), { ssr: false });
+const HeistScene = dynamic(() => import("./HeistScene"), { ssr: false });
 
-/* Static white + soft-pink marble tone — reduced-motion & pre-mount fallback */
+/* Dark vault tone — reduced-motion & pre-mount fallback for "The Heist" */
 function GradientFallback() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#FDFAF6]">
+    <div className="absolute inset-0 overflow-hidden bg-[#070406]">
       <div
-        className="absolute right-0 top-0 h-[70vmax] w-[70vmax] translate-x-1/4 -translate-y-1/4 rounded-full opacity-50 blur-[120px]"
+        className="absolute left-1/2 top-1/3 h-[60vmax] w-[60vmax] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-[130px]"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(255,140,176,0.30), rgba(255,92,158,0.10) 45%, transparent 72%)",
-        }}
-      />
-      <div
-        className="absolute bottom-0 left-0 h-[55vmax] w-[55vmax] -translate-x-1/4 translate-y-1/4 rounded-full opacity-40 blur-[120px]"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(255,192,210,0.35), transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(255,220,168,0.18), rgba(251,0,63,0.08) 45%, transparent 72%)",
         }}
       />
     </div>
@@ -55,7 +48,7 @@ export default function SceneLayer() {
       <GradientFallback />
       {mounted && !reducedMotion && (
         <div className="absolute inset-0">
-          <LiquidScene />
+          <HeistScene />
         </div>
       )}
     </div>
