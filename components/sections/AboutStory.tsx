@@ -234,7 +234,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
   }, [r]);
 
   return (
-    <div ref={root} className="about-root relative text-creme">
+    <div ref={root} className="about-root relative text-ink">
       <AboutSceneLayer />
 
       {/* ════════ ① HERO ════════ */}
@@ -256,7 +256,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           </h1>
         </div>
         <div className="ah-scroll absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2">
-          <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-creme/50">{a.hero.scroll}</span>
+          <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-ink/50">{a.hero.scroll}</span>
           <span className="relative h-12 w-px overflow-hidden bg-creme/15">
             <span className="motion-only absolute inset-x-0 top-0 h-4 w-px animate-[scrollLine_2s_ease-in-out_infinite] bg-pink" />
           </span>
@@ -266,21 +266,21 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       {/* ════════ ② THE NAME — particle illustration forms here ════════ */}
       <section id="about-name" className="relative flex min-h-[100svh] items-center overflow-hidden py-24 md:py-32">
         <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-12 px-5 md:grid-cols-2 md:px-10">
-          <div className="rounded-[1.6rem] bg-[#0c0a0c]/45 p-7 backdrop-blur-md ring-1 ring-creme/10 md:p-10">
+          <div className="rounded-[1.6rem] bg-[#0c0a0c]/45 p-7 backdrop-blur-md ring-1 ring-ink/10 md:p-10">
             <Reveal>
               <span className="mb-8 block text-pink"><Kicker>{a.name.kicker}</Kicker></span>
             </Reveal>
             <Reveal as="h2" y={30} className="font-display text-4xl font-medium italic leading-[1.05] tracking-[-0.01em] sm:text-5xl">
               {a.name.heading}
             </Reveal>
-            <div className="mt-8 space-y-4 font-sans text-base leading-relaxed text-creme/75 md:text-lg">
+            <div className="mt-8 space-y-4 font-sans text-base leading-relaxed text-ink/75 md:text-lg">
               {a.name.paras.map((p, i) => (
                 <Reveal as="p" key={i} delay={i * 0.05} blur={false} y={20}>{p}</Reveal>
               ))}
             </div>
             <Reveal as="blockquote" className="mt-8 border-l-2 border-pink pl-5">
               <p className="font-display text-xl italic leading-snug md:text-2xl">“{a.name.quote}”</p>
-              <p className="mt-3 font-sans text-sm leading-relaxed text-creme/55">{a.name.quoteSub}</p>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-ink/55">{a.name.quoteSub}</p>
             </Reveal>
             <Reveal as="p" className="mt-8 font-display text-2xl text-pink">{a.name.close}</Reveal>
           </div>
@@ -296,7 +296,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
                 className="max-h-[70vh] w-auto opacity-90 mix-blend-screen"
               />
             ) : (
-              <span className="pointer-events-none select-none font-sans text-[10px] uppercase tracking-[0.3em] text-creme/25">
+              <span className="pointer-events-none select-none font-sans text-[10px] uppercase tracking-[0.3em] text-ink/25">
                 {/* particles render in the world behind */}
               </span>
             )}
@@ -312,7 +312,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           <Reveal as="h2" y={30} className="max-w-3xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-6xl lg:text-7xl">
             {a.why.heading}
           </Reveal>
-          <div className="mt-14 max-w-xl space-y-5 font-sans text-lg leading-relaxed text-creme/70 md:text-xl">
+          <div className="mt-14 max-w-xl space-y-5 font-sans text-lg leading-relaxed text-ink/70 md:text-xl">
             {a.why.lines.map((l, i) => (
               <Reveal as="p" key={i} delay={i * 0.04} blur={false} y={20}>{l}</Reveal>
             ))}
@@ -334,13 +334,13 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           <Reveal as="h2" y={30} className="mx-auto max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-5xl md:text-6xl">
             {a.psychology.heading}
           </Reveal>
-          <Reveal as="p" className="mx-auto mt-9 max-w-2xl font-sans text-lg leading-relaxed text-creme/70 md:text-xl">
+          <Reveal as="p" className="mx-auto mt-9 max-w-2xl font-sans text-lg leading-relaxed text-ink/70 md:text-xl">
             {a.psychology.body}
           </Reveal>
           <Reveal as="p" className="mt-9 font-display text-2xl italic md:text-3xl">{a.psychology.detail}</Reveal>
           <div className="mt-14 flex flex-col items-center gap-2">
             {a.psychology.nothing.map((n, i) => (
-              <Reveal as="span" key={i} delay={i * 0.06} className="font-display text-2xl text-creme/35 md:text-3xl">{n}</Reveal>
+              <Reveal as="span" key={i} delay={i * 0.06} className="font-display text-2xl text-ink/35 md:text-3xl">{n}</Reveal>
             ))}
             <Reveal as="span" className="mt-5 font-display text-3xl font-medium text-pink md:text-4xl">{a.psychology.verdict}</Reveal>
           </div>
@@ -356,7 +356,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
             <Reveal as="h2" y={30} className="font-display text-4xl font-medium leading-[1.06] tracking-[-0.01em] sm:text-5xl md:col-span-7 md:text-6xl">
               {a.team.heading}
             </Reveal>
-            <Reveal as="p" className="font-sans text-base leading-relaxed text-creme/65 md:col-span-5 md:text-lg">
+            <Reveal as="p" className="font-sans text-base leading-relaxed text-ink/65 md:col-span-5 md:text-lg">
               {a.team.intro}
             </Reveal>
           </div>
@@ -367,7 +367,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
               return (
                 <Reveal key={m.name} delay={i * 0.06}>
                   <TiltCard disabled={r} className="group">
-                    <div className="relative aspect-[4/5] overflow-hidden rounded-[1.1rem] ring-1 ring-creme/15">
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-[1.1rem] ring-1 ring-ink/15">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={`/about/team/${slug}.jpg`}
@@ -380,12 +380,12 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
                   </TiltCard>
                   <h3 className="mt-5 font-display text-2xl font-medium leading-tight">{m.name}</h3>
                   <p className="mt-1 font-sans text-[11px] uppercase tracking-[0.2em] text-pink">{m.role}</p>
-                  <p className="mt-3 font-sans text-sm leading-relaxed text-creme/60">{m.craft}</p>
+                  <p className="mt-3 font-sans text-sm leading-relaxed text-ink/60">{m.craft}</p>
                 </Reveal>
               );
             })}
           </div>
-          <Reveal as="p" className="mt-14 font-display text-xl italic text-creme/45 md:text-2xl">{a.team.note}</Reveal>
+          <Reveal as="p" className="mt-14 font-display text-xl italic text-ink/45 md:text-2xl">{a.team.note}</Reveal>
         </div>
       </section>
 
@@ -405,7 +405,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
             {[0, 1].map((dup) => (
               <span key={dup} className="flex shrink-0 items-center">
                 {a.services.items.map((s) => (
-                  <span key={s} className="flex items-center font-display text-3xl text-creme/45 md:text-5xl">
+                  <span key={s} className="flex items-center font-display text-3xl text-ink/45 md:text-5xl">
                     <span className="px-6">{s}</span>
                     <span className="text-pink/50">✕</span>
                   </span>
@@ -421,10 +421,10 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
               {a.services.everything}
             </Reveal>
             <div className="flex gap-6">
-              <Reveal as="span" delay={0.06} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-creme/30 sm:text-6xl md:text-7xl">
+              <Reveal as="span" delay={0.06} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink/30 sm:text-6xl md:text-7xl">
                 {a.services.online}
               </Reveal>
-              <Reveal as="span" delay={0.12} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-creme/30 sm:text-6xl md:text-7xl">
+              <Reveal as="span" delay={0.12} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink/30 sm:text-6xl md:text-7xl">
                 {a.services.offline}
               </Reveal>
             </div>
@@ -459,10 +459,10 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
             </h2>
             <div className="grid gap-8 md:grid-cols-2">
               {a.work.items.map((it, i) => (
-                <figure key={i} className="overflow-hidden rounded-[1.1rem] ring-1 ring-creme/12">
+                <figure key={i} className="overflow-hidden rounded-[1.1rem] ring-1 ring-ink/12">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`/about/work/campaign-0${i + 1}.jpg`} alt={it.alt} className="w-full" />
-                  <figcaption className="px-1 pt-3 font-sans text-[11px] uppercase tracking-[0.2em] text-creme/55">
+                  <figcaption className="px-1 pt-3 font-sans text-[11px] uppercase tracking-[0.2em] text-ink/55">
                     {it.caption}
                   </figcaption>
                 </figure>
@@ -482,11 +482,11 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a0c] via-[#0c0a0c]/40 to-[#0c0a0c]/55" />
         <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-[10vh] md:px-10">
-          <Reveal><span className="mb-7 block text-creme/70"><Kicker>{a.vienna.kicker}</Kicker></span></Reveal>
+          <Reveal><span className="mb-7 block text-ink/70"><Kicker>{a.vienna.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="max-w-4xl font-display text-4xl font-medium leading-[1.0] tracking-[-0.01em] sm:text-6xl md:text-7xl">
             {a.vienna.heading}
           </Reveal>
-          <Reveal as="p" className="mt-8 max-w-xl font-sans text-base leading-relaxed text-creme/75 md:text-lg">
+          <Reveal as="p" className="mt-8 max-w-xl font-sans text-base leading-relaxed text-ink/75 md:text-lg">
             {a.vienna.body}
           </Reveal>
         </div>
@@ -524,11 +524,11 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
                 as="a"
                 href={`/${lang}#contact`}
                 strength={0.5}
-                className="rounded-full bg-pink px-10 py-5 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink"
+                className="rounded-full bg-pink px-10 py-5 font-sans text-sm uppercase tracking-[0.14em] text-ink transition-colors hover:bg-creme hover:text-ink"
               >
                 {a.final.cta}
               </MagneticButton>
-              <span className="font-sans text-xs uppercase tracking-[0.2em] text-creme/55">{a.final.note}</span>
+              <span className="font-sans text-xs uppercase tracking-[0.2em] text-ink/55">{a.final.note}</span>
             </div>
           </Reveal>
         </div>

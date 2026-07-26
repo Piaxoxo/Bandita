@@ -15,9 +15,10 @@ import { aboutScene, tickAboutInputs } from "@/lib/about-scene";
 import CampaignPlates from "./CampaignPlates";
 
 // HDR-ish colours (>1) so Bloom catches them as glow.
-const WHITE: [number, number, number] = [1.7, 1.62, 1.5];
-const PINK: [number, number, number] = [1.9, 0.05, 0.5];
-const ROSE: [number, number, number] = [1.8, 0.35, 0.7];
+// Dark, ink-toned particles so the silhouette reads on the cream ground.
+const WHITE: [number, number, number] = [0.16, 0.12, 0.14];
+const PINK: [number, number, number] = [0.98, 0.0, 0.25];
+const ROSE: [number, number, number] = [1.0, 0.42, 0.66];
 
 type Buffers = {
   woman: Float32Array;
@@ -297,7 +298,7 @@ function Particles({ count }: { count: number }) {
           fragmentShader={fragment}
           transparent
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
+          blending={THREE.NormalBlending}
         />
       </points>
     </group>

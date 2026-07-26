@@ -12,7 +12,7 @@ const AboutScene = dynamic(() => import("./AboutScene"), { ssr: false });
 // low-tier fallback so the page is never a flash of empty black.
 function DarkGround() {
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#0c0a0c]">
+    <div className="absolute inset-0 overflow-hidden bg-creme">
       <div
         className="absolute left-1/2 top-[18%] h-[80vmax] w-[80vmax] -translate-x-1/2 rounded-full opacity-[0.55] blur-[130px]"
         style={{
