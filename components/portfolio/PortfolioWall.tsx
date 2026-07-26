@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { STATIONS, coverOf, mediaCount } from "./portfolio-data";
 import { portfolio, setMood } from "@/lib/portfolio-scene";
+
+if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 export default function PortfolioWall({
   lang,
@@ -29,12 +33,46 @@ export default function PortfolioWall({
       if (el) {
         const rx = portfolio.pointerY * 4.5;
         const ry = portfolio.pointerX * 5.5;
-        el.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+        el.style.setProperty("--rx", `${rx.toFixed(2)}deg`);
+        el.style.setProperty("--ry", `${ry.toFixed(2)}deg`);
       }
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
+  }, [reduced]);
+
+  // scroll-driven life: cards enter on scroll, columns drift at different
+  // speeds, and each card counter-rotates a touch as it travels the viewport
+  useEffect(() => {
+    if (reduced || !gridRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".portfolio-card").forEach((el, i) => {
+        const col = i % 4;
+        const depthSpeed = 40 + col * 26; // outer columns travel further
+        gsap.fromTo(
+          el,
+          { yPercent: 18, autoAlpha: 0, rotateX: -12 },
+          {
+            yPercent: 0,
+            autoAlpha: 1,
+            rotateX: 0,
+            ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 96%", end: "top 62%", scrub: 1 },
+          },
+        );
+        gsap.fromTo(
+          el,
+          { y: depthSpeed },
+          {
+            y: -depthSpeed,
+            ease: "none",
+            scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
+          },
+        );
+      });
+    }, gridRef);
+    return () => ctx.revert();
   }, [reduced]);
 
   return (
@@ -58,10 +96,12 @@ export default function PortfolioWall({
           <div
             ref={gridRef}
             className="grid grid-cols-2 gap-4 [transform-style:preserve-3d] will-change-transform sm:grid-cols-3 md:gap-6 lg:grid-cols-4"
-            style={{ transition: "transform 200ms ease-out" }}
+            style={{
+              transform: "rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))",
+              transition: "transform 200ms ease-out",
+            }}
           >
             {STATIONS.map((st, i) => {
-              const depth = ((i % 4) - 1.5) * 10; // gentle concave wall
               return (
                 <button
                   key={st.id}
@@ -70,12 +110,7 @@ export default function PortfolioWall({
                   onClick={() => onOpen(i)}
                   onMouseEnter={() => setMood(st.color)}
                   onMouseLeave={() => setMood(null)}
-                  className="portfolio-card group relative block overflow-hidden rounded-[1rem] text-left ring-1 ring-creme/10 [transform-style:preserve-3d]"
-                  style={{
-                    transform: `translateZ(${depth}px)`,
-                    animation: reduced ? undefined : `cardIn 0.7s cubic-bezier(0.16,1,0.3,1) both`,
-                    animationDelay: reduced ? undefined : `${0.04 * i}s`,
-                  }}
+                  className="portfolio-card group relative block overflow-hidden rounded-[1rem] text-left ring-1 ring-creme/10"
                 >
                   <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#0d0b0e]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}

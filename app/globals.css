@@ -307,8 +307,8 @@ html[data-reduced-motion="true"] .reduced-only {
   to   { opacity: 1; transform: translateY(0); }
 }
 .portfolio-fade { animation: portfolioFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.portfolio-card { transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-.portfolio-card:hover { transform: translateZ(60px) scale(1.03) !important; z-index: 5; }
+.portfolio-card { transition: box-shadow 0.5s ease, outline-color 0.4s ease; outline: 1px solid transparent; }
+.portfolio-card:hover { z-index: 5; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8); }
 @media (prefers-reduced-motion: reduce) {
-  .portfolio-fade, .portfolio-card { animation: none; }
+  .portfolio-fade { animation: none; }
 }

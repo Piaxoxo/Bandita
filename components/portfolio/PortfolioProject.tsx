@@ -38,33 +38,78 @@ export default function PortfolioProject({
     window.scrollTo(0, 0);
   }, [st.color, index]);
 
-  // scroll reveals + gentle parallax + pointer tilt
+  // scroll reveals + parallax + velocity skew + kinetic name + pointer tilt
   useEffect(() => {
     if (reduced || !root.current) return;
     const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".pf-media").forEach((el) => {
+      // cinematic per-frame reveal — alternating side, clip-wipe, rotateY
+      gsap.utils.toArray<HTMLElement>(".pf-media").forEach((el, i) => {
+        const dir = i % 2 === 0 ? -1 : 1;
         gsap.fromTo(
           el,
-          { opacity: 0, y: 90, rotateX: 8, scale: 0.96 },
+          { opacity: 0, y: 120, xPercent: dir * 10, rotateY: dir * 11, rotateX: 8, scale: 0.88 },
           {
             opacity: 1,
             y: 0,
+            xPercent: 0,
+            rotateY: 0,
             rotateX: 0,
             scale: 1,
-            duration: 1.1,
-            ease: "power3.out",
-            scrollTrigger: { trigger: el, start: "top 88%" },
+            transformPerspective: 1200,
+            duration: 1.3,
+            ease: "power4.out",
+            scrollTrigger: { trigger: el, start: "top 90%" },
           },
         );
         const img = el.querySelector<HTMLElement>(".pf-inner");
         if (img) {
           gsap.fromTo(
             img,
-            { yPercent: -6 },
-            { yPercent: 6, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true } },
+            { yPercent: -12, scale: 1.14 },
+            {
+              yPercent: 12,
+              scale: 1.0,
+              ease: "none",
+              scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
+            },
           );
         }
       });
+
+      // hero zooms/fades away as you scroll into the work
+      gsap.to(".pf-hero", {
+        yPercent: -18,
+        scale: 0.94,
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: { trigger: ".pf-hero", start: "top top", end: "bottom top", scrub: true },
+      });
+
+      // giant kinetic project name drifting behind the stream
+      gsap.utils.toArray<HTMLElement>(".pf-kinetic").forEach((el, i) => {
+        gsap.fromTo(
+          el,
+          { xPercent: i % 2 === 0 ? -12 : 12 },
+          { xPercent: i % 2 === 0 ? 12 : -12, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true } },
+        );
+      });
+
+      // scroll-velocity skew for a liquid "speed" feel on the whole column
+      const skewTo = gsap.quickTo(".pf-stream", "skewY", { duration: 0.5, ease: "power3" });
+      ScrollTrigger.create({
+        trigger: root.current,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: (self) => skewTo(gsap.utils.clamp(-2.4, 2.4, (self.getVelocity() ?? 0) / -420)),
+      });
+
+      // scroll progress fill in the index rail area
+      gsap.fromTo(
+        ".pf-progress",
+        { scaleY: 0 },
+        { scaleY: 1, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom bottom", scrub: true } },
+      );
+
       gsap.fromTo(
         ".pf-title-line",
         { opacity: 0, yPercent: 120, rotateX: -50 },
@@ -130,8 +175,13 @@ export default function PortfolioProject({
         ))}
       </nav>
 
+      {/* scroll progress */}
+      <div className="pointer-events-none fixed right-2 top-0 z-20 hidden h-full w-[2px] bg-creme/5 lg:block">
+        <div className="pf-progress absolute inset-x-0 top-0 h-full origin-top" style={{ background: st.color }} />
+      </div>
+
       {/* hero title */}
-      <header className="mx-auto max-w-[1500px] px-5 pt-36 md:px-10 md:pt-44">
+      <header className="pf-hero mx-auto max-w-[1500px] px-5 pt-36 will-change-transform md:px-10 md:pt-44">
         <div className="flex items-baseline gap-4">
           <span
             className="font-display text-6xl font-medium leading-none tracking-[-0.02em] md:text-8xl"
@@ -157,10 +207,17 @@ export default function PortfolioProject({
       </header>
 
       {/* media stream */}
-      <div className="mx-auto mt-20 flex max-w-[1300px] flex-col gap-16 px-5 pb-16 md:mt-28 md:gap-28 md:px-10">
+      <div className="pf-stream mx-auto mt-20 flex max-w-[1300px] flex-col gap-16 px-5 pb-16 will-change-transform md:mt-28 md:gap-28 md:px-10">
         {media.map((m, i) => (
+          <div key={m.src} className="contents">
+          {(i === Math.floor(media.length / 2) && media.length > 2) && (
+            <div className="pf-kinetic pointer-events-none -mx-5 overflow-hidden py-4 md:-mx-10" aria-hidden>
+              <span className="block whitespace-nowrap font-display text-[17vw] font-medium leading-none tracking-[-0.02em] text-creme/[0.055]">
+                {`${st.name[lang]} — ${st.name[lang]} — ${st.name[lang]} — `}
+              </span>
+            </div>
+          )}
           <figure
-            key={m.src}
             className="pf-media relative [transform-style:preserve-3d]"
             onPointerMove={onTilt}
             onPointerLeave={onLeave}
@@ -199,6 +256,7 @@ export default function PortfolioProject({
               </span>
             </figcaption>
           </figure>
+          </div>
         ))}
       </div>
 

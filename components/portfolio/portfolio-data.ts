@@ -146,7 +146,10 @@ export const STATIONS: Station[] = [
     id: "kern",
     kind: "photo",
     name: { en: "Kern", de: "Kern" },
-    tag: { en: "Hospitality", de: "Hospitality" },
+    tag: {
+      en: "Social Media Content · Beherbergungsbetriebs GmbH",
+      de: "Social Media Content · Beherbergungsbetriebs GmbH",
+    },
     images: ["/portfolio/kern/01.jpg", "/portfolio/kern/02.jpg", "/portfolio/kern/03.jpg"],
     orientation: "portrait",
     color: "#7FB0C9",
