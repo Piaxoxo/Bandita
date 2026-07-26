@@ -14,17 +14,17 @@ function DarkGround() {
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#0c0a0c]">
       <div
-        className="absolute left-1/2 top-[18%] h-[80vmax] w-[80vmax] -translate-x-1/2 rounded-full opacity-[0.5] blur-[120px]"
+        className="absolute left-1/2 top-[18%] h-[80vmax] w-[80vmax] -translate-x-1/2 rounded-full opacity-[0.55] blur-[130px]"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(60,42,52,0.9), rgba(251,0,63,0.08) 42%, transparent 68%)",
+            "radial-gradient(circle at 50% 50%, rgba(255,140,176,0.28), rgba(251,0,63,0.12) 45%, transparent 72%)",
         }}
       />
       <div
-        className="absolute bottom-0 right-0 h-[55vmax] w-[55vmax] translate-x-1/4 translate-y-1/4 rounded-full opacity-40 blur-[120px]"
+        className="absolute bottom-0 right-0 h-[55vmax] w-[55vmax] translate-x-1/4 translate-y-1/4 rounded-full opacity-45 blur-[130px]"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(40,28,36,0.9), transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(255,92,158,0.22), transparent 70%)",
         }}
       />
     </div>
