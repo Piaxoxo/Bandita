@@ -102,7 +102,8 @@ export default function Nav({
         <button
           onClick={() => {
             setOpen(false);
-            scrollToId("top");
+            if (isHome) scrollToId("top");
+            else router.push(`/${lang}`);
           }}
           aria-label="BANDITA — Home"
           data-cursor="link"

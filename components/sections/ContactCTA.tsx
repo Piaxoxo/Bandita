@@ -6,7 +6,8 @@ import Reveal from "@/components/anim/Reveal";
 import Parallax from "@/components/anim/Parallax";
 import MagneticButton from "@/components/MagneticButton";
 
-const EMAIL = "agencybandita@gmail.com";
+const EMAIL = "agencybandita@gmail.com"; // where mail is actually delivered
+const DISPLAY_EMAIL = "office@bandita.agency"; // shown on the site (forwards to EMAIL)
 const OPTIONS: Record<Locale, { label: string; subject: string }[]> = {
   de: [
     { label: "Projekt anfragen", subject: "Projektanfrage" },
@@ -91,7 +92,7 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
               data-cursor="link"
               className="font-sans text-sm lowercase tracking-[0.1em] text-creme/80 underline decoration-creme/30 underline-offset-4 transition-colors hover:text-creme"
             >
-              {EMAIL}
+              {DISPLAY_EMAIL}
             </a>
             <span className="font-sans text-xs uppercase tracking-[0.2em] text-creme/60">
               {dict.cta.note}
