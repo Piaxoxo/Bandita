@@ -28,10 +28,10 @@ export default function ScrollFlight() {
         const centre = rect.top + rect.height / 2;
         let r = (centre - mid) / vh; // ~ -1 (above) .. +1 (below)
         r = Math.max(-1.2, Math.min(1.2, r));
-        const rot = -r * 8; // tilt toward the camera
-        const ty = -r * 30; // gentle counter-drift for depth
-        const sc = 1 - Math.abs(r) * 0.06;
-        const op = Math.max(0, 1 - Math.abs(r) * 0.45);
+        const rot = -r * 10; // tilt toward the camera
+        const ty = -r * 78; // strong counter-drift → the page is always moving
+        const sc = 1 - Math.abs(r) * 0.05;
+        const op = Math.max(0, 1 - Math.abs(r) * 0.3);
         el.style.transform = `perspective(1400px) translateY(${ty}px) rotateX(${rot}deg) scale(${sc})`;
         el.style.opacity = String(op);
         el.style.transformStyle = "preserve-3d";
