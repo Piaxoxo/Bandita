@@ -326,11 +326,11 @@ export default function AboutScene({
       </Suspense>
       <EffectComposer multisampling={0}>
         <Bloom
-          intensity={quality === "high" ? 1.4 : 0.9}
-          luminanceThreshold={0.2}
-          luminanceSmoothing={0.5}
+          intensity={quality === "high" ? 0.55 : 0.4}
+          luminanceThreshold={0.78}
+          luminanceSmoothing={0.35}
           mipmapBlur
-          radius={quality === "high" ? 0.85 : 0.7}
+          radius={quality === "high" ? 0.6 : 0.5}
         />
         <ChromaticAberration
           offset={new THREE.Vector2(0.0003, 0.0003)}
