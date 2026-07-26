@@ -214,7 +214,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       });
       gsap.fromTo(
         ".manifesto-belief",
-        { opacity: 0.12 },
+        { opacity: 0.32 },
         {
           opacity: 1,
           stagger: 0.5,
@@ -239,7 +239,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
 
       {/* ════════ ① HERO ════════ */}
       <section id="top" className="relative flex min-h-[100svh] items-center overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0c0a0c]/40 via-transparent to-[#0c0a0c]/70" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-creme/30 via-transparent to-creme/55" />
         <div ref={heroInner} className="relative z-10 mx-auto w-full max-w-[1500px] px-5 will-change-transform md:px-10">
           <p className="ah-eyebrow mb-7 font-sans text-[11px] uppercase tracking-[0.4em] text-pink md:text-xs">
             {a.hero.eyebrow}
@@ -257,7 +257,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
         </div>
         <div className="ah-scroll absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2">
           <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-ink/50">{a.hero.scroll}</span>
-          <span className="relative h-12 w-px overflow-hidden bg-creme/15">
+          <span className="relative h-12 w-px overflow-hidden bg-ink/15">
             <span className="motion-only absolute inset-x-0 top-0 h-4 w-px animate-[scrollLine_2s_ease-in-out_infinite] bg-pink" />
           </span>
         </div>
@@ -266,7 +266,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       {/* ════════ ② THE NAME — particle illustration forms here ════════ */}
       <section id="about-name" className="relative flex min-h-[100svh] items-center overflow-hidden py-24 md:py-32">
         <div className="relative mx-auto grid w-full max-w-[1400px] items-center gap-12 px-5 md:grid-cols-2 md:px-10">
-          <div className="rounded-[1.6rem] bg-[#0c0a0c]/45 p-7 backdrop-blur-md ring-1 ring-ink/10 md:p-10">
+          <div className="rounded-[1.6rem] bg-creme/60 p-7 backdrop-blur-md ring-1 ring-ink/10 md:p-10">
             <Reveal>
               <span className="mb-8 block text-pink"><Kicker>{a.name.kicker}</Kicker></span>
             </Reveal>
@@ -306,7 +306,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
 
       {/* ════════ ③ WHY US — plate flies in on the right ════════ */}
       <section id="about-why" className="relative overflow-hidden py-28 md:py-40">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0c0a0c]/85 via-[#0c0a0c]/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-creme/75 via-creme/35 to-transparent" />
         <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
           <Reveal><span className="mb-9 block text-pink"><Kicker>{a.why.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="max-w-3xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-6xl lg:text-7xl">
@@ -340,7 +340,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           <Reveal as="p" className="mt-9 font-display text-2xl italic md:text-3xl">{a.psychology.detail}</Reveal>
           <div className="mt-14 flex flex-col items-center gap-2">
             {a.psychology.nothing.map((n, i) => (
-              <Reveal as="span" key={i} delay={i * 0.06} className="font-display text-2xl text-ink/35 md:text-3xl">{n}</Reveal>
+              <Reveal as="span" key={i} delay={i * 0.06} className="font-display text-2xl text-ink/55 md:text-3xl">{n}</Reveal>
             ))}
             <Reveal as="span" className="mt-5 font-display text-3xl font-medium text-pink md:text-4xl">{a.psychology.verdict}</Reveal>
           </div>
@@ -349,7 +349,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
 
       {/* ════════ ⑤ THE BANDITAS — 3D tilt gallery ════════ */}
       <section id="about-team" className="relative overflow-hidden py-28 md:py-40">
-        <div className="absolute inset-0 bg-[#0c0a0c]/60" />
+        <div className="absolute inset-0 bg-creme/45" />
         <div className="relative mx-auto max-w-[1500px] px-5 md:px-10">
           <Reveal><span className="mb-9 block text-pink"><Kicker>{a.team.kicker}</Kicker></span></Reveal>
           <div className="grid items-end gap-8 md:grid-cols-12">
@@ -391,7 +391,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
 
       {/* ════════ ⑥ WHAT WE DO — kinetic marquee ════════ */}
       <section id="about-services" className="relative overflow-hidden py-28 md:py-40">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0c0a0c]/80 via-[#0c0a0c]/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-creme/70 via-creme/30 to-transparent" />
         <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
           <Reveal><span className="mb-9 block text-pink"><Kicker>{a.services.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="max-w-3xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-6xl">
@@ -421,10 +421,10 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
               {a.services.everything}
             </Reveal>
             <div className="flex gap-6">
-              <Reveal as="span" delay={0.06} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink/30 sm:text-6xl md:text-7xl">
+              <Reveal as="span" delay={0.06} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink/45 sm:text-6xl md:text-7xl">
                 {a.services.online}
               </Reveal>
-              <Reveal as="span" delay={0.12} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink/30 sm:text-6xl md:text-7xl">
+              <Reveal as="span" delay={0.12} className="font-display text-5xl font-medium leading-none tracking-[-0.02em] text-ink/45 sm:text-6xl md:text-7xl">
                 {a.services.offline}
               </Reveal>
             </div>
@@ -436,7 +436,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       {/* ════════ Focal campaign moment — the big centred plate develops here ════════ */}
       {!r && (
         <section id="about-work-focal" className="relative flex min-h-[95svh] items-center overflow-hidden py-24">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0a0c]/85 via-[#0c0a0c]/35 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-creme/75 via-creme/30 to-transparent" />
           <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 md:px-10">
             <Reveal><span className="mb-8 block text-pink"><Kicker>{a.work.kicker}</Kicker></span></Reveal>
             <Reveal as="h2" y={30} className="max-w-xl font-display text-5xl font-medium leading-[1.02] tracking-[-0.01em] sm:text-6xl md:text-7xl">
@@ -480,7 +480,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           alt={a.vienna.imageAlt}
           className={`absolute inset-0 h-full w-full object-cover ${r ? "" : "kenburns"}`}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a0c] via-[#0c0a0c]/40 to-[#0c0a0c]/55" />
+        <div className="absolute inset-0 bg-gradient-to-t from-creme via-creme/55 to-creme/25" />
         <div className="relative z-10 mx-auto w-full max-w-[1400px] px-5 pb-[10vh] md:px-10">
           <Reveal><span className="mb-7 block text-ink/70"><Kicker>{a.vienna.kicker}</Kicker></span></Reveal>
           <Reveal as="h2" y={30} className="max-w-4xl font-display text-4xl font-medium leading-[1.0] tracking-[-0.01em] sm:text-6xl md:text-7xl">

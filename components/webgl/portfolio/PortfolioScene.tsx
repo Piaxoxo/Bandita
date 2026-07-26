@@ -91,14 +91,12 @@ const planeFrag = `
     col += uTint * front * 1.4 * uDevelop;
     float vis = mix(smoothstep(0.0,0.18,uReveal), visD, uDevelop);
     float b = min(min(vUv.x,1.0-vUv.x), min(vUv.y,1.0-vUv.y));
-    col += uTint * smoothstep(0.05,0.0,b) * (0.5 + uGlass*0.9);
-    col += vec3(1.0) * smoothstep(0.018,0.0,b) * uGlass * 0.5;
+    col += uTint * smoothstep(0.04,0.0,b) * (0.28 + uGlass*0.6);
+    col += vec3(1.0) * smoothstep(0.014,0.0,b) * uGlass * 0.35;
     col *= 1.0 - uScan * 0.10 * step(0.5, fract(vUv.y*200.0));
     float sync = (1.0-smoothstep(0.0,0.06,abs(uReveal - vUv.y))) * (1.0-step(0.99,uReveal));
     col += vec3(1.0) * sync * uScan * 0.6;
     col += col * uBloom * (1.0 - uReveal) * 0.7;
-    float sw = abs(fract((vUv.x+vUv.y)*0.5 - uTime*0.05)-0.5);
-    col += vec3(1.0)*smoothstep(0.5,0.47,sw)*0.1*vis;
     gl_FragColor = vec4(col, vis*uOpacity);
   }
 `;
@@ -260,7 +258,7 @@ function Halo({ getFocus, color, size, pos }: { getFocus: () => { focus: number;
     const t = s.clock.elapsedTime;
     m.position.set(pos[0] + portfolio.pointerX * 0.5, pos[1] + portfolio.pointerY * 0.35, pos[2] - 1.4);
     m.scale.setScalar((0.9 + eased.current * 0.35) * (1 + Math.sin(t * 0.6 + pos[0]) * 0.03));
-    u.uOpacity.value = eased.current * 0.5;
+    u.uOpacity.value = eased.current * 0.3;
   });
   return (
     <mesh ref={mesh} visible={false}>
@@ -354,7 +352,7 @@ function Inner({ compact, dust }: { compact: boolean; dust: number }) {
         </Suspense>
       ))}
       <EffectComposer multisampling={0}>
-        <Bloom intensity={compact ? 0.8 : 1.25} luminanceThreshold={0.22} luminanceSmoothing={0.5} mipmapBlur radius={0.8} />
+        <Bloom intensity={compact ? 0.28 : 0.4} luminanceThreshold={0.82} luminanceSmoothing={0.3} mipmapBlur radius={0.6} />
         <ChromaticAberration offset={new THREE.Vector2(0.0004, 0.0004)} radialModulation={false} modulationOffset={0} />
         <Vignette eskil={false} offset={0.22} darkness={0.92} />
         <Noise premultiply opacity={compact ? 0.03 : 0.05} />
