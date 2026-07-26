@@ -10,6 +10,7 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 import AccessibilityPanel from "./AccessibilityPanel";
 import SceneLayer from "./webgl/SceneLayer";
+import CinemaOverlay from "./CinemaOverlay";
 
 export default function SiteShell({
   lang,
@@ -30,6 +31,7 @@ export default function SiteShell({
       <main id="main">{children}</main>
       <Footer dict={dict} />
       <AccessibilityPanel lang={lang} dict={dict} />
+      <CinemaOverlay />
     </SiteProvider>
   );
 }

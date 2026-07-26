@@ -254,3 +254,21 @@ html[data-reduced-motion="true"] .motion-only {
 html[data-reduced-motion="true"] .reduced-only {
   display: flex;
 }
+
+/* Cinematic film-grain flicker (CinemaOverlay) */
+@keyframes cinemaGrain {
+  0% { transform: translate3d(0, 0, 0); }
+  10% { transform: translate3d(-4%, -3%, 0); }
+  20% { transform: translate3d(-8%, 4%, 0); }
+  30% { transform: translate3d(6%, -6%, 0); }
+  40% { transform: translate3d(-4%, 7%, 0); }
+  50% { transform: translate3d(7%, 3%, 0); }
+  60% { transform: translate3d(-8%, 5%, 0); }
+  70% { transform: translate3d(5%, -4%, 0); }
+  80% { transform: translate3d(-6%, -6%, 0); }
+  90% { transform: translate3d(4%, 5%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+.cinema-grain {
+  animation: cinemaGrain 0.7s steps(4) infinite;
+}

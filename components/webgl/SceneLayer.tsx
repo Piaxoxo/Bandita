@@ -6,8 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSite } from "@/lib/site-context";
 import { initSceneInputs } from "@/lib/scene-store";
 
-const MarbleScene = dynamic(() => import("./MarbleScene"), { ssr: false });
-const OneLineArt = dynamic(() => import("./OneLineArt"), { ssr: false });
+const MercuryScene = dynamic(() => import("./MercuryScene"), { ssr: false });
 
 /* Static white + soft-pink marble tone — reduced-motion & pre-mount fallback */
 function GradientFallback() {
@@ -56,8 +55,7 @@ export default function SceneLayer() {
       <GradientFallback />
       {mounted && !reducedMotion && (
         <div className="absolute inset-0">
-          <MarbleScene />
-          <OneLineArt />
+          <MercuryScene />
         </div>
       )}
     </div>
