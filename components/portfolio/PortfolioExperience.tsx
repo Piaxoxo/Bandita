@@ -6,38 +6,52 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { detectTier } from "@/lib/scene-store";
-import { portfolio, attachPortfolioInputs } from "@/lib/portfolio-scene";
-import { STATIONS, QUOTES, ITEMS } from "./portfolio-data";
-import MagneticButton from "@/components/MagneticButton";
-import { scrollToId } from "@/lib/scroll";
+import { portfolio, attachPortfolioInputs, tickPortfolio } from "@/lib/portfolio-scene";
+import PortfolioWall from "./PortfolioWall";
+import PortfolioProject from "./PortfolioProject";
 
-const PortfolioScene = dynamic(() => import("@/components/webgl/portfolio/PortfolioScene"), { ssr: false });
-
-const TRACK_VH = (ITEMS.length + 1) * 120; // one clean frame per image — slow cinematic travel
+const PortfolioAtmosphere = dynamic(() => import("@/components/webgl/portfolio/PortfolioAtmosphere"), {
+  ssr: false,
+});
 
 export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const { reducedMotion: r } = useSite();
   const [canvas, setCanvas] = useState(false);
   const [compact, setCompact] = useState(false);
-  const introRef = useRef<HTMLDivElement>(null);
-  const tagRef = useRef<HTMLSpanElement>(null);
-  const counterRef = useRef<HTMLSpanElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  const quoteRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [expanded, setExpanded] = useState(-1);
+  const [open, setOpen] = useState(-1); // -1 = wall, >=0 = project index
+  const [soundOn, setSoundOn] = useState(false);
+  const glowRef = useRef<HTMLDivElement>(null);
   const t = dict.portfolio;
 
-  // ── ambient sound (WebAudio pad that shifts per station) ──
-  const audio = useRef<{
-    ctx: AudioContext;
-    master: GainNode;
-    oscs: OscillatorNode[];
-    filter: BiquadFilterNode;
-  } | null>(null);
-  const [soundOn, setSoundOn] = useState(false);
-  // higher register so it's audible on phone speakers (G3–D5 pentatonic)
-  const NOTES = [196, 233.08, 261.63, 293.66, 349.23, 392, 440, 523.25];
+  useEffect(() => {
+    const tier = detectTier();
+    setCompact(tier !== "high");
+    setCanvas(!r && tier !== "low");
+  }, [r]);
 
+  // pointer smoothing + mood glow follow (ref-driven, no re-renders)
+  useEffect(() => {
+    if (r) return;
+    const detach = attachPortfolioInputs();
+    let raf = 0;
+    const loop = () => {
+      tickPortfolio(0.06);
+      if (glowRef.current) {
+        const [rr, gg, bb] = portfolio.mood;
+        const c = `${Math.round(rr * 255)},${Math.round(gg * 255)},${Math.round(bb * 255)}`;
+        glowRef.current.style.background = `radial-gradient(60% 55% at 50% 42%, rgba(${c},0.22), transparent 70%)`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(raf);
+      detach();
+    };
+  }, [r]);
+
+  // ── ambient pad (simple on/off drone) ──
+  const audio = useRef<{ ctx: AudioContext; master: GainNode } | null>(null);
   const toggleSound = () => {
     if (!audio.current) {
       const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -47,314 +61,82 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
       master.connect(ctx.destination);
       const filter = ctx.createBiquadFilter();
       filter.type = "lowpass";
-      filter.frequency.value = 1600;
-      filter.Q.value = 2;
+      filter.frequency.value = 1400;
+      filter.Q.value = 1.5;
       filter.connect(master);
-      const delay = ctx.createDelay();
-      delay.delayTime.value = 0.4;
-      const fb = ctx.createGain();
-      fb.gain.value = 0.3;
-      filter.connect(delay);
-      delay.connect(fb);
-      fb.connect(delay);
-      delay.connect(master);
-      const oscs: OscillatorNode[] = [];
-      [0, 1, 2].forEach((i) => {
+      [110, 164.81, 220].forEach((f, i) => {
         const o = ctx.createOscillator();
         o.type = i === 0 ? "sawtooth" : "sine";
-        o.frequency.value = 220;
-        o.detune.value = (i - 1) * 6;
+        o.frequency.value = f;
+        o.detune.value = (i - 1) * 5;
         const g = ctx.createGain();
-        g.gain.value = i === 0 ? 0.16 : 0.34;
+        g.gain.value = i === 0 ? 0.14 : 0.28;
         o.connect(g);
         g.connect(filter);
         o.start();
-        oscs.push(o);
       });
       const lfo = ctx.createOscillator();
-      lfo.frequency.value = 0.08;
+      lfo.frequency.value = 0.06;
       const lg = ctx.createGain();
-      lg.gain.value = 300;
+      lg.gain.value = 260;
       lfo.connect(lg);
       lg.connect(filter.frequency);
       lfo.start();
-      audio.current = { ctx, master, oscs, filter };
+      audio.current = { ctx, master };
     }
     const a = audio.current;
     const on = !soundOn;
     setSoundOn(on);
-    portfolio.soundOn = on;
-    // iOS unlock: resume inside the gesture + kick a 1-sample silent buffer
     a.ctx.resume();
-    try {
-      const buf = a.ctx.createBuffer(1, 1, 22050);
-      const src = a.ctx.createBufferSource();
-      src.buffer = buf;
-      src.connect(a.ctx.destination);
-      src.start(0);
-    } catch {
-      /* ignore */
-    }
     a.master.gain.cancelScheduledValues(a.ctx.currentTime);
-    a.master.gain.linearRampToValueAtTime(on ? 0.22 : 0.0001, a.ctx.currentTime + (on ? 1.4 : 0.6));
+    a.master.gain.linearRampToValueAtTime(on ? 0.2 : 0.0001, a.ctx.currentTime + (on ? 1.4 : 0.5));
   };
-
-  useEffect(
-    () => () => {
-      audio.current?.ctx.close();
-    },
-    [],
-  );
-
-  useEffect(() => {
-    const tier = detectTier();
-    setCompact(tier !== "high");
-    setCanvas(!r); // canvas on every device unless reduce-motion
-  }, [r]);
-
-  // scroll → progress + overlay sync (ref-driven, no re-renders)
-  useEffect(() => {
-    if (r) return;
-    const detach = attachPortfolioInputs();
-    const onScroll = () => {
-      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      portfolio.progress = Math.min(1, Math.max(0, window.scrollY / max));
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    let raf = 0;
-    const quotePoints = QUOTES.map((_, i) => (i + 1) / (QUOTES.length + 1));
-    const loop = () => {
-      const p = portfolio.progress;
-      if (introRef.current) introRef.current.style.opacity = `${Math.max(0, 1 - p * 14)}`;
-      const act = portfolio.active;
-      if (tagRef.current)
-        tagRef.current.textContent = act >= 0 ? STATIONS[act].tag[lang] : "";
-      if (counterRef.current)
-        counterRef.current.textContent = act >= 0 ? `${String(act + 1).padStart(2, "0")} / ${String(STATIONS.length).padStart(2, "0")}` : "";
-      quotePoints.forEach((qp, i) => {
-        const el = quoteRefs.current[i];
-        if (!el) return;
-        const d = Math.abs(p - qp);
-        const vis = Math.max(0, 1 - d / 0.05);
-        el.style.opacity = `${vis}`;
-        el.style.transform = `translate(-50%,-50%) translateY(${(p - qp) * 600}px) scale(${0.9 + vis * 0.1})`;
-      });
-      if (ctaRef.current) ctaRef.current.style.opacity = `${Math.max(0, (p - 0.975) / 0.025)}`;
-      // ambient pad follows the active station
-      const a = audio.current;
-      if (a && portfolio.soundOn) {
-        const idx = portfolio.active >= 0 ? portfolio.active : 0;
-        const base = NOTES[idx % NOTES.length];
-        a.oscs.forEach((o, i) => o.frequency.setTargetAtTime(base * (i === 2 ? 2 : 1), a.ctx.currentTime, 0.5));
-        a.filter.frequency.setTargetAtTime(portfolio.active >= 0 ? 2400 : 900, a.ctx.currentTime, 0.6);
-      }
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      detach();
-    };
-  }, [r, lang]);
-
-  // expand overlay: lock scroll + Esc to close
-  useEffect(() => {
-    if (expanded < 0) return;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setExpanded(-1);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [expanded]);
-
-  /* ───────── reduced-motion / no-JS: content-complete lit gallery ───────── */
-  if (r) {
-    return (
-      <div className="min-h-screen bg-[#08070a] px-5 pb-32 pt-32 text-creme md:px-10">
-        <div className="mx-auto max-w-[1500px]">
-          <span className="font-sans text-[11px] uppercase tracking-[0.34em] text-pink">{t.fallbackKicker}</span>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl font-medium leading-[1.05] tracking-[-0.01em] sm:text-6xl">
-            {t.fallbackHeading}
-          </h1>
-          <div className="mt-16 space-y-24">
-            {STATIONS.map((st) => (
-              <section key={st.id}>
-                <span className="font-sans text-[11px] uppercase tracking-[0.22em] text-creme/55">{st.tag[lang]}</span>
-                <div className={`mt-4 grid gap-4 ${st.orientation === "portrait" ? "grid-cols-2 md:grid-cols-3" : "grid-cols-1 md:grid-cols-2"}`}>
-                  {st.video
-                    ? st.video.map((v, i) => (
-                        // eslint-disable-next-line jsx-a11y/media-has-caption
-                        <video key={v} src={v} poster={st.images[i]} muted loop playsInline autoPlay className="w-full rounded-[1rem] ring-1 ring-creme/10" />
-                      ))
-                    : st.images.map((src) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img key={src} src={src} alt={st.tag[lang]} loading="lazy" className="w-full rounded-[1rem] ring-1 ring-creme/10" />
-                      ))}
-                </div>
-              </section>
-            ))}
-          </div>
-          <div className="mt-24">
-            <MagneticButton as="a" href={`/${lang}#contact`} onClick={() => scrollToId("contact")} className="rounded-full bg-pink px-9 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme">
-              {t.cta}
-            </MagneticButton>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => () => void audio.current?.ctx.close(), []);
 
   return (
     <>
-      {/* fixed world */}
-      <div className="fixed inset-0 -z-10 bg-[#08070a]">{canvas && <PortfolioScene compact={compact} />}</div>
-
-      {/* floating advertising quotes */}
-      <div className="pointer-events-none fixed inset-0 z-10 overflow-hidden">
-        {QUOTES.map((q, i) => (
-          <div
-            key={i}
-            ref={(el) => {
-              quoteRefs.current[i] = el;
-            }}
-            className="absolute left-1/2 top-1/2 w-[90%] max-w-5xl text-center font-display text-4xl font-medium italic leading-[1.05] tracking-[-0.01em] text-creme sm:text-6xl md:text-7xl"
-            style={{ opacity: 0, transform: "translate(-50%,-50%)", textShadow: "0 0 40px rgba(0,0,0,0.6)" }}
-          >
-            {q[lang]}
+      {/* continuous 3D world behind everything */}
+      <div className="fixed inset-0 -z-10 bg-[#08070a]">
+        <div ref={glowRef} className="absolute inset-0" />
+        {canvas && (
+          <div className="absolute inset-0">
+            <PortfolioAtmosphere compact={compact} />
           </div>
-        ))}
+        )}
       </div>
 
-      {/* intro */}
-      <div ref={introRef} className="pointer-events-none fixed inset-0 z-20 flex flex-col items-center justify-center text-center">
-        <span className="font-sans text-[11px] uppercase tracking-[0.4em] text-pink">{t.enter}</span>
-        <p className="mt-6 max-w-md px-6 font-display text-2xl italic text-creme/80 md:text-3xl">{t.fallbackHeading}</p>
-        <span className="mt-10 font-sans text-[10px] uppercase tracking-[0.3em] text-creme/45">{t.scroll} ↓</span>
+      {/* mode content */}
+      <div key={open} className="portfolio-fade">
+        {open < 0 ? (
+          <PortfolioWall lang={lang} dict={dict} reduced={r} onOpen={(i) => setOpen(i)} />
+        ) : (
+          <PortfolioProject
+            index={open}
+            lang={lang}
+            dict={dict}
+            reduced={r}
+            onBack={() => {
+              setOpen(-1);
+              window.scrollTo(0, 0);
+            }}
+            onSelect={(i) => setOpen(i)}
+          />
+        )}
       </div>
 
-      {/* HUD */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-20 flex items-center justify-between px-5 font-sans text-[11px] uppercase tracking-[0.2em] text-creme/60 md:px-10">
-        <span ref={counterRef} className="tabular-nums" />
+      {/* sound toggle */}
+      {!r && (
         <button
           type="button"
           onClick={toggleSound}
           data-cursor="link"
-          className="pointer-events-auto flex items-center gap-2 text-creme/55 transition-colors hover:text-pink"
           aria-pressed={soundOn}
+          className="fixed bottom-6 left-5 z-30 flex items-center gap-2 rounded-full bg-black/40 px-4 py-2 font-sans text-[11px] uppercase tracking-[0.2em] text-creme/60 backdrop-blur transition-colors hover:text-pink md:left-10"
         >
           <span className={`inline-block h-1.5 w-1.5 rounded-full ${soundOn ? "bg-pink" : "bg-creme/40"}`} />
           {t.sound}
         </button>
-        <button
-          type="button"
-          onClick={() => {
-            if (portfolio.active >= 0) setExpanded(portfolio.active);
-          }}
-          data-cursor="link"
-          className="pointer-events-auto flex items-center gap-2 text-creme/75 transition-colors hover:text-pink"
-        >
-          <span ref={tagRef} />
-          <span className="text-pink">↗</span>
-        </button>
-      </div>
-
-      {/* end CTA */}
-      <div ref={ctaRef} className="fixed inset-0 z-20 flex items-center justify-center" style={{ opacity: 0 }}>
-        <div className="pointer-events-auto text-center">
-          <p className="mb-8 font-display text-3xl italic text-creme md:text-5xl">{t.fallbackHeading}</p>
-          <MagneticButton as="a" href={`/${lang}#contact`} onClick={() => scrollToId("contact")} strength={0.5} className="rounded-full bg-pink px-10 py-5 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink">
-            {t.cta}
-          </MagneticButton>
-        </div>
-      </div>
-
-      {/* click a work → it expands to become the environment */}
-      {expanded >= 0 && (
-        <ExpandOverlay station={STATIONS[expanded]} lang={lang} onClose={() => setExpanded(-1)} />
       )}
-
-      {/* virtual scroll track */}
-      <div style={{ height: `${TRACK_VH}vh` }} aria-hidden />
     </>
-  );
-}
-
-/* ───────── in-world expand: the work becomes the whole environment ───────── */
-function ExpandOverlay({
-  station,
-  lang,
-  onClose,
-}: {
-  station: (typeof STATIONS)[number];
-  lang: Locale;
-  onClose: () => void;
-}) {
-  const [i, setI] = useState(0);
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    const r = requestAnimationFrame(() => setShown(true));
-    if (station.video) return () => cancelAnimationFrame(r);
-    const id = setInterval(() => setI((v) => (v + 1) % station.images.length), 2800);
-    return () => {
-      cancelAnimationFrame(r);
-      clearInterval(id);
-    };
-  }, [station]);
-
-  return (
-    <div
-      className="fixed inset-0 z-40 flex items-center justify-center bg-black/96 transition-opacity duration-500"
-      style={{ opacity: shown ? 1 : 0 }}
-      onClick={onClose}
-    >
-      <div className="relative h-full w-full" style={{ transform: shown ? "scale(1)" : "scale(1.06)", transition: "transform 700ms cubic-bezier(0.16,1,0.3,1)" }}>
-        {station.video
-          ? station.video.map((v, k) => (
-              // eslint-disable-next-line jsx-a11y/media-has-caption
-              <video
-                key={v}
-                src={v}
-                poster={station.images[k]}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 h-full w-full object-contain"
-                style={{ padding: station.orientation === "portrait" ? "4vh 0" : "0" }}
-              />
-            ))
-          : station.images.map((src, k) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={src}
-                src={src}
-                alt={station.tag[lang]}
-                className="absolute inset-0 h-full w-full object-contain transition-opacity duration-[1200ms]"
-                style={{ opacity: k === i ? 1 : 0 }}
-              />
-            ))}
-      </div>
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-8 flex items-center justify-between px-6 font-sans text-[11px] uppercase tracking-[0.22em] text-creme/70 md:px-12">
-        <span>{station.tag[lang]}</span>
-        <span className="text-creme/45">Esc</span>
-      </div>
-      <button
-        type="button"
-        onClick={onClose}
-        data-cursor="link"
-        aria-label="Close"
-        className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center rounded-full bg-creme/10 text-creme transition-colors hover:bg-pink md:right-10 md:top-10"
-      >
-        ✕
-      </button>
-    </div>
   );
 }

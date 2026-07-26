@@ -245,6 +245,9 @@ const de: Dictionary = {
     cta: "Projekt starten",
     fallbackKicker: "Ausgewählte Arbeiten",
     fallbackHeading: "Schau. Mehr braucht es nicht.",
+    projects: "Projekte",
+    overview: "Übersicht",
+    nextProject: "Nächstes Projekt",
   },
   studio: {
     meta: {

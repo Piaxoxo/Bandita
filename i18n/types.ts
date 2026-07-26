@@ -137,6 +137,9 @@ export interface Dictionary {
     cta: string;
     fallbackKicker: string;
     fallbackHeading: string;
+    projects: string;
+    overview: string;
+    nextProject: string;
   };
   studio: {
     meta: { title: string; description: string };

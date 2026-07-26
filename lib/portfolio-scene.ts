@@ -12,6 +12,7 @@ type PortfolioState = {
   moved: boolean;
   active: number; // index of the station nearest the camera (-1 none)
   soundOn: boolean;
+  mood: [number, number, number]; // current atmosphere tint (0..1 rgb)
 };
 
 export const portfolio: PortfolioState = {
@@ -24,7 +25,18 @@ export const portfolio: PortfolioState = {
   moved: false,
   active: -1,
   soundOn: false,
+  mood: [0.55, 0.45, 0.5],
 };
+
+// set the atmosphere target tint from a hex accent (smoothed by the scene)
+export function setMood(hex: string | null) {
+  if (!hex) {
+    portfolio.mood = [0.55, 0.45, 0.5];
+    return;
+  }
+  const n = parseInt(hex.replace("#", ""), 16);
+  portfolio.mood = [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
 
 let attached = 0;
 let onPointer: ((e: PointerEvent) => void) | null = null;
