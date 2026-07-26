@@ -44,7 +44,7 @@ const vert = /* glsl */ `
   float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.0; a*=0.5; } return v; }
 
   float height(vec2 p){
-    float t = uTime*0.10 + uScroll*1.6;
+    float t = uTime*mix(0.08, 0.24, uScroll) + uScroll*2.2;
     vec2 q = vec2(fbm(p + t), fbm(p - t + 3.1));
     // pull the swell gently toward the cursor
     float pull = 0.5 - length(p*0.16 - uPointer*1.2)*0.12;
@@ -53,8 +53,8 @@ const vert = /* glsl */ `
 
   void main(){
     vec3 pos = position;
-    vec2 p = pos.xy * 0.16;
-    float amp = 3.8 * (1.0 + uBeat * 0.9);
+    vec2 p = pos.xy * mix(0.13, 0.22, clamp(uScroll, 0.0, 1.0));
+    float amp = mix(2.6, 5.6, smoothstep(0.0, 0.75, uScroll)) * (1.0 + uBeat * 0.9);
     float h = height(p);
     float e = 0.05;
     float hx = height(p + vec2(e,0.0));
@@ -86,21 +86,27 @@ const frag = /* glsl */ `
     float spec = pow(clamp(dot(N, H), 0.0, 1.0), 32.0);
     float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 3.0);
 
-    vec3 cream = vec3(0.995, 0.965, 0.94);
-    vec3 blush = vec3(1.0, 0.78, 0.86);
-    vec3 rose  = vec3(0.98, 0.36, 0.60);
-    vec3 pink  = vec3(0.99, 0.02, 0.27);
+    // travelling palette — the world transforms across the scroll journey:
+    // cream → blush → rosé → pink → deep crimson
+    vec3 pA = vec3(0.995, 0.965, 0.94);
+    vec3 pB = vec3(1.0, 0.78, 0.86);
+    vec3 pC = vec3(0.98, 0.36, 0.60);
+    vec3 pD = vec3(0.99, 0.02, 0.27);
+    vec3 pE = vec3(0.42, 0.0, 0.12);
+    float s5 = uScroll * 4.0;
+    vec3 base = mix(pA, pB, clamp(s5, 0.0, 1.0));
+    base = mix(base, pC, clamp(s5 - 1.0, 0.0, 1.0));
+    base = mix(base, pD, clamp(s5 - 2.0, 0.0, 1.0));
+    base = mix(base, pE, clamp(s5 - 3.0, 0.0, 1.0));
 
     float band = smoothstep(0.18, 0.82, vH + sin(vPos.x*0.05 + uTime*0.25)*0.08);
-    vec3 col = mix(cream, blush, band);
-    col = mix(col, rose, smoothstep(0.55, 0.96, vH));
+    vec3 hi = mix(base, vec3(1.0, 0.97, 0.96), 0.4);   // lit crest
+    vec3 col = mix(base * 0.7, hi, band);
 
-    // shadows fall to deep rosé (never muddy grey), crests catch a pink sparkle
     float lit = clamp(0.5 + diff * 0.62, 0.0, 1.0);
-    col = mix(rose * 0.55, col, lit);
-    col += pink * spec * (1.0 + uBeat * 1.8);   // crests flare on the beat
-    col += rose * uBeat * 0.14;                  // whole surface breathes with the music
-    col = mix(col, pink, uScroll * 0.12);        // world deepens toward pink as you travel
+    col = mix(base * 0.5, col, lit);                    // shadows keep the world's hue
+    col += vec3(1.0, 0.35, 0.55) * spec * (1.0 + uBeat * 1.8); // crest flares on the beat
+    col += base * uBeat * 0.2;                          // whole surface breathes with the music
     col = mix(col, vec3(1.0, 0.95, 0.97), fres * 0.14);
     gl_FragColor = vec4(col, 1.0);
   }
