@@ -73,7 +73,7 @@ function ParallaxImage({
 
   return (
     <div ref={wrap} className={`overflow-hidden rounded-[1.4rem] ${className}`}>
-      <div ref={layer} className="relative h-[120%] w-full" style={{ marginTop: "-10%" }}>
+      <div ref={layer} className="relative h-[150%] w-full" style={{ marginTop: "-25%" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={src}
@@ -131,7 +131,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
           src="/work/film-01.jpg"
           alt={s.s1.alt}
           className="absolute inset-0 !rounded-none"
-          parallax={10}
+          parallax={16}
           reduced={r}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-ink/40" />
@@ -171,7 +171,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
                 src="/work/film-02.jpg"
                 alt={s.s2.alt}
                 className="h-[52vh] md:h-[78vh]"
-                parallax={12}
+                parallax={16}
                 reduced={r}
               />
               {/* partially overlapping smaller frame */}
@@ -180,7 +180,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
                   src="/work/film-01.jpg"
                   alt={s.s2.altSmall}
                   className="aspect-[4/5] shadow-2xl ring-1 ring-ink/10"
-                  parallax={20}
+                  parallax={16}
                   reduced={r}
                 />
               </div>
@@ -195,7 +195,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
           src="/work/bar-01.jpg"
           alt={s.s3.alt}
           className="absolute inset-0 !rounded-none"
-          parallax={9}
+          parallax={16}
           reduced={r}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-ink/30" />
@@ -221,7 +221,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
           src="/work/guests-01.jpg"
           alt={s.s4.alt}
           className="absolute inset-0 !rounded-none"
-          parallax={11}
+          parallax={16}
           reduced={r}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-ink/35" />
