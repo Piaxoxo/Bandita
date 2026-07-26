@@ -160,14 +160,24 @@ function FloatingModel({ item, center }: { item: Item; center: number }) {
     const beat = audioState.level;
     // visible around this theme's section, cross-fading to neighbours
     const active = Math.max(0, 1 - Math.abs(scroll - center) / 0.14);
-    const s = item.scale * active * (1 + beat * 0.12);
+    const s = item.scale * 1.55 * active * (1 + beat * 0.15); // bigger + beat
     g.visible = s > 0.002;
     if (!g.visible) return;
     g.scale.setScalar(s);
-    g.position.y = item.pos[1] + Math.sin(t * 0.35 + item.seed) * 0.7 + (scroll - center) * (10 + depth * 26);
-    g.position.x = item.pos[0] + Math.cos(t * 0.28 + item.seed) * 0.6 + store.pointerX * depth * 2.4;
-    g.rotation.x = t * 0.22 + item.seed;
-    g.rotation.y = t * 0.3;
+    let x = item.pos[0] + Math.cos(t * 0.32 + item.seed) * 0.8 + store.pointerX * depth * 2.6;
+    let y = item.pos[1] + Math.sin(t * 0.42 + item.seed) * 1.0 + (scroll - center) * (12 + depth * 30);
+    // cursor repel — the forms shy away from the pointer
+    const px = store.pointerX * 7.5;
+    const py = store.pointerY * 4.2;
+    const dx = x - px;
+    const dy = y - py;
+    const dist = Math.hypot(dx, dy) + 0.001;
+    const force = Math.max(0, 1 - dist / 5.5) * 3.4;
+    x += (dx / dist) * force;
+    y += (dy / dist) * force;
+    g.position.set(x, y, item.pos[2]);
+    g.rotation.x = t * (0.35 + item.seed * 0.05) + item.seed;
+    g.rotation.y = t * 0.5;
   });
   return (
     <group ref={ref} position={item.pos}>
@@ -185,11 +195,17 @@ function Rig() {
     const t = state.clock.elapsedTime;
     const s = store.scroll;
     const compact = size.width < 768;
-    camera.position.x += (store.pointerX * 1.3 + Math.sin(t * 0.1) * 0.35 - camera.position.x) * 0.05;
-    camera.position.y += (store.pointerY * 0.9 - s * 1.8 - camera.position.y) * 0.05;
-    camera.position.z += ((compact ? 12 : 10) - s * 2.5 - camera.position.z) * 0.05;
-    camera.lookAt(0, 0, -6);
-    camera.rotation.z += (Math.sin(t * 0.06) * 0.02 + store.pointerX * 0.025 - camera.rotation.z) * 0.05;
+    // a rollercoaster ride: the camera swoops side-to-side and dips/rises as it
+    // rides the scroll, banking into every turn.
+    const swoopX = Math.sin(s * Math.PI * 4) * (compact ? 1.8 : 3.6) + store.pointerX * 1.5;
+    const swoopY = Math.sin(s * Math.PI * 3) * 2.2 - s * 2 + store.pointerY * 0.9;
+    const swoopZ = (compact ? 12 : 10) - Math.sin(s * Math.PI * 2) * 3.2 - store.scroll * 1.5;
+    camera.position.x += (swoopX - camera.position.x) * 0.06;
+    camera.position.y += (swoopY - camera.position.y) * 0.06;
+    camera.position.z += (swoopZ - camera.position.z) * 0.06;
+    camera.lookAt(swoopX * 0.35, swoopY * 0.3, -6);
+    const bank = Math.cos(s * Math.PI * 4) * 0.14 + store.pointerX * 0.03;
+    camera.rotation.z += (bank - camera.rotation.z) * 0.06;
   });
   return null;
 }

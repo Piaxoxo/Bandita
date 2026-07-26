@@ -363,7 +363,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
 
           <div className="mt-16 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
             {a.team.members.map((m, i) => {
-              const slug = ["pia-alice", "dino", "niddl", "noemi-santo"][i] ?? "";
+              const slug = ["pia-alice", "dino", "niddl", "michael-lehner"][i] ?? "";
               return (
                 <Reveal key={m.name} delay={i * 0.06}>
                   <TiltCard disabled={r} className="group">

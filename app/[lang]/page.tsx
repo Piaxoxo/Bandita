@@ -24,7 +24,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
       <ReelsShowcase lang={lang} />
       <Philosophy dict={dict} />
       <EditorialShowcase dict={dict} />
-      <ContactCTA dict={dict} />
+      <ContactCTA dict={dict} lang={lang} />
     </>
   );
 }

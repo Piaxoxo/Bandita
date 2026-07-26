@@ -164,10 +164,10 @@ const de: Dictionary = {
             "Originalsound und Scoring — der Teil einer Marke, den man fühlt, bevor man ihn benennen kann.",
         },
         {
-          name: "Noemi Santo",
+          name: "Michael Lehner",
           role: "Head of Photography",
           craft:
-            "Das stehende Bild. Licht, Komposition und das eine Foto, das den Scroll stoppt.",
+            "Das stehende Bild. Licht, Komposition und das eine Foto, das den Scroll stoppt. (Foto folgt.)",
         },
       ],
       note: "Hinter jedem Lead steht das Team, das es real macht.",

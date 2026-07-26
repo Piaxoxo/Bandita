@@ -164,10 +164,10 @@ const en: Dictionary = {
             "Original sound and scoring — the part of a brand you feel before you can name it.",
         },
         {
-          name: "Noemi Santo",
+          name: "Michael Lehner",
           role: "Head of Photography",
           craft:
-            "The still frame. Light, composition and the single image that stops the scroll.",
+            "The still frame. Light, composition and the single image that stops the scroll. (Photo to follow.)",
         },
       ],
       note: "Behind every lead stands the team that makes it real.",

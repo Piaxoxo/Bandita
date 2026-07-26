@@ -41,7 +41,6 @@ export default function Nav({
     ready: boolean;
   }[] = [
     { key: "about", label: dict.nav.about, href: `/${lang}/about`, ready: true },
-    { key: "studio", label: "The Studio", href: `/${lang}/studio`, ready: true },
     { key: "portfolio", label: dict.nav.portfolio, href: `/${lang}/portfolio`, ready: true },
     { key: "contact", label: dict.nav.contact, anchor: "contact", ready: true },
   ];
@@ -156,6 +155,19 @@ export default function Nav({
         </nav>
 
         <div className="flex items-center gap-3 md:gap-5">
+          {/* Back to home — always available off the homepage */}
+          {!isHome && (
+            <Link
+              href={`/${lang}`}
+              data-cursor="link"
+              className={`hidden items-center gap-1 font-sans text-xs uppercase tracking-[0.15em] transition-colors hover:text-pink sm:flex ${
+                lightChrome ? "text-creme/75" : "text-ink/75"
+              }`}
+            >
+              ← {dict.nav.home}
+            </Link>
+          )}
+
           {/* Language switch */}
           <Link
             href={switchedPath}
