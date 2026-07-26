@@ -177,18 +177,18 @@ function Rig() {
     const s = store.scroll;
     const beat = audioState.level;
     const compact = size.width < 768;
-    const baseZ = compact ? 16 : 13;
-    // a big continuous flight: strong lateral sway, a climb, and a steady dive
-    // deep into the world, with banking + pitch as you go.
-    const flyX = Math.sin(s * Math.PI * 3.0) * (compact ? 2.6 : 4.6) + store.pointerX * 1.6;
-    const flyY = s * 6.5 + store.pointerY * 1.0 + Math.sin(t * 0.12) * 0.5;
-    const flyZ = baseZ - s * 7.5 - beat * 0.8; // dive deep through the scroll
-    camera.position.x += (flyX - camera.position.x) * 0.06;
-    camera.position.y += (flyY - camera.position.y) * 0.06;
-    camera.position.z += (flyZ - camera.position.z) * 0.06;
-    camera.lookAt(store.pointerX * 0.9, s * 3.2, -2);
+    const baseZ = compact ? 16.5 : 13.5;
+    // a dramatic continuous flight: hard lateral weave, a steep climb and a
+    // deep dive into the world, with strong banking through every turn.
+    const flyX = Math.sin(s * Math.PI * 3.5) * (compact ? 3.4 : 7.0) + store.pointerX * 1.8;
+    const flyY = s * 10.0 + store.pointerY * 1.0 + Math.sin(t * 0.12) * 0.6;
+    const flyZ = baseZ - s * 8.0 - beat * 0.9; // dive deep through the scroll
+    camera.position.x += (flyX - camera.position.x) * 0.055;
+    camera.position.y += (flyY - camera.position.y) * 0.055;
+    camera.position.z += (flyZ - camera.position.z) * 0.055;
+    camera.lookAt(store.pointerX * 1.0, s * 4.5, -2);
     camera.rotation.z +=
-      (Math.sin(t * 0.06) * 0.03 + store.pointerX * 0.03 + Math.sin(s * Math.PI * 2.0) * 0.07 - camera.rotation.z) * 0.06;
+      (Math.sin(t * 0.06) * 0.03 + store.pointerX * 0.03 + Math.sin(s * Math.PI * 2.5) * 0.12 - camera.rotation.z) * 0.06;
   });
   return null;
 }

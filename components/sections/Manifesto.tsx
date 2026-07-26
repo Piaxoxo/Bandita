@@ -65,7 +65,7 @@ export default function Manifesto({ dict }: { dict: Dictionary }) {
         Bandita
       </span>
 
-      <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
+      <div data-fly className="relative mx-auto max-w-[1400px] px-5 md:px-10">
         <p className="mb-10 font-sans text-[11px] uppercase tracking-[0.4em] text-pink">
           {dict.manifesto.eyebrow}
         </p>

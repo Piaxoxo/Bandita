@@ -22,7 +22,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
         }}
       />
 
-      <div className="relative mx-auto mb-10 max-w-[1400px] px-5 md:mb-14 md:px-10">
+      <div data-fly className="relative mx-auto mb-10 max-w-[1400px] px-5 md:mb-14 md:px-10">
         <Reveal>
           <p className="mb-8 font-sans text-[11px] uppercase tracking-[0.4em] text-pink">
             {dict.capabilities.eyebrow}
@@ -60,7 +60,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
         ))}
       </ul>
 
-      <div className="relative mx-auto mt-10 max-w-[1400px] px-5 md:mt-16 md:px-10">
+      <div data-fly className="relative mx-auto mt-10 max-w-[1400px] px-5 md:mt-16 md:px-10">
         <Reveal>
           <p className="max-w-2xl font-sans text-lg leading-relaxed text-ink/70">
             {dict.capabilities.body}

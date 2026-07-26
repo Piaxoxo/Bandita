@@ -13,6 +13,7 @@ import SceneLayer from "./webgl/SceneLayer";
 import CinemaOverlay from "./CinemaOverlay";
 import SoundControl from "./SoundControl";
 import PageTransition from "./PageTransition";
+import ScrollFlight from "./ScrollFlight";
 
 export default function SiteShell({
   lang,
@@ -35,6 +36,7 @@ export default function SiteShell({
       <AccessibilityPanel lang={lang} dict={dict} />
       <SoundControl />
       <PageTransition />
+      <ScrollFlight />
       <CinemaOverlay />
     </SiteProvider>
   );

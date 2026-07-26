@@ -74,7 +74,7 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
           where the scene fills more of the small viewport. */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-creme/70 via-creme/25 to-creme/70 md:from-creme/30 md:via-transparent md:to-creme/55" />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1600px] px-5 md:px-10">
+      <div data-fly className="relative z-10 mx-auto w-full max-w-[1600px] px-5 md:px-10">
         <p className="hero-eyebrow mb-6 font-sans text-[11px] uppercase tracking-[0.4em] text-pink md:text-xs">
           {dict.hero.eyebrow}
         </p>

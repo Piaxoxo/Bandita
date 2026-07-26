@@ -138,7 +138,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
         <div className="absolute right-6 top-28 text-creme/70 md:right-12 md:top-32">
           <Label>{s.s1.label}</Label>
         </div>
-        <div className="relative z-10 mx-auto w-full max-w-[1500px] px-5 pb-[12vh] md:px-10">
+        <div data-fly className="relative z-10 mx-auto w-full max-w-[1500px] px-5 pb-[12vh] md:px-10">
           <Heading reduced={r} className="max-w-4xl">
             <h2 className="font-display text-5xl font-medium uppercase leading-[0.98] tracking-[-0.01em] sm:text-7xl md:text-8xl">
               {s.s1.heading}
@@ -200,7 +200,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-ink/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-ink/40" />
-        <div className="relative z-10 mx-auto w-full max-w-[1500px] px-5 md:px-10">
+        <div data-fly className="relative z-10 mx-auto w-full max-w-[1500px] px-5 md:px-10">
           <Heading reduced={r} className="max-w-3xl">
             <span className="mb-7 block text-rose">
               <Label>{s.s3.label}</Label>
@@ -225,7 +225,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
           reduced={r}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-ink/35" />
-        <div className="relative z-10 mx-auto w-full max-w-[1500px] px-5 pb-[12vh] md:px-10">
+        <div data-fly className="relative z-10 mx-auto w-full max-w-[1500px] px-5 pb-[12vh] md:px-10">
           <Heading reduced={r} className="max-w-4xl">
             <span className="mb-7 block text-rose">
               <Label>{s.s4.label}</Label>

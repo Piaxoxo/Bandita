@@ -21,7 +21,7 @@ export default function ContactCTA({ dict }: { dict: Dictionary }) {
         }}
       />
 
-      <div className="relative mx-auto max-w-[1400px] px-5 text-center md:px-10">
+      <div data-fly className="relative mx-auto max-w-[1400px] px-5 text-center md:px-10">
         <Reveal>
           <p className="mb-8 font-sans text-[11px] uppercase tracking-[0.4em] text-creme/70">
             {dict.cta.eyebrow}

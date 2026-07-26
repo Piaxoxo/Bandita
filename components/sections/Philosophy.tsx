@@ -52,7 +52,7 @@ export default function Philosophy({ dict }: { dict: Dictionary }) {
         />
       </div>
 
-      <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+      <div data-fly className="mx-auto max-w-[1400px] px-5 md:px-10">
         <div className="grid gap-16 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <div>
             <Reveal>
