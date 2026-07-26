@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 /*
   Site-wide cinematic finish: a faint film-grain that flickers over everything
@@ -13,6 +14,7 @@ const GRAIN =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E";
 
 export default function CinemaOverlay() {
+  const pathname = usePathname();
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -21,6 +23,9 @@ export default function CinemaOverlay() {
     mq.addEventListener("change", on);
     return () => mq.removeEventListener("change", on);
   }, []);
+
+  // Subpages (About/Portfolio/Studio) keep their own look — no cinema overlay.
+  if (/^\/(en|de)\/(about|portfolio|studio)(\/|$)/.test(pathname)) return null;
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[90]">
