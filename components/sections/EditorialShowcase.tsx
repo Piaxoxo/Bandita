@@ -153,8 +153,8 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
       {/* ── SECTION 02 — clean magazine spread ────────────────────────── */}
       <section className="relative overflow-hidden bg-creme py-[14vh] text-ink">
         <div className="mx-auto max-w-[1500px] px-5 md:px-12">
-          <div className="grid items-center gap-10 md:grid-cols-12">
-            <Heading reduced={r} className="md:col-span-4">
+          <div className="grid items-center gap-10 lg:grid-cols-12">
+            <Heading reduced={r} className="lg:col-span-4">
               <span className="mb-7 block text-pink">
                 <Label>{s.s2.label}</Label>
               </span>
@@ -166,16 +166,17 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
               </p>
             </Heading>
 
-            <div className="relative md:col-span-8">
+            <div className="relative lg:col-span-8">
               <ParallaxImage
                 src="/work/film-02.jpg"
                 alt={s.s2.alt}
-                className="h-[52vh] md:h-[78vh]"
+                className="h-[52vh] lg:h-[78vh]"
                 parallax={16}
                 reduced={r}
               />
-              {/* partially overlapping smaller frame */}
-              <div className="absolute -bottom-10 -left-6 w-[42%] max-w-[280px] md:-left-16 md:-bottom-16">
+              {/* partially overlapping smaller frame — only overlaps the big
+                  image, never the text column */}
+              <div className="absolute -bottom-8 left-4 w-[38%] max-w-[240px] lg:-left-10 lg:-bottom-14">
                 <ParallaxImage
                   src="/work/film-01.jpg"
                   alt={s.s2.altSmall}
