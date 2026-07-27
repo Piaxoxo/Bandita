@@ -22,14 +22,22 @@ const nextConfig = {
       }
     : {
         images: { formats: ["image/avif", "image/webp"] },
-        // Silent business-card short links — not linked anywhere on the site,
-        // not in the sitemap. They forward to the standalone landing apps.
-        // (redirects() is unsupported by `output: export`, so SSR-only.)
-        async redirects() {
-          return [
-            { source: "/pia", destination: "https://bandita-landing.vercel.app", permanent: false },
-            { source: "/dino", destination: "https://bandita-dino.vercel.app", permanent: false },
-          ];
+        // Silent business-card short links. These serve a self-contained page
+        // that full-bleed-embeds the standalone landing app, so the address bar
+        // stays bandita.agency/pia (no vercel URL shown) and the landing's own
+        // assets load from its origin inside the frame — nothing breaks.
+        // beforeFiles so the [lang] dynamic route can't swallow /pia as a
+        // locale. Not linked anywhere in the UI, not in the sitemap.
+        // (rewrites() is unsupported by `output: export`, so SSR-only.)
+        async rewrites() {
+          return {
+            beforeFiles: [
+              { source: "/pia", destination: "/pia.html" },
+              { source: "/dino", destination: "/dino.html" },
+            ],
+            afterFiles: [],
+            fallback: [],
+          };
         },
       }),
 };
