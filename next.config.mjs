@@ -22,6 +22,15 @@ const nextConfig = {
       }
     : {
         images: { formats: ["image/avif", "image/webp"] },
+        // Silent business-card short links — not linked anywhere on the site,
+        // not in the sitemap. They forward to the standalone landing apps.
+        // (redirects() is unsupported by `output: export`, so SSR-only.)
+        async redirects() {
+          return [
+            { source: "/pia", destination: "https://bandita-landing.vercel.app", permanent: false },
+            { source: "/dino", destination: "https://bandita-dino.vercel.app", permanent: false },
+          ];
+        },
       }),
 };
 

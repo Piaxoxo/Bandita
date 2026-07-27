@@ -29,5 +29,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)"],
+  // `pia` / `dino` are excluded so the locale middleware never rewrites them
+  // to /de/pia — they are handled by the silent redirects in next.config.
+  matcher: ["/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|pia|dino|.*\\..*).*)"],
 };
