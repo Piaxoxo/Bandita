@@ -256,6 +256,13 @@ const en: Dictionary = {
         "Not a services page. Step inside Bandita's studio — six creative departments under one roof: brand, web, social, film, and everything else.",
     },
   },
+  services: {
+    meta: {
+      title: "Services & Pricing — Bandita | Creative Agency Vienna",
+      description:
+        "Everything under one roof: branding, social media, cinema-camera film, web & 3D sites, SEO, music, an AI content studio (AI images & videos without a shoot) and AI agents. Real prices, starter models & Bandita Black. From Vienna, worldwide.",
+    },
+  },
   cta: {
     eyebrow: "Vienna · Worldwide",
     heading: "Let's build something the world can't scroll past.",

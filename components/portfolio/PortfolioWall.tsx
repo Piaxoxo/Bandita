@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Locale } from "@/i18n/config";
@@ -154,6 +155,31 @@ export default function PortfolioWall({
               );
             })}
           </div>
+        </div>
+
+        {/* Cross-link into Services — "you've seen it, here's how we make it" */}
+        <div className="mt-24 flex flex-col items-center gap-6 rounded-[1.75rem] border border-creme/12 bg-creme/[0.03] px-6 py-16 text-center backdrop-blur-sm md:mt-32 md:py-20">
+          <span className="font-sans text-[11px] uppercase tracking-[0.4em] text-pink">
+            {lang === "de" ? "So entsteht das" : "How it's made"}
+          </span>
+          <h2 className="max-w-3xl font-display text-3xl font-medium leading-[1.05] tracking-[-0.01em] text-creme sm:text-5xl md:text-6xl">
+            {lang === "de"
+              ? "Du hast die Arbeit gesehen. Jetzt sieh, was wir alles können."
+              : "You've seen the work. Now see everything we do."}
+          </h2>
+          <p className="max-w-xl font-sans text-base leading-relaxed text-creme/60">
+            {lang === "de"
+              ? "Branding, Film, Web, Social, KI-Content und mehr — mit echten Preisen und Startermodellen."
+              : "Branding, film, web, social, AI content and more — with real prices and starter models."}
+          </p>
+          <Link
+            href={`/${lang}/services`}
+            data-cursor="hover"
+            className="mt-2 inline-flex items-center gap-2 rounded-full bg-pink px-9 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink"
+          >
+            {lang === "de" ? "Leistungen & Preise" : "Services & Pricing"}
+            <span aria-hidden>→</span>
+          </Link>
         </div>
       </div>
     </div>
