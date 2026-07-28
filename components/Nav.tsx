@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import { scrollToId } from "@/lib/scroll";
 import Wordmark from "./Wordmark";
 import MagneticButton from "./MagneticButton";
@@ -19,6 +20,7 @@ export default function Nav({
   dict: Dictionary;
 }) {
   const { introDone } = useSite();
+  const { open: openQuote } = useQuote();
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -184,9 +186,9 @@ export default function Nav({
             <span className={lang === "de" ? "text-pink" : ""}>DE</span>
           </Link>
 
-          {/* CTA (desktop) */}
+          {/* CTA (desktop) — opens the offer builder */}
           <MagneticButton
-            onClick={() => handleAnchor("contact")}
+            onClick={() => { setOpen(false); openQuote(); }}
             cursor="hover"
             className={`hidden rounded-full px-6 py-3 font-sans text-xs uppercase tracking-[0.15em] transition-colors md:inline-flex ${
               lightChrome
@@ -282,7 +284,7 @@ export default function Nav({
             {lang === "en" ? "Deutsch" : "English"}
           </Link>
           <button
-            onClick={() => handleAnchor("contact")}
+            onClick={() => { setOpen(false); openQuote(); }}
             className="rounded-full bg-ink px-6 py-3 font-sans text-xs uppercase tracking-[0.15em] text-creme"
           >
             {dict.nav.cta}

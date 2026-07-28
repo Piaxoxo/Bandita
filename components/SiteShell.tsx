@@ -3,6 +3,7 @@
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { SiteProvider } from "@/lib/site-context";
+import QuoteProvider from "./quote/QuoteProvider";
 import SmoothScroll from "./SmoothScroll";
 import CustomCursor from "./CustomCursor";
 import Loader from "./Loader";
@@ -26,18 +27,20 @@ export default function SiteShell({
 }) {
   return (
     <SiteProvider>
-      <SceneLayer />
-      <SmoothScroll />
-      <CustomCursor />
-      <Loader dict={dict} />
-      <Nav lang={lang} dict={dict} />
-      <main id="main">{children}</main>
-      <Footer dict={dict} />
-      <AccessibilityPanel lang={lang} dict={dict} />
-      <SoundControl />
-      <PageTransition />
-      <ScrollFlight />
-      <CinemaOverlay />
+      <QuoteProvider lang={lang}>
+        <SceneLayer />
+        <SmoothScroll />
+        <CustomCursor />
+        <Loader dict={dict} />
+        <Nav lang={lang} dict={dict} />
+        <main id="main">{children}</main>
+        <Footer lang={lang} dict={dict} />
+        <AccessibilityPanel lang={lang} dict={dict} />
+        <SoundControl />
+        <PageTransition />
+        <ScrollFlight />
+        <CinemaOverlay />
+      </QuoteProvider>
     </SiteProvider>
   );
 }

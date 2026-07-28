@@ -13,7 +13,7 @@ import Reveal3D from "@/components/anim/Reveal3D";
 import SplitText from "@/components/anim/SplitText";
 import MagneticButton from "@/components/MagneticButton";
 import ContactCTA from "@/components/sections/ContactCTA";
-import QuoteModal from "./QuoteModal";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import {
   HERO, CHAPTERS, AISTUDIO, CATALOGUE, INDUSTRIES,
   PRICING, BLACK, EXCLUSIVES, ADDONS, MORE, PROCESS, CLOSE, OFFER,
@@ -110,12 +110,9 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
   const [catFilter, setCatFilter] = useState("all");
   const [priceFilter, setPriceFilter] = useState("all");
   const [activeSec, setActiveSec] = useState("");
-  const [quoteOpen, setQuoteOpen] = useState(false);
-  const [prefill, setPrefill] = useState<string | null>(null);
+  const { open: openQuote } = useQuote();
   const hero = useTilt(r, 7);
   const clusterRef = useRef<HTMLDivElement>(null);
-
-  const openQuote = (p?: string | null) => { setPrefill(p ?? null); setQuoteOpen(true); };
 
   const NAV = [
     { id: "leistungen", label: { en: "Services", de: "Leistungen" } },
@@ -512,8 +509,6 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
       </section>
 
       <ContactCTA dict={dict} lang={lang} />
-
-      <QuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} lang={lang} prefill={prefill} />
     </div>
   );
 }
