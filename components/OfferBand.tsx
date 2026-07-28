@@ -26,15 +26,15 @@ export default function OfferBand({
     <section className={`relative overflow-hidden px-5 py-20 text-center md:py-24 ${styles.bg}`}>
       <div className="relative mx-auto max-w-3xl">
         <p className={`mb-4 font-sans text-[11px] uppercase tracking-[0.4em] ${styles.kick}`}>
-          {de ? "Individueller Preis · Unverbindlich" : "Individual price · Non-binding"}
+          {de ? "Preis auf Anfrage · Unverbindlich" : "Price on request · Non-binding"}
         </p>
         <h2 className="font-display text-3xl font-medium leading-[1.05] tracking-[-0.01em] md:text-5xl">
-          {de ? "Stell dir dein Angebot zusammen — mit Preis." : "Build your own offer — with a price."}
+          {de ? "Fordere dein individuelles Angebot an." : "Request your individual offer."}
         </h2>
         <p className={`mx-auto mt-5 max-w-xl font-sans text-base leading-relaxed md:text-lg ${styles.sub}`}>
           {de
-            ? "Firma, Ziel, Wunschleistungen — sag's uns, wir kalkulieren individuell und melden uns in 48 Stunden."
-            : "Company, goal, the services you want — tell us and we'll build an individual offer and reply within 48 hours."}
+            ? "Firma, Ziel, Wunschleistungen — sag's uns, wir kalkulieren individuell. Preis auf Anfrage, unverbindlich, Antwort in 48 Stunden."
+            : "Company, goal, the services you want — tell us and we'll build an individual offer. Price on request, non-binding, reply within 48 hours."}
         </p>
         <div className="mt-9">
           <MagneticButton onClick={() => open()} strength={0.5}

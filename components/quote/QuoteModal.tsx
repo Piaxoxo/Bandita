@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { Locale } from "@/i18n/config";
-import { OFFICE_EMAIL } from "@/lib/contact";
+import { OFFICE_EMAIL, sendLead } from "@/lib/contact";
 import { QUOTE } from "@/components/services/services-data";
 
 export default function QuoteModal({
@@ -23,6 +23,9 @@ export default function QuoteModal({
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendErr, setSendErr] = useState(false);
+  const [viaMail, setViaMail] = useState(false);
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
@@ -46,9 +49,10 @@ export default function QuoteModal({
   const toggleService = (key: string) =>
     setServices((s) => (s.includes(key) ? s.filter((k) => k !== key) : [...s, key]));
 
-  const submit = () => {
+  const submit = async () => {
     if (!email.trim() && !phone.trim()) { setError(true); return; }
     setError(false);
+    setSendErr(false);
     const labelFor = (key: string) => QUOTE.services.find((s) => s.key === key)?.label[lang] ?? key;
     const body = [
       `${QUOTE.qCompany[lang]}: ${company || "—"}`,
@@ -63,8 +67,17 @@ export default function QuoteModal({
       `${QUOTE.qPhone[lang]}: ${phone || "—"}`,
       message ? `\n${QUOTE.qMessage[lang]}: ${message}` : "",
     ].join("\n");
-    const subject = `[Angebot] ${company || name || (lang === "de" ? "Angebotsanfrage" : "Offer request")}`;
-    window.location.href = `mailto:${OFFICE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const subject = company || name || (lang === "de" ? "Angebotsanfrage" : "Offer request");
+
+    setSending(true);
+    const res = await sendLead({ category: "Angebot", subject, message: body, name, email, phone });
+    setSending(false);
+
+    if (res === "sent") { setViaMail(false); setSent(true); return; }
+    if (res === "error") { setSendErr(true); return; }
+    // no form key yet → fall back to a prefilled mail so nothing is lost
+    setViaMail(true);
+    window.location.href = `mailto:${OFFICE_EMAIL}?subject=${encodeURIComponent(`[Angebot] ${subject}`)}&body=${encodeURIComponent(body)}`;
     setSent(true);
   };
 
@@ -90,7 +103,9 @@ export default function QuoteModal({
           <div className="py-10 text-center">
             <p className="font-display text-3xl font-medium text-pink">✓</p>
             <h2 className="mt-4 font-display text-3xl font-medium tracking-[-0.01em]">{QUOTE.title[lang]}</h2>
-            <p className="mx-auto mt-4 max-w-md font-sans text-[15px] leading-relaxed text-ink/70">{QUOTE.success[lang]}</p>
+            <p className="mx-auto mt-4 max-w-md font-sans text-[15px] leading-relaxed text-ink/70">
+              {viaMail ? QUOTE.successMail[lang] : QUOTE.success[lang]}
+            </p>
             <p className="mt-6 font-sans text-sm text-ink/60">
               {QUOTE.successPhone[lang]}{" "}
               <a href={`mailto:${OFFICE_EMAIL}`} className="text-pink underline underline-offset-2">{OFFICE_EMAIL}</a>
@@ -102,7 +117,7 @@ export default function QuoteModal({
         ) : (
           <>
             <p className="font-sans text-[11px] uppercase tracking-[0.3em] text-pink">
-              {lang === "de" ? "Individueller Preis · Unverbindlich" : "Individual price · Non-binding"}
+              {lang === "de" ? "Preis auf Anfrage · Unverbindlich" : "Price on request · Non-binding"}
             </p>
             <h2 className="mt-2 font-display text-3xl font-medium leading-[1.05] tracking-[-0.01em] md:text-4xl">{QUOTE.title[lang]}</h2>
             <p className="mt-2 font-sans text-[15px] leading-relaxed text-ink/60">{QUOTE.subtitle[lang]}</p>
@@ -150,11 +165,17 @@ export default function QuoteModal({
             </div>
 
             {error && <p className="mt-4 font-sans text-sm text-pink">{QUOTE.required[lang]}</p>}
+            {sendErr && (
+              <p className="mt-4 font-sans text-sm text-pink">
+                {QUOTE.errorSend[lang]}{" "}
+                <a href={`mailto:${OFFICE_EMAIL}`} className="underline underline-offset-2">{OFFICE_EMAIL}</a>
+              </p>
+            )}
 
             <div className="mt-7 flex flex-col items-center gap-3">
-              <button onClick={submit} data-cursor="hover"
-                className="w-full rounded-full bg-pink px-8 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-ink sm:w-auto sm:px-12">
-                {QUOTE.submit[lang]}
+              <button onClick={submit} disabled={sending} data-cursor="hover"
+                className="w-full rounded-full bg-pink px-8 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-ink disabled:opacity-60 sm:w-auto sm:px-12">
+                {sending ? QUOTE.sending[lang] : QUOTE.submit[lang]}
               </button>
               <p className="font-sans text-xs text-ink/45">{QUOTE.note[lang]}</p>
             </div>
