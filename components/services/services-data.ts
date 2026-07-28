@@ -52,7 +52,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "Positioning, identity, voice, character — built on neuromarketing, not gut feeling.", de: "Positionierung, Identität, Stimme, Charakter — gebaut auf Neuromarketing, nicht auf Bauchgefühl." },
     ],
     services: ["Brand Strategy", "Positioning", "Logo & Naming", "Corporate Identity", "Brand Guidelines", "Rebranding", "Packaging", "Editorial Design", "Creative Direction"],
-    images: ["/portfolio/besser-reisen/01.jpg", "/about/work/campaign-01.jpg"],
+    images: ["/portfolio/besser-reisen/01.jpg", "/portfolio/publikationen/01.jpg"],
     portfolioId: "besser-reisen",
   },
   {
@@ -67,7 +67,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "Reels, campaigns and a content plan that gets saved, shared and remembered.", de: "Reels, Kampagnen und ein Redaktionsplan, der gespeichert, geteilt und gemerkt wird." },
     ],
     services: ["Content Strategy", "Reels & Shorts", "Community Management", "Instagram", "TikTok", "LinkedIn", "Influencer Marketing", "Paid Social", "Content in 10+ languages"],
-    images: ["/portfolio/hotel/01.jpg", "/work/guests-01.jpg"],
+    images: ["/work/guests-01.jpg", "/portfolio/kern/01.jpg"],
     portfolioId: "hotel",
   },
   {
@@ -82,7 +82,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "Commercials, image films, reels — Hollywood for businesses.", de: "Werbespots, Imagefilme, Reels — Hollywood für Unternehmen." },
     ],
     services: ["Commercials", "Image Films", "Product Films", "Social Reels", "Recruiting Videos", "Drone", "FPV", "Cinematic Editing", "Color Grading"],
-    images: ["/portfolio/video/deutschland-gta-poster.jpg", "/about/work/real-reel-poster.jpg"],
+    images: ["/work/film-01.jpg", "/portfolio/video/deutschland-gta-poster.jpg"],
     portfolioId: "deutschland",
   },
   {
@@ -142,7 +142,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "SEO, funnels, automation and live dashboards that turn attention into revenue.", de: "SEO, Funnels, Automatisierung und Live-Dashboards, die Aufmerksamkeit in Umsatz verwandeln." },
     ],
     services: ["SEO", "Local SEO", "Google Business", "Google Ads", "Conversion Optimisation", "Funnels", "Marketing Automation", "Analytics", "Dashboards"],
-    images: ["/portfolio/publikationen/01.jpg", "/about/work/campaign-03.jpg"],
+    images: ["/portfolio/tourism-international/01.jpg", "/work/event-01.jpg"],
     portfolioId: "publikationen",
   },
   {
@@ -157,7 +157,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "Scroll on for the AI Studio — content without a camera.", de: "Scroll weiter zum AI Studio — Content ohne Kamera." },
     ],
     services: ["AI Agents", "Business AI", "Website Concierge", "AI Customer Service", "AI Automation", "Prompt Engineering", "AI Image Production", "AI Video", "AI Consulting"],
-    images: ["/portfolio/tourism-international/01.jpg", "/about/work/campaign-05.jpg"],
+    images: ["/portfolio/plein/03.jpg", "/portfolio/product/03.jpg"],
     portfolioId: "tourism-international",
   },
 ];
@@ -193,7 +193,7 @@ export const AISTUDIO = {
       ],
       tagsLabel: { en: "Ideal for", de: "Ideal für" },
       tags: ["Fashion Brands", "Boutiques", "Jewellery", "Bags", "Shoes", "Beauty", "Luxury", "Designers", "Concept Stores"],
-      image: "/portfolio/plein/01.jpg",
+      image: "/portfolio/plein/02.jpg",
     },
     {
       id: "product", color: "#FF8A5B",
@@ -239,7 +239,7 @@ export const AISTUDIO = {
       ],
       tagsLabel: { en: "Perfect for", de: "Perfekt für" },
       tags: ["Meta Ads", "Google Ads", "Instagram", "TikTok", "Lookbooks", "Magazines"],
-      image: "/about/work/campaign-02.jpg",
+      image: "/portfolio/besser-reisen/03.jpg",
     },
     {
       id: "model", color: "#A88BEB",
@@ -540,4 +540,80 @@ export const CLOSE = {
   line1: { en: "Your competitors won't like us.", de: "Deine Konkurrenz wird uns nicht mögen." } as Bi,
   line2: { en: "Your customers will.", de: "Deine Kunden schon." } as Bi,
   button: { en: "Start your project", de: "Projekt starten" } as Bi,
+};
+
+// ── TAILORED-OFFER call to action (used across the page) ───────────────────
+export const OFFER = {
+  cta: { en: "Request your tailored offer", de: "Maßgeschneidertes Angebot anfordern" } as Bi,
+  ctaShort: { en: "Tailored offer", de: "Maßgeschneidertes Angebot" } as Bi,
+  bandKicker: { en: "As individual as your brand", de: "So individuell wie deine Marke" } as Bi,
+  bandHeading: {
+    en: "No two brands are the same. Neither are our offers.",
+    de: "Keine Marke ist wie die andere. Kein Angebot auch.",
+  } as Bi,
+  bandSub: {
+    en: "Tell us your goal — we build a package around it. Free and non-binding.",
+    de: "Sag uns dein Ziel — wir schnüren das Paket drumherum. Gratis und unverbindlich.",
+  } as Bi,
+};
+
+// ── QUOTE MODAL — tailored-offer request form ──────────────────────────────
+export const QUOTE = {
+  title: { en: "Your tailored offer", de: "Dein maßgeschneidertes Angebot" } as Bi,
+  subtitle: {
+    en: "Non-binding. Pick what fits — we'll come back with an individual proposal.",
+    de: "Unverbindlich. Wähl aus, was passt — wir melden uns mit einem individuellen Vorschlag.",
+  } as Bi,
+  qServices: { en: "Which services interest you?", de: "Welche Leistungen interessieren dich?" } as Bi,
+  qGoal: { en: "Your main goal", de: "Dein wichtigstes Ziel" } as Bi,
+  qBusiness: { en: "Your type of business", de: "Deine Betriebsart" } as Bi,
+  qName: { en: "Name", de: "Name" } as Bi,
+  qEmail: { en: "Email", de: "E-Mail" } as Bi,
+  qPhone: { en: "Phone (for a callback)", de: "Telefon (für einen Rückruf)" } as Bi,
+  qMessage: { en: "Anything else? (optional)", de: "Noch etwas? (optional)" } as Bi,
+  submit: { en: "Send request", de: "Anfrage senden" } as Bi,
+  note: { en: "Your details go straight to our team.", de: "Deine Angaben gehen direkt an unser Team." } as Bi,
+  required: { en: "Please add an email or phone number so we can reach you.", de: "Bitte E-Mail oder Telefon angeben, damit wir dich erreichen." } as Bi,
+  success: {
+    en: "Thanks! Your mail app just opened with your request — hit send and we'll be in touch.",
+    de: "Danke! Dein Mail-Programm hat sich mit deiner Anfrage geöffnet — einmal senden, wir melden uns.",
+  } as Bi,
+  successPhone: {
+    en: "Prefer a call? We'll ring you back — or reach us any time at",
+    de: "Lieber telefonisch? Wir rufen zurück — oder erreich uns jederzeit unter",
+  } as Bi,
+  services: [
+    { key: "brand", label: { en: "Branding", de: "Branding" } },
+    { key: "social", label: { en: "Social Media", de: "Social Media" } },
+    { key: "film", label: { en: "Film Production", de: "Filmproduktion" } },
+    { key: "photo", label: { en: "Photography", de: "Fotografie" } },
+    { key: "web", label: { en: "Web & 3D", de: "Web & 3D" } },
+    { key: "audio", label: { en: "Music & Audio", de: "Musik & Audio" } },
+    { key: "seo", label: { en: "SEO & Growth", de: "SEO & Growth" } },
+    { key: "ai", label: { en: "AI Content", de: "AI Content" } },
+    { key: "events", label: { en: "Events", de: "Events" } },
+    { key: "merch", label: { en: "Merchandise", de: "Merchandise" } },
+    { key: "fullservice", label: { en: "Full-Service / Bandita Black", de: "Full-Service / Bandita Black" } },
+    { key: "unsure", label: { en: "Not sure yet", de: "Weiß ich noch nicht" } },
+  ] as { key: string; label: Bi }[],
+  goals: [
+    { en: "More visibility & reach", de: "Mehr Sichtbarkeit & Reichweite" },
+    { en: "More revenue & sales", de: "Mehr Umsatz & Verkäufe" },
+    { en: "New brand / rebranding", de: "Neue Marke / Rebranding" },
+    { en: "More bookings / reservations", de: "Mehr Buchungen / Reservierungen" },
+    { en: "Recruiting & employer branding", de: "Recruiting & Employer Branding" },
+    { en: "Launch / market entry", de: "Launch / Markteintritt" },
+    { en: "Not sure yet", de: "Weiß ich noch nicht" },
+  ] as Bi[],
+  businessTypes: [
+    { en: "Hotel / Accommodation", de: "Hotel / Beherbergung" },
+    { en: "Restaurant / Bar / Café", de: "Restaurant / Bar / Café" },
+    { en: "Fashion / Beauty", de: "Fashion / Beauty" },
+    { en: "Retail / E-Commerce", de: "Handel / E-Commerce" },
+    { en: "Service / B2B", de: "Dienstleister / B2B" },
+    { en: "Real Estate", de: "Immobilien" },
+    { en: "Startup", de: "Startup" },
+    { en: "Event / Entertainment", de: "Event / Entertainment" },
+    { en: "Other", de: "Sonstiges" },
+  ] as Bi[],
 };
