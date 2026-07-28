@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { STATIONS, coverOf, mediaCount } from "./portfolio-data";
 import { portfolio, setMood } from "@/lib/portfolio-scene";
+import { useQuote } from "@/components/quote/QuoteProvider";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -23,6 +24,7 @@ export default function PortfolioWall({
   reduced: boolean;
 }) {
   const t = dict.portfolio;
+  const { open: openQuote } = useQuote();
   const gridRef = useRef<HTMLDivElement>(null);
 
   // pointer parallax — the whole wall tilts subtly toward the cursor
@@ -172,14 +174,23 @@ export default function PortfolioWall({
               ? "Branding, Film, Web, Social, KI-Content und mehr — mit echten Preisen und Startermodellen."
               : "Branding, film, web, social, AI content and more — with real prices and starter models."}
           </p>
-          <Link
-            href={`/${lang}/services`}
-            data-cursor="hover"
-            className="mt-2 inline-flex items-center gap-2 rounded-full bg-pink px-9 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink"
-          >
-            {lang === "de" ? "Leistungen & Preise" : "Services & Pricing"}
-            <span aria-hidden>→</span>
-          </Link>
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href={`/${lang}/services`}
+              data-cursor="hover"
+              className="inline-flex items-center gap-2 rounded-full bg-pink px-9 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink"
+            >
+              {lang === "de" ? "Leistungen & Preise" : "Services & Pricing"}
+              <span aria-hidden>→</span>
+            </Link>
+            <button
+              onClick={() => openQuote()}
+              data-cursor="hover"
+              className="inline-flex items-center gap-2 rounded-full border border-creme/40 px-9 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:border-creme hover:bg-creme hover:text-ink"
+            >
+              {lang === "de" ? "Angebot anfordern" : "Request an offer"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { i18n, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import AboutStory from "@/components/sections/AboutStory";
+import OfferBand from "@/components/OfferBand";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.studio";
 
@@ -85,6 +86,7 @@ export default function AboutPage({ params }: { params: { lang: string } }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <AboutStory dict={dict} lang={lang} />
+      <OfferBand lang={lang} tone="pink" />
     </>
   );
 }

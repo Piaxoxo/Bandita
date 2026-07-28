@@ -1,13 +1,18 @@
 import type { Dictionary } from "@/i18n/types";
+import type { Locale } from "@/i18n/config";
 import Wordmark from "./Wordmark";
+import FooterActions from "./FooterActions";
 
-export default function Footer({ dict }: { dict: Dictionary }) {
+export default function Footer({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const year = 2026; // build-time constant; bump per release
 
   return (
     <footer className="relative z-10 bg-ink px-5 pb-28 pt-20 text-creme md:px-10">
       <div className="mx-auto max-w-[1600px]">
-        <div className="flex flex-col items-start justify-between gap-12 border-b border-creme/15 pb-14 md:flex-row md:items-end">
+        {/* conversion block: newsletter + offer + project */}
+        <FooterActions lang={lang} />
+
+        <div className="flex flex-col items-start justify-between gap-12 border-b border-creme/15 py-14 md:flex-row md:items-end">
           <div className="text-pink">
             <Wordmark />
           </div>

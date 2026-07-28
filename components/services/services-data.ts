@@ -559,24 +559,26 @@ export const OFFER = {
 
 // ── QUOTE MODAL — tailored-offer request form ──────────────────────────────
 export const QUOTE = {
-  title: { en: "Your tailored offer", de: "Dein maßgeschneidertes Angebot" } as Bi,
+  title: { en: "Build your offer — with a price.", de: "Stell dir dein Angebot zusammen — mit Preis." } as Bi,
   subtitle: {
-    en: "Non-binding. Pick what fits — we'll come back with an individual proposal.",
-    de: "Unverbindlich. Wähl aus, was passt — wir melden uns mit einem individuellen Vorschlag.",
+    en: "Non-binding. Tell us your business, your goal and what you need — we build an individual offer with a price and reply within 48 hours.",
+    de: "Unverbindlich. Sag uns dein Business, dein Ziel und was du brauchst — wir stellen dir ein individuelles Angebot mit Preis zusammen und melden uns innerhalb von 48 Stunden.",
   } as Bi,
-  qServices: { en: "Which services interest you?", de: "Welche Leistungen interessieren dich?" } as Bi,
+  qServices: { en: "Which services do you need?", de: "Welche Leistungen brauchst du?" } as Bi,
   qGoal: { en: "Your main goal", de: "Dein wichtigstes Ziel" } as Bi,
   qBusiness: { en: "Your type of business", de: "Deine Betriebsart" } as Bi,
+  qCompany: { en: "Company", de: "Firma" } as Bi,
+  qWebsite: { en: "Website / Instagram (optional)", de: "Website / Instagram (optional)" } as Bi,
   qName: { en: "Name", de: "Name" } as Bi,
   qEmail: { en: "Email", de: "E-Mail" } as Bi,
   qPhone: { en: "Phone (for a callback)", de: "Telefon (für einen Rückruf)" } as Bi,
-  qMessage: { en: "Anything else? (optional)", de: "Noch etwas? (optional)" } as Bi,
-  submit: { en: "Send request", de: "Anfrage senden" } as Bi,
-  note: { en: "Your details go straight to our team.", de: "Deine Angaben gehen direkt an unser Team." } as Bi,
+  qMessage: { en: "Your wishes (optional)", de: "Deine Wünsche (optional)" } as Bi,
+  submit: { en: "Request my offer", de: "Angebot anfordern" } as Bi,
+  note: { en: "Non-binding · We reply within 48 hours.", de: "Unverbindlich · Antwort innerhalb von 48 Stunden." } as Bi,
   required: { en: "Please add an email or phone number so we can reach you.", de: "Bitte E-Mail oder Telefon angeben, damit wir dich erreichen." } as Bi,
   success: {
-    en: "Thanks! Your mail app just opened with your request — hit send and we'll be in touch.",
-    de: "Danke! Dein Mail-Programm hat sich mit deiner Anfrage geöffnet — einmal senden, wir melden uns.",
+    en: "Thanks! Your mail app just opened with your request — hit send and we'll come back within 48 hours with your individual offer.",
+    de: "Danke! Dein Mail-Programm hat sich mit deiner Anfrage geöffnet — einmal senden, und wir melden uns innerhalb von 48 Stunden mit deinem individuellen Angebot.",
   } as Bi,
   successPhone: {
     en: "Prefer a call? We'll ring you back — or reach us any time at",
