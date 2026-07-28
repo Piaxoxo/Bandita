@@ -258,9 +258,9 @@ const en: Dictionary = {
   },
   services: {
     meta: {
-      title: "Services — Bandita | Creative Agency Vienna",
+      title: "Services & Pricing — Bandita | Creative Agency Vienna",
       description:
-        "Everything under one roof: brand strategy & identity, social media content, cinema-camera film production, photography, web & 3D, music & audio, digitalisation and artificial intelligence. Starter models, prices on request. From Vienna, worldwide.",
+        "Everything under one roof: branding, social media, cinema-camera film, web & 3D sites, SEO, music, an AI content studio (AI images & videos without a shoot) and AI agents. Real prices, starter models & Bandita Black. From Vienna, worldwide.",
     },
   },
   cta: {

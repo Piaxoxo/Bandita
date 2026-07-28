@@ -258,9 +258,9 @@ const de: Dictionary = {
   },
   services: {
     meta: {
-      title: "Leistungen — Bandita | Marketingagentur Wien",
+      title: "Leistungen & Preise — Bandita | Marketingagentur Wien",
       description:
-        "Alles aus einer Hand: Markenstrategie & Branding, Social-Media-Content, Filmproduktion mit Kinokamera, Fotografie, Web & 3D, Musik & Audio, Digitalisierung und Künstliche Intelligenz. Startermodelle, Preise auf Anfrage. Aus Wien, weltweit.",
+        "Alles aus einer Hand: Branding, Social Media, Filmproduktion mit Kinokamera, Web & 3D-Websites, SEO, Musik, AI-Content-Studio (KI-Bilder & -Videos ohne Shooting) und AI-Agents. Echte Preise, Startermodelle & Bandita Black. Aus Wien, weltweit.",
     },
   },
   cta: {
