@@ -103,15 +103,18 @@ export default function CustomCursor() {
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[70] hidden md:block">
       <div
         ref={glowRef}
-        className="fixed left-0 top-0 h-40 w-40 rounded-full opacity-60 blur-3xl"
+        className="fixed left-0 top-0 h-32 w-32 rounded-full opacity-35 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, rgba(251,0,63,0.35), rgba(255,92,158,0.12) 50%, transparent 70%)",
+            "radial-gradient(circle, rgba(251,0,63,0.3), rgba(255,92,158,0.1) 50%, transparent 70%)",
         }}
       />
+      {/* precise click point — inverts against ANY background so it is never
+          lost (e.g. the pink glow in the services section) */}
       <div
         ref={dotRef}
-        className="fixed left-0 top-0 h-1.5 w-1.5 rounded-full bg-pink mix-blend-normal transition-opacity duration-300"
+        className="fixed left-0 top-0 h-2.5 w-2.5 rounded-full bg-white transition-opacity duration-300"
+        style={{ mixBlendMode: "difference" }}
       />
       <div
         ref={ringRef}

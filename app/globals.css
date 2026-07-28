@@ -195,7 +195,10 @@ body {
     background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.3s ease;
-  box-shadow: 0 0 22px rgba(251, 0, 63, 0.25);
+  /* faint white halo so the ring stays visible over pink/red areas too */
+  box-shadow:
+    0 0 22px rgba(251, 0, 63, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.4);
 }
 .cursor-ring[data-state="link"] {
   width: 64px;
@@ -209,7 +212,9 @@ body {
   height: 92px;
   background: var(--pink);
   border-color: var(--pink);
-  box-shadow: 0 0 40px rgba(251, 0, 63, 0.45);
+  box-shadow:
+    0 0 40px rgba(251, 0, 63, 0.45),
+    0 0 0 1.5px rgba(255, 255, 255, 0.5);
 }
 .cursor-ring[data-press="true"] {
   transform-origin: center;
