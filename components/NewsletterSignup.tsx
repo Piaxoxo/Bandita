@@ -21,7 +21,8 @@ export default function NewsletterSignup({ lang, tone = "dark" }: { lang: Locale
       email,
     });
     setBusy(false);
-    if (res === "notconfigured") {
+    if (res !== "sent") {
+      // background delivery unavailable → prefilled mail so the lead survives
       window.location.href = mailto(
         "Newsletter",
         lang === "de" ? "Newsletter-Anmeldung" : "Newsletter signup",
