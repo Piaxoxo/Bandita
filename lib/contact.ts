@@ -3,18 +3,18 @@
 export const OFFICE_EMAIL = "office@bandita.agency";
 
 // ── Silent submission (no mail window on the customer's device) ─────────────
-// Web3Forms delivers the form straight to the office inbox via a background
+// FormSubmit delivers the form straight to the office inbox via a background
 // fetch — the visitor just sees a success message, no mail app opens.
-// Get a free key in ~20s: https://web3forms.com  → enter office@bandita.agency
-// → the access key is emailed to that inbox → paste it below.
-export const WEB3FORMS_ACCESS_KEY = ""; // ← paste the Web3Forms access key here
+// No API key needed: the FIRST submission triggers a one-time activation mail
+// to office@bandita.agency — click its confirm link once and it's live.
+const FORM_ENDPOINT = `https://formsubmit.co/ajax/${OFFICE_EMAIL}`;
 
 export type LeadCategory = "Angebot" | "Newsletter" | "Projekt" | "Rückruf" | "Kontakt";
 
 export type LeadResult = "sent" | "notconfigured" | "error";
 
-// Send a lead silently. Returns "notconfigured" if no key is set yet (callers
-// then fall back to mailto so nothing is ever lost).
+// Send a lead silently in the background. Callers fall back to mailto on
+// "error"/"notconfigured" so nothing is ever lost.
 export async function sendLead(fields: {
   category: LeadCategory;
   subject: string;
@@ -23,22 +23,23 @@ export async function sendLead(fields: {
   email?: string;
   phone?: string;
 }): Promise<LeadResult> {
-  if (!WEB3FORMS_ACCESS_KEY) return "notconfigured";
   try {
-    const res = await fetch("https://api.web3forms.com/submit", {
+    const res = await fetch(FORM_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({
-        access_key: WEB3FORMS_ACCESS_KEY,
-        subject: `[${fields.category}] ${fields.subject}`,
-        from_name: fields.name || fields.email || "Bandita Website",
-        replyto: fields.email || "",
-        phone: fields.phone || "",
-        message: fields.message,
+        _subject: `[${fields.category}] ${fields.subject}`,
+        _template: "box",
+        _captcha: "false",
+        Kategorie: fields.category,
+        Name: fields.name || "—",
+        email: fields.email || "",
+        Telefon: fields.phone || "—",
+        Nachricht: fields.message,
       }),
     });
-    const data = await res.json();
-    return data?.success ? "sent" : "error";
+    const data = await res.json().catch(() => null);
+    return res.ok && data && (data.success === "true" || data.success === true) ? "sent" : "error";
   } catch {
     return "error";
   }
