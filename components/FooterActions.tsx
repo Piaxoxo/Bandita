@@ -3,7 +3,7 @@
 import type { Locale } from "@/i18n/config";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import NewsletterSignup from "./NewsletterSignup";
-import { OFFICE_EMAIL, mailto } from "@/lib/contact";
+import { OFFICE_EMAIL } from "@/lib/contact";
 
 // Site-wide footer conversion block: newsletter + offer + project + email.
 export default function FooterActions({ lang }: { lang: Locale }) {
@@ -37,10 +37,10 @@ export default function FooterActions({ lang }: { lang: Locale }) {
             className="rounded-full bg-pink px-7 py-3.5 font-sans text-xs uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink">
             {de ? "Angebot anfordern" : "Request an offer"}
           </button>
-          <a href={mailto("Projekt", de ? "Projektanfrage" : "Project enquiry")} data-cursor="link"
+          <button onClick={() => open()} data-cursor="link"
             className="rounded-full border border-creme/30 px-7 py-3.5 font-sans text-xs uppercase tracking-[0.14em] text-creme transition-colors hover:border-creme hover:bg-creme hover:text-ink">
             {de ? "Projekt anfragen" : "Start a project"}
-          </a>
+          </button>
         </div>
         <a href={`mailto:${OFFICE_EMAIL}`} data-cursor="link"
           className="mt-5 inline-block font-sans text-sm lowercase tracking-[0.06em] text-creme/70 underline decoration-creme/30 underline-offset-4 transition-colors hover:text-pink">

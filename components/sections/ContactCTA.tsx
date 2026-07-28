@@ -7,19 +7,11 @@ import Parallax from "@/components/anim/Parallax";
 import MagneticButton from "@/components/MagneticButton";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import { useQuote } from "@/components/quote/QuoteProvider";
-import { OFFICE_EMAIL, mailto, type LeadCategory } from "@/lib/contact";
+import { OFFICE_EMAIL } from "@/lib/contact";
 
-const OPTIONS: Record<Locale, { label: string; category: LeadCategory; subject: string }[]> = {
-  de: [
-    { label: "Angebot holen", category: "Angebot", subject: "Angebotsanfrage" },
-    { label: "Rückruf bitte", category: "Rückruf", subject: "Rückruf-Wunsch" },
-    { label: "Einfach Hallo", category: "Kontakt", subject: "Hallo Bandita" },
-  ],
-  en: [
-    { label: "Get a quote", category: "Angebot", subject: "Quote request" },
-    { label: "Request a callback", category: "Rückruf", subject: "Callback request" },
-    { label: "Just say hi", category: "Kontakt", subject: "Hi Bandita" },
-  ],
+const OPTIONS: Record<Locale, string[]> = {
+  de: ["Angebot holen", "Rückruf anfordern", "Einfach Hallo"],
+  en: ["Get a quote", "Request a callback", "Just say hi"],
 };
 
 export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; lang?: Locale }) {
@@ -52,16 +44,16 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
             {/* primary: build the individual offer */}
             <MagneticButton onClick={() => open()} strength={0.5}
               className="rounded-full bg-creme px-10 py-5 font-sans text-sm uppercase tracking-[0.14em] text-ink transition-colors hover:bg-ink hover:text-creme">
-              {de ? "Individuelles Angebot mit Preis" : "Build your offer — with a price"}
+              {de ? "Individuelles Angebot anfordern" : "Request your individual offer"}
             </MagneticButton>
 
-            {/* categorised quick contacts */}
+            {/* quick contacts — all open the offer builder (no mail window) */}
             <div className="flex flex-wrap items-center justify-center gap-3">
-              {options.map((o) => (
-                <a key={o.subject} href={mailto(o.category, o.subject)} data-cursor="link"
+              {options.map((label) => (
+                <button key={label} onClick={() => open()} data-cursor="link"
                   className="rounded-full border border-creme/40 px-6 py-3 font-sans text-xs uppercase tracking-[0.14em] text-creme/90 transition-colors hover:border-creme hover:bg-creme hover:text-ink">
-                  {o.label}
-                </a>
+                  {label}
+                </button>
               ))}
             </div>
 

@@ -559,10 +559,10 @@ export const OFFER = {
 
 // ── QUOTE MODAL — tailored-offer request form ──────────────────────────────
 export const QUOTE = {
-  title: { en: "Build your offer — with a price.", de: "Stell dir dein Angebot zusammen — mit Preis." } as Bi,
+  title: { en: "Your individual offer.", de: "Dein individuelles Angebot." } as Bi,
   subtitle: {
-    en: "Non-binding. Tell us your business, your goal and what you need — we build an individual offer with a price and reply within 48 hours.",
-    de: "Unverbindlich. Sag uns dein Business, dein Ziel und was du brauchst — wir stellen dir ein individuelles Angebot mit Preis zusammen und melden uns innerhalb von 48 Stunden.",
+    en: "Price on request, non-binding. Tell us your business, your goal and what you need — we put together an individual offer and reply within 48 hours.",
+    de: "Preis auf Anfrage, unverbindlich. Sag uns dein Business, dein Ziel und was du brauchst — wir stellen dir ein individuelles Angebot zusammen und melden uns innerhalb von 48 Stunden.",
   } as Bi,
   qServices: { en: "Which services do you need?", de: "Welche Leistungen brauchst du?" } as Bi,
   qGoal: { en: "Your main goal", de: "Dein wichtigstes Ziel" } as Bi,
@@ -574,15 +574,24 @@ export const QUOTE = {
   qPhone: { en: "Phone (for a callback)", de: "Telefon (für einen Rückruf)" } as Bi,
   qMessage: { en: "Your wishes (optional)", de: "Deine Wünsche (optional)" } as Bi,
   submit: { en: "Request my offer", de: "Angebot anfordern" } as Bi,
-  note: { en: "Non-binding · We reply within 48 hours.", de: "Unverbindlich · Antwort innerhalb von 48 Stunden." } as Bi,
+  sending: { en: "Sending…", de: "Wird gesendet…" } as Bi,
+  note: { en: "Price on request · Non-binding · Reply within 48 hours.", de: "Preis auf Anfrage · Unverbindlich · Antwort in 48 Stunden." } as Bi,
   required: { en: "Please add an email or phone number so we can reach you.", de: "Bitte E-Mail oder Telefon angeben, damit wir dich erreichen." } as Bi,
+  errorSend: {
+    en: "Something went wrong. Please try again — or email us at",
+    de: "Etwas ist schiefgelaufen. Bitte nochmal versuchen — oder schreib an",
+  } as Bi,
   success: {
-    en: "Thanks! Your mail app just opened with your request — hit send and we'll come back within 48 hours with your individual offer.",
-    de: "Danke! Dein Mail-Programm hat sich mit deiner Anfrage geöffnet — einmal senden, und wir melden uns innerhalb von 48 Stunden mit deinem individuellen Angebot.",
+    en: "Thanks! Your request is on its way — we'll reply within 48 hours with your individual offer.",
+    de: "Danke! Deine Anfrage ist unterwegs — wir melden uns innerhalb von 48 Stunden mit deinem individuellen Angebot.",
+  } as Bi,
+  successMail: {
+    en: "One last step: your mail app opened — just hit send.",
+    de: "Ein letzter Schritt: dein Mail-Programm hat sich geöffnet — bitte nur noch auf Senden tippen.",
   } as Bi,
   successPhone: {
-    en: "Prefer a call? We'll ring you back — or reach us any time at",
-    de: "Lieber telefonisch? Wir rufen zurück — oder erreich uns jederzeit unter",
+    en: "Or reach us any time at",
+    de: "Oder erreich uns jederzeit unter",
   } as Bi,
   services: [
     { key: "brand", label: { en: "Branding", de: "Branding" } },
