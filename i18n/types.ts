@@ -144,6 +144,9 @@ export interface Dictionary {
   studio: {
     meta: { title: string; description: string };
   };
+  services: {
+    meta: { title: string; description: string };
+  };
   cta: {
     eyebrow: string;
     heading: string;

@@ -256,6 +256,13 @@ const de: Dictionary = {
         "Keine Leistungsseite. Tritt ein in Banditas Studio — sechs Kreativ-Abteilungen unter einem Dach: Brand, Web, Social, Film und alles andere.",
     },
   },
+  services: {
+    meta: {
+      title: "Leistungen — Bandita | Marketingagentur Wien",
+      description:
+        "Alles aus einer Hand: Markenstrategie & Branding, Social-Media-Content, Filmproduktion mit Kinokamera, Fotografie, Web & 3D, Musik & Audio, Digitalisierung und Künstliche Intelligenz. Startermodelle, Preise auf Anfrage. Aus Wien, weltweit.",
+    },
+  },
   cta: {
     eyebrow: "Wien · Weltweit",
     heading: "Lass uns was bauen, an dem die Welt nicht vorbeikommt.",

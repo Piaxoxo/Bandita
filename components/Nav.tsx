@@ -41,6 +41,7 @@ export default function Nav({
     ready: boolean;
   }[] = [
     { key: "about", label: dict.nav.about, href: `/${lang}/about`, ready: true },
+    { key: "services", label: dict.nav.services, href: `/${lang}/services`, ready: true },
     { key: "portfolio", label: dict.nav.portfolio, href: `/${lang}/portfolio`, ready: true },
     { key: "contact", label: dict.nav.contact, anchor: "contact", ready: true },
   ];
