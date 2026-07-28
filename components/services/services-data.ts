@@ -52,7 +52,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "Positioning, identity, voice, character — built on neuromarketing, not gut feeling.", de: "Positionierung, Identität, Stimme, Charakter — gebaut auf Neuromarketing, nicht auf Bauchgefühl." },
     ],
     services: ["Brand Strategy", "Positioning", "Logo & Naming", "Corporate Identity", "Brand Guidelines", "Rebranding", "Packaging", "Editorial Design", "Creative Direction"],
-    images: ["/portfolio/besser-reisen/01.jpg", "/about/work/campaign-01.jpg"],
+    images: ["/portfolio/besser-reisen/01.jpg", "/portfolio/publikationen/01.jpg"],
     portfolioId: "besser-reisen",
   },
   {
@@ -67,7 +67,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "Reels, campaigns and a content plan that gets saved, shared and remembered.", de: "Reels, Kampagnen und ein Redaktionsplan, der gespeichert, geteilt und gemerkt wird." },
     ],
     services: ["Content Strategy", "Reels & Shorts", "Community Management", "Instagram", "TikTok", "LinkedIn", "Influencer Marketing", "Paid Social", "Content in 10+ languages"],
-    images: ["/portfolio/hotel/01.jpg", "/work/guests-01.jpg"],
+    images: ["/work/guests-01.jpg", "/portfolio/kern/01.jpg"],
     portfolioId: "hotel",
   },
   {
@@ -82,7 +82,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "Commercials, image films, reels — Hollywood for businesses.", de: "Werbespots, Imagefilme, Reels — Hollywood für Unternehmen." },
     ],
     services: ["Commercials", "Image Films", "Product Films", "Social Reels", "Recruiting Videos", "Drone", "FPV", "Cinematic Editing", "Color Grading"],
-    images: ["/portfolio/video/deutschland-gta-poster.jpg", "/about/work/real-reel-poster.jpg"],
+    images: ["/work/film-01.jpg", "/portfolio/video/deutschland-gta-poster.jpg"],
     portfolioId: "deutschland",
   },
   {
@@ -142,7 +142,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "SEO, funnels, automation and live dashboards that turn attention into revenue.", de: "SEO, Funnels, Automatisierung und Live-Dashboards, die Aufmerksamkeit in Umsatz verwandeln." },
     ],
     services: ["SEO", "Local SEO", "Google Business", "Google Ads", "Conversion Optimisation", "Funnels", "Marketing Automation", "Analytics", "Dashboards"],
-    images: ["/portfolio/publikationen/01.jpg", "/about/work/campaign-03.jpg"],
+    images: ["/portfolio/tourism-international/01.jpg", "/work/event-01.jpg"],
     portfolioId: "publikationen",
   },
   {
@@ -157,7 +157,7 @@ export const CHAPTERS: Chapter[] = [
       { en: "Scroll on for the AI Studio — content without a camera.", de: "Scroll weiter zum AI Studio — Content ohne Kamera." },
     ],
     services: ["AI Agents", "Business AI", "Website Concierge", "AI Customer Service", "AI Automation", "Prompt Engineering", "AI Image Production", "AI Video", "AI Consulting"],
-    images: ["/portfolio/tourism-international/01.jpg", "/about/work/campaign-05.jpg"],
+    images: ["/portfolio/plein/03.jpg", "/portfolio/product/03.jpg"],
     portfolioId: "tourism-international",
   },
 ];
@@ -193,7 +193,7 @@ export const AISTUDIO = {
       ],
       tagsLabel: { en: "Ideal for", de: "Ideal für" },
       tags: ["Fashion Brands", "Boutiques", "Jewellery", "Bags", "Shoes", "Beauty", "Luxury", "Designers", "Concept Stores"],
-      image: "/portfolio/plein/01.jpg",
+      image: "/portfolio/plein/02.jpg",
     },
     {
       id: "product", color: "#FF8A5B",
@@ -239,7 +239,7 @@ export const AISTUDIO = {
       ],
       tagsLabel: { en: "Perfect for", de: "Perfekt für" },
       tags: ["Meta Ads", "Google Ads", "Instagram", "TikTok", "Lookbooks", "Magazines"],
-      image: "/about/work/campaign-02.jpg",
+      image: "/portfolio/besser-reisen/03.jpg",
     },
     {
       id: "model", color: "#A88BEB",
