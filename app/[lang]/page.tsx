@@ -8,6 +8,7 @@ import Philosophy from "@/components/sections/Philosophy";
 import EditorialShowcase from "@/components/sections/EditorialShowcase";
 import ContactCTA from "@/components/sections/ContactCTA";
 import OfferBand from "@/components/OfferBand";
+import InlineCTA from "@/components/InlineCTA";
 
 export function generateStaticParams() {
   return i18n.locales.map((lang) => ({ lang }));
@@ -22,7 +23,20 @@ export default function HomePage({ params }: { params: { lang: string } }) {
       <Hero dict={dict} lang={lang} />
       <Manifesto dict={dict} />
       <Capabilities dict={dict} />
+      <InlineCTA
+        lang={lang}
+        de="Genau das braucht deine Marke? Sag uns, was du vorhast."
+        en="Exactly what your brand needs? Tell us what you're planning."
+      />
       <ReelsShowcase lang={lang} />
+      <InlineCTA
+        lang={lang}
+        de="Willst du Content, der so hängen bleibt? Preis auf Anfrage — unverbindlich."
+        en="Want content that sticks like this? Price on request — non-binding."
+        buttonDe="Content anfragen"
+        buttonEn="Request content"
+        prefill="social"
+      />
       <Philosophy dict={dict} />
       <OfferBand lang={lang} tone="ink" />
       <EditorialShowcase dict={dict} />

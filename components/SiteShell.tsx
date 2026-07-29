@@ -10,6 +10,7 @@ import Loader from "./Loader";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import AccessibilityPanel from "./AccessibilityPanel";
+import FloatingCTA from "./FloatingCTA";
 import SceneLayer from "./webgl/SceneLayer";
 import CinemaOverlay from "./CinemaOverlay";
 import SoundControl from "./SoundControl";
@@ -35,6 +36,7 @@ export default function SiteShell({
         <Nav lang={lang} dict={dict} />
         <main id="main">{children}</main>
         <Footer lang={lang} dict={dict} />
+        <FloatingCTA lang={lang} />
         <AccessibilityPanel lang={lang} dict={dict} />
         <SoundControl />
         <PageTransition />
