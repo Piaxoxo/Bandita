@@ -8,7 +8,7 @@ import type { Dictionary } from "@/i18n/types";
 import { STATIONS, projectMedia } from "./portfolio-data";
 import { setMood } from "@/lib/portfolio-scene";
 import MagneticButton from "@/components/MagneticButton";
-import { scrollToId } from "@/lib/scroll";
+import { useQuote } from "@/components/quote/QuoteProvider";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +28,7 @@ export default function PortfolioProject({
   reduced: boolean;
 }) {
   const t = dict.portfolio;
+  const { open: openQuote } = useQuote();
   const st = STATIONS[index];
   const media = projectMedia(st);
   const root = useRef<HTMLDivElement>(null);
@@ -277,15 +278,18 @@ export default function PortfolioProject({
               <span className="transition-colors group-hover:text-pink">{STATIONS[next].name[lang]} →</span>
             </span>
           </button>
-          <MagneticButton
-            as="a"
-            href={`/${lang}#contact`}
-            onClick={() => scrollToId("contact")}
-            strength={0.5}
-            className="shrink-0 rounded-full bg-pink px-9 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink"
-          >
-            {t.cta}
-          </MagneticButton>
+          <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
+            <span className="font-sans text-[10px] uppercase tracking-[0.28em] text-creme/45">
+              {lang === "de" ? "Sowas für deine Marke?" : "Want this for your brand?"}
+            </span>
+            <MagneticButton
+              onClick={() => openQuote()}
+              strength={0.5}
+              className="rounded-full bg-pink px-9 py-4 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink"
+            >
+              {t.cta}
+            </MagneticButton>
+          </div>
         </div>
       </footer>
     </div>

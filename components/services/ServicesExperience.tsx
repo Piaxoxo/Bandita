@@ -13,6 +13,7 @@ import Reveal3D from "@/components/anim/Reveal3D";
 import SplitText from "@/components/anim/SplitText";
 import MagneticButton from "@/components/MagneticButton";
 import ContactCTA from "@/components/sections/ContactCTA";
+import InlineCTA from "@/components/InlineCTA";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import {
   HERO, CHAPTERS, AISTUDIO, CATALOGUE, INDUSTRIES,
@@ -104,6 +105,12 @@ const TAG_TO_SERVICE: Record<string, string> = {
   aicontent: "ai", ai: "ai", web: "web", social: "social", film: "film", seo: "seo", premium: "fullservice",
 };
 const prefillFor = (tags: string[]) => tags.map((t) => TAG_TO_SERVICE[t]).find(Boolean) ?? null;
+
+// catalogue category → offer-builder service preselection
+const CAT_TO_SERVICE: Record<string, string> = {
+  brand: "brand", web: "web", ai: "ai", seo: "seo", social: "social",
+  film: "film", audio: "audio", events: "events", print: "merch", hospitality: "fullservice",
+};
 
 export default function ServicesExperience({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const { reducedMotion: r } = useSite();
@@ -253,9 +260,24 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
                 <div className="mt-5 flex flex-wrap gap-1.5">
                   {cat.items.map((it) => (<span key={it} className="rounded-full border border-ink/12 px-2.5 py-1 font-sans text-[12px] text-ink/70">{it}</span>))}
                 </div>
+                <button
+                  onClick={() => openQuote(CAT_TO_SERVICE[cat.key] ?? null)}
+                  data-cursor="link"
+                  className="group mt-6 inline-flex items-center gap-2 self-start font-sans text-xs uppercase tracking-[0.14em] text-pink transition-colors hover:text-ink"
+                >
+                  {lang === "de" ? "Angebot anfordern" : "Request an offer"}
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </button>
               </div>
             ))}
           </Reveal3D>
+          <InlineCTA
+            lang={lang}
+            de="Nicht sicher, was du brauchst? Wir schon — nach einem Gespräch."
+            en="Not sure what you need? We will be — after one call."
+            buttonDe="Unverbindlich anfragen"
+            buttonEn="Ask us — non-binding"
+          />
         </div>
       </section>
 
@@ -474,6 +496,14 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
               <div key={it} className="flex items-center gap-3 border-b border-ink/10 py-3.5 font-sans text-[15px] text-ink/80"><span className="text-pink">🩷</span>{it}</div>
             ))}
           </div>
+          <InlineCTA
+            lang={lang}
+            de="Eines dieser Systeme für dein Business? Preis auf Anfrage."
+            en="One of these systems for your business? Price on request."
+            buttonDe="System anfragen"
+            buttonEn="Request a system"
+            prefill="ai"
+          />
         </div>
       </section>
 
@@ -491,6 +521,13 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
               </div>
             ))}
           </Reveal3D>
+          <InlineCTA
+            lang={lang}
+            de="Schritt 01 beginnt mit einer Nachricht. Kostenlos, unverbindlich."
+            en="Step 01 starts with one message. Free, non-binding."
+            buttonDe="Los geht's"
+            buttonEn="Let's go"
+          />
         </div>
       </section>
 

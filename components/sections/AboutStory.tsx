@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
-import { scrollToId } from "@/lib/scroll";
+import { useQuote } from "@/components/quote/QuoteProvider";
 import { aboutScene } from "@/lib/about-scene";
 import Reveal from "@/components/anim/Reveal";
 import MagneticButton from "@/components/MagneticButton";
@@ -69,6 +69,7 @@ function TiltCard({
 export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Locale }) {
   const a = dict.about;
   const { introDone, reducedMotion: r } = useSite();
+  const { open: openQuote } = useQuote();
   const root = useRef<HTMLDivElement>(null);
   const heroInner = useRef<HTMLDivElement>(null);
   const [staticIllo, setStaticIllo] = useState(true);
@@ -520,11 +521,9 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
           <Reveal>
             <div className="mt-12 flex flex-col items-center gap-5">
               <MagneticButton
-                onClick={() => scrollToId("contact")}
-                as="a"
-                href={`/${lang}#contact`}
+                onClick={() => openQuote()}
                 strength={0.5}
-                className="rounded-full bg-pink px-10 py-5 font-sans text-sm uppercase tracking-[0.14em] text-ink transition-colors hover:bg-creme hover:text-ink"
+                className="rounded-full bg-pink px-10 py-5 font-sans text-sm uppercase tracking-[0.14em] text-creme transition-colors hover:bg-creme hover:text-ink"
               >
                 {a.final.cta}
               </MagneticButton>
