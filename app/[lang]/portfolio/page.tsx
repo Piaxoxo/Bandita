@@ -3,7 +3,7 @@ import { i18n, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import PortfolioExperience from "@/components/portfolio/PortfolioExperience";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.studio";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.agency";
 
 export function generateStaticParams() {
   return i18n.locales.map((lang) => ({ lang }));

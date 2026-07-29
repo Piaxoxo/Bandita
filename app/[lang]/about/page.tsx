@@ -4,7 +4,7 @@ import { getDictionary } from "@/i18n/dictionaries";
 import AboutStory from "@/components/sections/AboutStory";
 import OfferBand from "@/components/OfferBand";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.studio";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.agency";
 
 export function generateStaticParams() {
   return i18n.locales.map((lang) => ({ lang }));
