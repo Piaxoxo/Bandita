@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { i18n } from "@/i18n/config";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.studio";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.agency";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date("2026-06-29");
