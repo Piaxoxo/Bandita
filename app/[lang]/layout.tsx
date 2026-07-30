@@ -4,6 +4,7 @@ import "../globals.css";
 import { i18n, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import SiteShell from "@/components/SiteShell";
+import { Analytics } from "@vercel/analytics/next";
 
 const bodoni = Bodoni_Moda({
   subsets: ["latin"],
@@ -100,7 +101,7 @@ export default function RootLayout({
     name: "BANDITA",
     alternateName: "Bandita Creative Studio",
     url: `${SITE_URL}/${lang}`,
-    slogan: "Verrückt. Hip. Aus Wien.",
+    slogan: "Verr√ºckt. Hip. Aus Wien.",
     description: dict.meta.description,
     address: {
       "@type": "PostalAddress",
@@ -131,6 +132,7 @@ export default function RootLayout({
         <SiteShell lang={lang} dict={dict}>
           {children}
         </SiteShell>
+        <Analytics />
       </body>
     </html>
   );
