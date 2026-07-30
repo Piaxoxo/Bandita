@@ -9,6 +9,9 @@ import EditorialShowcase from "@/components/sections/EditorialShowcase";
 import ContactCTA from "@/components/sections/ContactCTA";
 import OfferBand from "@/components/OfferBand";
 import InlineCTA from "@/components/InlineCTA";
+import StarterPackages from "@/components/home/StarterPackages";
+import NewsletterPromo from "@/components/home/NewsletterPromo";
+import SocialSection from "@/components/home/SocialSection";
 
 export function generateStaticParams() {
   return i18n.locales.map((lang) => ({ lang }));
@@ -21,6 +24,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
   return (
     <>
       <Hero dict={dict} lang={lang} />
+      <StarterPackages lang={lang} />
       <Manifesto dict={dict} />
       <Capabilities dict={dict} />
       <InlineCTA
@@ -40,7 +44,9 @@ export default function HomePage({ params }: { params: { lang: string } }) {
       <Philosophy dict={dict} />
       <OfferBand lang={lang} tone="ink" />
       <EditorialShowcase dict={dict} />
+      <NewsletterPromo lang={lang} />
       <ContactCTA dict={dict} lang={lang} />
+      <SocialSection lang={lang} />
     </>
   );
 }

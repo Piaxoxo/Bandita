@@ -8,6 +8,8 @@ import MagneticButton from "@/components/MagneticButton";
 import NewsletterSignup from "@/components/NewsletterSignup";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { OFFICE_EMAIL } from "@/lib/contact";
+import { INSTAGRAM, utm } from "@/lib/social";
+import { InstagramIcon } from "@/components/SocialIcons";
 
 const OPTIONS: Record<Locale, string[]> = {
   de: ["Angebot holen", "Rückruf anfordern", "Einfach Hallo"],
@@ -57,10 +59,20 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
               ))}
             </div>
 
-            <a href={`mailto:${OFFICE_EMAIL}`} data-cursor="link"
-              className="font-sans text-sm lowercase tracking-[0.1em] text-creme/80 underline decoration-creme/30 underline-offset-4 transition-colors hover:text-creme">
-              {OFFICE_EMAIL}
-            </a>
+            {/* email + Instagram DM — equal-footing contact channels */}
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-6">
+              <a href={`mailto:${OFFICE_EMAIL}`} data-cursor="link"
+                className="font-sans text-sm lowercase tracking-[0.1em] text-creme/80 underline decoration-creme/30 underline-offset-4 transition-colors hover:text-creme">
+                {OFFICE_EMAIL}
+              </a>
+              <a href={utm(INSTAGRAM.url, "contact")} target="_blank" rel="noopener"
+                aria-label={de ? "Bandita per Instagram-DM kontaktieren" : "Contact Bandita via Instagram DM"}
+                data-cursor="link"
+                className="inline-flex items-center gap-2 font-sans text-sm tracking-[0.04em] text-creme/80 transition-colors hover:text-creme">
+                <InstagramIcon className="h-4 w-4" />
+                {de ? "Schneller geht's per DM →" : "Faster via DM →"}
+              </a>
+            </div>
             <span className="font-sans text-xs uppercase tracking-[0.2em] text-creme/60">{dict.cta.note}</span>
 
             {/* newsletter */}
