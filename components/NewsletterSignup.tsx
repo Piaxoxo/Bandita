@@ -12,8 +12,6 @@ import { NEWSLETTER_NAME } from "@/lib/social";
 // AFTER the confirmation mail (double opt-in), never shown here.
 export default function NewsletterSignup({ lang, tone = "dark" }: { lang: Locale; tone?: "dark" | "light" }) {
   const [email, setEmail] = useState("");
-  const [consent, setConsent] = useState(false);
-  const [consentErr, setConsentErr] = useState(false);
   const [honey, setHoney] = useState(""); // honeypot — humans never see it
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
@@ -23,8 +21,6 @@ export default function NewsletterSignup({ lang, tone = "dark" }: { lang: Locale
     e.preventDefault();
     if (!email.trim()) return;
     if (honey.trim()) { setDone(true); return; } // bot: pretend success, send nothing
-    if (!consent) { setConsentErr(true); return; }
-    setConsentErr(false);
     setBusy(true);
     const res = await sendLead({
       category: "Newsletter",
@@ -85,32 +81,16 @@ export default function NewsletterSignup({ lang, tone = "dark" }: { lang: Locale
         </button>
       </div>
 
-      {/* GDPR consent + double-opt-in note */}
-      <label className={`mt-3 flex cursor-pointer items-start gap-2.5 text-left font-sans text-xs leading-relaxed ${small}`}>
-        <input
-          type="checkbox" checked={consent} onChange={(e) => { setConsent(e.target.checked); if (e.target.checked) setConsentErr(false); }}
-          className="mt-0.5 h-4 w-4 shrink-0 accent-[#FB003F] focus-visible:ring-2 focus-visible:ring-pink/60"
-          aria-describedby="nl-doi-note"
-        />
-        <span>
-          {de ? (
-            <>Ich bin einverstanden, dass Bandita mir den Newsletter schickt. Details in der{" "}
-              <Link href={`/${lang}/datenschutz`} className="underline underline-offset-2 hover:text-pink">Datenschutzerklärung</Link>.</>
-          ) : (
-            <>I agree that Bandita may send me the newsletter. Details in the{" "}
-              <Link href={`/${lang}/datenschutz`} className="underline underline-offset-2 hover:text-pink">privacy policy</Link>.</>
-          )}
-        </span>
-      </label>
-      {consentErr && (
-        <p className="mt-2 font-sans text-xs text-pink">
-          {de ? "Bitte Häkchen setzen — ohne Einwilligung kein Bandit Letter." : "Please tick the box — no consent, no Bandit Letter."}
-        </p>
-      )}
-      <p id="nl-doi-note" className={`mt-2 font-sans text-[11px] leading-relaxed ${small}`}>
-        {de
-          ? "Du bekommst eine Bestätigungs-Mail (Double-Opt-in). Abmelden jederzeit mit einem Klick."
-          : "You'll get a confirmation email (double opt-in). Unsubscribe any time with one click."}
+      {/* consent-by-submit + double-opt-in note (no checkbox — the labelled
+          form + DOI confirmation carries the consent) */}
+      <p id="nl-doi-note" className={`mt-2.5 font-sans text-[11px] leading-relaxed ${small}`}>
+        {de ? (
+          <>Mit der Anmeldung bekommst du eine Bestätigungs-Mail (Double-Opt-in). Abmelden jederzeit mit einem Klick. Details:{" "}
+            <Link href={`/${lang}/datenschutz`} className="underline underline-offset-2 hover:text-pink">Datenschutz</Link>.</>
+        ) : (
+          <>By signing up you'll get a confirmation email (double opt-in). Unsubscribe any time with one click. Details:{" "}
+            <Link href={`/${lang}/datenschutz`} className="underline underline-offset-2 hover:text-pink">privacy policy</Link>.</>
+        )}
       </p>
     </form>
   );
