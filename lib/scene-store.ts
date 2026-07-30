@@ -49,9 +49,11 @@ export const TIER_CONFIG: Record<
   DeviceTier,
   { field: number; intro: number; dpr: [number, number] }
 > = {
-  high: { field: 9000, intro: 3200, dpr: [1, 1.75] },
-  mid: { field: 5200, intro: 2400, dpr: [1, 1.5] },
-  low: { field: 3200, intro: 1500, dpr: [1, 1.3] },
+  // DPR capped at 1.5 — on retina that's ~27% fewer pixels per frame with no
+  // visible difference (AdaptiveDpr regresses further under load anyway).
+  high: { field: 6500, intro: 3200, dpr: [1, 1.5] },
+  mid: { field: 4200, intro: 2400, dpr: [1, 1.35] },
+  low: { field: 2800, intro: 1500, dpr: [1, 1.2] },
 };
 
 let lastScrollPx = 0;

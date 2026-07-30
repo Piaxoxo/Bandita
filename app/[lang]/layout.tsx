@@ -6,9 +6,11 @@ import { getDictionary } from "@/i18n/dictionaries";
 import SiteShell from "@/components/SiteShell";
 import { Analytics } from "@vercel/analytics/next";
 
+// Only the weights actually used (400/500 + one 600) — fewer font files on
+// the critical path means faster first paint.
 const bodoni = Bodoni_Moda({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   variable: "--font-bodoni",
   display: "swap",
@@ -17,7 +19,7 @@ const bodoni = Bodoni_Moda({
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   variable: "--font-inter",
   display: "swap",
 });
