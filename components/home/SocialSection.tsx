@@ -11,9 +11,8 @@ import { SOCIAL_ICONS } from "@/components/SocialIcons";
 // Cheeky one-liner per channel — Bandita voice, DE + EN.
 const LINES: Record<string, { de: string; en: string }> = {
   instagram: { de: "Hinter den Kulissen. Vor der Konkurrenz.", en: "Behind the scenes. Ahead of the competition." },
-  tiktok: { de: "Trends? Machen wir selbst.", en: "Trends? We start them." },
+  facebook: { de: "Ja, wir sind auch dort. Deine Kunden nämlich auch.", en: "Yes, we're there too. So are your customers." },
   linkedin: { de: "Business. Aber nicht langweilig.", en: "Business. Just not boring." },
-  youtube: { de: "Kino-Qualität. Gratis zum Anschauen.", en: "Cinema quality. Free to watch." },
 };
 
 // One 3D card: pointer tilt (rAF-capped, transform-only), glare that follows
@@ -134,7 +133,7 @@ export default function SocialSection({ lang }: { lang: Locale }) {
         </div>
 
         <div style={{ perspective: "1200px" }}>
-          <Reveal3D className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" stagger={0.09}>
+          <Reveal3D className="mt-14 grid gap-6 sm:grid-cols-2 lg:mx-auto lg:max-w-[1100px] lg:grid-cols-3" stagger={0.09}>
             {SOCIAL_LINKS.map((s) => (
               <SocialCard key={s.key} s={s} lang={lang} reduced={r} canHover={canHover} />
             ))}
