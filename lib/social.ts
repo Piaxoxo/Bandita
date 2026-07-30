@@ -12,11 +12,10 @@ export type SocialChannel = {
 };
 
 export const SOCIAL_LINKS: SocialChannel[] = [
-  // ⚠️ PLACEHOLDER — echte Profil-URLs eintragen:
-  { key: "instagram", name: "Instagram", handle: "@bandita.agency", url: "https://instagram.com/bandita.agency", color: "#E4405F" },
-  { key: "tiktok", name: "TikTok", handle: "@bandita.agency", url: "https://tiktok.com/@bandita.agency", color: "#69C9D0" },
-  { key: "linkedin", name: "LinkedIn", handle: "Bandita Agency", url: "https://linkedin.com/company/bandita-agency", color: "#0A66C2" },
-  { key: "youtube", name: "YouTube", handle: "@bandita.agency", url: "https://youtube.com/@bandita.agency", color: "#FF0000" },
+  // Echte Profile (Stand Juli 2026):
+  { key: "instagram", name: "Instagram", handle: "@bandita.agency", url: "https://www.instagram.com/bandita.agency/", color: "#E4405F" },
+  { key: "facebook", name: "Facebook", handle: "Bandita Agency", url: "https://www.facebook.com/profile.php?id=61592501850907", color: "#1877F2" },
+  { key: "linkedin", name: "LinkedIn", handle: "Bandita Studio", url: "https://www.linkedin.com/company/bandita-studio/", color: "#0A66C2" },
 ];
 
 export const INSTAGRAM = SOCIAL_LINKS[0];
