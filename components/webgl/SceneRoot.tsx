@@ -103,8 +103,8 @@ function GlassOrb({ tier }: { tier: DeviceTier }) {
         <mesh>
           <icosahedronGeometry args={[1, tier === "low" ? 3 : 6]} />
           <MeshTransmissionMaterial
-            samples={tier === "low" ? 2 : 6}
-            resolution={tier === "low" ? 128 : 256}
+            samples={tier === "low" ? 2 : 4}
+            resolution={tier === "low" ? 128 : 192}
             thickness={0.85}
             roughness={0.12}
             transmission={1}
@@ -196,6 +196,7 @@ export default function SceneRoot() {
       dpr={cfg.dpr}
       camera={{ position: [0, 0, 9], fov: 42 }}
       gl={{ antialias: tier !== "low", alpha: false, powerPreference: "high-performance" }}
+      performance={{ min: 0.5 }}
     >
       <AdaptiveDpr pixelated />
       <fogExp2 attach="fog" args={["#FBE6E6", 0.016]} />

@@ -131,7 +131,8 @@ export default function SoundControl() {
 
   return (
     <>
-      <audio ref={audioRef} src="/audio/bandita.mp3" loop preload="auto" crossOrigin="anonymous" />
+      {/* preload="none": the 5 MB track only downloads when the user unmutes */}
+      <audio ref={audioRef} src="/audio/bandita.mp3" loop preload="none" crossOrigin="anonymous" />
       <div className="fixed bottom-6 right-6 z-[70] flex items-center gap-3 rounded-full border border-ink/15 bg-creme/70 px-4 py-2.5 backdrop-blur-md">
         <button
           onClick={toggle}

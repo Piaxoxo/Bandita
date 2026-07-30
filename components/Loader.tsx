@@ -33,8 +33,18 @@ export default function Loader({ dict }: { dict: Dictionary }) {
       sceneStore.introProgress = 1;
       setIntroDone(true);
       setHidden(true);
+      try { sessionStorage.setItem("bandita:intro", "1"); } catch {}
     };
     finish.current = done;
+
+    // The cinematic intro plays once per session — repeat loads go straight
+    // to the page (huge perceived-speed win for ad/campaign traffic).
+    let seen = false;
+    try { seen = sessionStorage.getItem("bandita:intro") === "1"; } catch {}
+    if (seen) {
+      done();
+      return () => { document.body.style.overflow = ""; };
+    }
 
     const isReduced =
       typeof window !== "undefined" &&
