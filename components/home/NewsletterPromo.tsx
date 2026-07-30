@@ -3,7 +3,7 @@
 import type { Locale } from "@/i18n/config";
 import Reveal from "@/components/anim/Reveal";
 import NewsletterSignup from "@/components/NewsletterSignup";
-import { PROMO_DISCOUNT } from "@/lib/social";
+import { PROMO_BONUS } from "@/lib/social";
 
 // "Der Bandit Letter" promo block. No popup, no exit-intent — an offer, not a beg.
 export default function NewsletterPromo({ lang }: { lang: Locale }) {
@@ -23,8 +23,8 @@ export default function NewsletterPromo({ lang }: { lang: Locale }) {
           <Reveal>
             <p className="mt-5 max-w-xl font-sans text-base leading-relaxed text-creme/75 md:text-lg">
               {de
-                ? <>Einmal im Monat: was in Marketing gerade wirklich funktioniert. Als Dankeschön: <span className="text-pink">−{PROMO_DISCOUNT} auf jedes Starter-Paket.</span></>
-                : <>Once a month: what actually works in marketing right now. As a thank-you: <span className="text-pink">−{PROMO_DISCOUNT} off every starter package.</span></>}
+                ? <>Einmal im Monat: was in Marketing gerade wirklich funktioniert. Als Dankeschön: <span className="text-pink">{PROMO_BONUS.de}</span></>
+                : <>Once a month: what actually works in marketing right now. As a thank-you: <span className="text-pink">{PROMO_BONUS.en}</span></>}
             </p>
           </Reveal>
         </div>

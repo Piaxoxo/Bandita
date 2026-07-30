@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { mailto, sendLead } from "@/lib/contact";
-import { NEWSLETTER_NAME, PROMO_CODE } from "@/lib/social";
+import { NEWSLETTER_NAME } from "@/lib/social";
 
 // "Der Bandit Letter" opt-in. GDPR consent checkbox, double-opt-in hint,
 // honeypot against bots. Routes a categorised [Newsletter] lead to the office
@@ -32,7 +32,7 @@ export default function NewsletterSignup({ lang, tone = "dark" }: { lang: Locale
       message: [
         `${de ? "Newsletter-Anmeldung" : "Newsletter signup"} (${NEWSLETTER_NAME}): ${email}`,
         `${de ? "Einwilligung (DSGVO): erteilt" : "Consent (GDPR): given"}`,
-        `→ ${de ? `Nach Bestätigung (Double-Opt-in) Willkommens-Mail mit Code ${PROMO_CODE} senden.` : `After confirmation (double opt-in), send welcome mail with code ${PROMO_CODE}.`}`,
+        `→ ${de ? "Nach Bestätigung (Double-Opt-in) Willkommens-Mail mit dem Buchungslink für den Gratis-Strategiecall (30 Min) senden." : "After confirmation (double opt-in), send the welcome mail with the booking link for the free 30-min strategy call."}`,
       ].join("\n"),
       email,
     });
@@ -58,8 +58,8 @@ export default function NewsletterSignup({ lang, tone = "dark" }: { lang: Locale
     return (
       <p className={`font-sans text-sm ${dark ? "text-creme/80" : "text-ink/70"}`}>
         {de
-          ? "Fast Bandit! Check dein Postfach und bestätige kurz — dann kommt dein Rabattcode. 🖤"
-          : "Almost a Bandit! Check your inbox and confirm — your discount code follows. 🖤"}
+          ? "Fast Bandit! Bestätige kurz per Mail — dann schicken wir dir deinen Call-Link. 🖤"
+          : "Almost a Bandit! Confirm via email — then we'll send your call link. 🖤"}
       </p>
     );
   }

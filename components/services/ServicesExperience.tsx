@@ -8,7 +8,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
-import { PROMO_DISCOUNT } from "@/lib/social";
+import { PROMO_BADGE } from "@/lib/social";
 import Reveal from "@/components/anim/Reveal";
 import Reveal3D from "@/components/anim/Reveal3D";
 import SplitText from "@/components/anim/SplitText";
@@ -310,9 +310,7 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
                   {STARTER_TIER_IDS.has(t.id) && (
                     <button onClick={() => scrollToId("newsletter")} data-cursor="link"
                       className={`mt-4 text-left font-sans text-[11px] leading-snug underline underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:ring-pink/60 ${feat ? "text-creme/75 decoration-creme/30 hover:text-pink" : "text-pink decoration-pink/30 hover:text-ink"}`}>
-                      {lang === "de"
-                        ? `Bandit-Letter-Abonnenten zahlen ${PROMO_DISCOUNT} weniger.`
-                        : `Bandit Letter subscribers pay ${PROMO_DISCOUNT} less.`}
+                      {PROMO_BADGE[lang]}
                     </button>
                   )}
                   <button onClick={() => openQuote(prefillFor(t.tags))} data-cursor="link"

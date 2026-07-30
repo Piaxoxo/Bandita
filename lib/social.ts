@@ -22,8 +22,16 @@ export const SOCIAL_LINKS: SocialChannel[] = [
 export const INSTAGRAM = SOCIAL_LINKS[0];
 
 export const NEWSLETTER_NAME = "Der Bandit Letter";
-export const PROMO_DISCOUNT = "10 %"; // Rabatt auf alle Starter-Pakete für Abonnenten
-export const PROMO_CODE = "BANDIT10"; // wird NACH Double-Opt-in per Willkommens-Mail verschickt
+// Abo-Bonus: KEIN Rabatt — ein Gratis-Strategiecall (30 Min). Der Buchungs-
+// Link wird NACH der Double-Opt-in-Bestätigung per Willkommens-Mail verschickt.
+export const PROMO_BONUS = {
+  de: "ein 30-Minuten-Strategiecall. Gratis. Unverbindlich. Ehrlich.",
+  en: "a 30-minute strategy call. Free. Non-binding. Honest.",
+};
+export const PROMO_BADGE = {
+  de: "Bandit-Letter-Abonnenten bekommen einen Gratis-Strategiecall dazu.",
+  en: "Bandit Letter subscribers get a free strategy call on top.",
+};
 
 // Attach UTM parameters so we can see in analytics which placement converts.
 export function utm(url: string, medium: string, campaign = "bandita_site"): string {

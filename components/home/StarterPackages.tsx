@@ -7,7 +7,7 @@ import Reveal3D from "@/components/anim/Reveal3D";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { scrollToId } from "@/lib/scroll";
 import { PRICING } from "@/components/services/services-data";
-import { PROMO_DISCOUNT } from "@/lib/social";
+import { PROMO_BADGE } from "@/lib/social";
 
 // The four entry-level packages, surfaced on the homepage WITH prices —
 // sourced from the services pricing data so numbers never drift apart.
@@ -56,9 +56,7 @@ export default function StarterPackages({ lang }: { lang: Locale }) {
               {/* Bandit-Letter promo line → scrolls to the footer form */}
               <button onClick={() => scrollToId("newsletter")} data-cursor="link"
                 className="mt-4 text-left font-sans text-[11px] leading-snug text-pink underline decoration-pink/30 underline-offset-2 transition-colors hover:text-ink focus-visible:ring-2 focus-visible:ring-pink/60">
-                {de
-                  ? `Bandit-Letter-Abonnenten zahlen ${PROMO_DISCOUNT} weniger.`
-                  : `Bandit Letter subscribers pay ${PROMO_DISCOUNT} less.`}
+                {PROMO_BADGE[lang]}
               </button>
               <div className="mt-4 flex gap-2">
                 <Link href={`/${lang}/services#preise`} data-cursor="link"
