@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Dictionary } from "@/i18n/types";
 import type { Locale } from "@/i18n/config";
 import Wordmark from "./Wordmark";
@@ -25,7 +26,15 @@ export default function Footer({ dict, lang }: { dict: Dictionary; lang: Locale 
           <span>
             © {year} BANDITA — {dict.footer.rights}
           </span>
-          <span>{dict.footer.based}</span>
+          <div className="flex items-center gap-5">
+            <Link href={`/${lang}/impressum`} data-cursor="link" className="transition-colors hover:text-pink">
+              Impressum
+            </Link>
+            <Link href={`/${lang}/datenschutz`} data-cursor="link" className="transition-colors hover:text-pink">
+              {lang === "de" ? "Datenschutz" : "Privacy"}
+            </Link>
+            <span className="hidden md:inline">{dict.footer.based}</span>
+          </div>
         </div>
       </div>
     </footer>
