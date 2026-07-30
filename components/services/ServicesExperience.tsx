@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
+import { PROMO_DISCOUNT } from "@/lib/social";
 import Reveal from "@/components/anim/Reveal";
 import Reveal3D from "@/components/anim/Reveal3D";
 import SplitText from "@/components/anim/SplitText";
@@ -111,6 +112,9 @@ const CAT_TO_SERVICE: Record<string, string> = {
   brand: "brand", web: "web", ai: "ai", seo: "seo", social: "social",
   film: "film", audio: "audio", events: "events", print: "merch", hospitality: "fullservice",
 };
+
+// starter-level tiers carry the Bandit-Letter discount badge
+const STARTER_TIER_IDS = new Set(["web-starter", "social-start", "seo-start", "ai-fashion-starter", "ai-product-starter", "ai-start"]);
 
 export default function ServicesExperience({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const { reducedMotion: r } = useSite();
@@ -303,6 +307,14 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
                   <ul className={`mt-5 flex-1 space-y-2 font-sans text-[14px] ${feat ? "text-creme/80" : "text-ink/70"}`}>
                     {t.features.map((f, fi) => (<li key={fi} className="flex items-start gap-2.5"><span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-pink" />{f}</li>))}
                   </ul>
+                  {STARTER_TIER_IDS.has(t.id) && (
+                    <button onClick={() => scrollToId("newsletter")} data-cursor="link"
+                      className={`mt-4 text-left font-sans text-[11px] leading-snug underline underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:ring-pink/60 ${feat ? "text-creme/75 decoration-creme/30 hover:text-pink" : "text-pink decoration-pink/30 hover:text-ink"}`}>
+                      {lang === "de"
+                        ? `Bandit-Letter-Abonnenten zahlen ${PROMO_DISCOUNT} weniger.`
+                        : `Bandit Letter subscribers pay ${PROMO_DISCOUNT} less.`}
+                    </button>
+                  )}
                   <button onClick={() => openQuote(prefillFor(t.tags))} data-cursor="link"
                     className={`mt-7 inline-flex w-full items-center justify-center rounded-full px-6 py-3 font-sans text-xs uppercase tracking-[0.14em] transition-colors ${feat ? "bg-creme text-ink hover:bg-pink hover:text-creme" : "bg-ink text-creme hover:bg-pink"}`}>
                     {PRICING.button[lang]}

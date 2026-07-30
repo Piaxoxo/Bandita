@@ -9,6 +9,8 @@ import type { Dictionary } from "@/i18n/types";
 import { STATIONS, coverOf, mediaCount } from "./portfolio-data";
 import { portfolio, setMood } from "@/lib/portfolio-scene";
 import { useQuote } from "@/components/quote/QuoteProvider";
+import { INSTAGRAM, utm } from "@/lib/social";
+import { InstagramIcon } from "@/components/SocialIcons";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -190,6 +192,22 @@ export default function PortfolioWall({
             >
               {lang === "de" ? "Angebot anfordern" : "Request an offer"}
             </button>
+          </div>
+
+          {/* Instagram cross-sell */}
+          <div className="mt-10 flex flex-col items-center gap-4 border-t border-creme/10 pt-10">
+            <p className="font-display text-xl italic text-creme/70 md:text-2xl">
+              {lang === "de" ? "Das war die Kurzfassung. Der Rest läuft auf Instagram." : "That was the short version. The rest runs on Instagram."}
+            </p>
+            <a
+              href={utm(INSTAGRAM.url, "portfolio")}
+              target="_blank" rel="noopener"
+              aria-label={`Bandita ${lang === "de" ? "auf" : "on"} Instagram — ${INSTAGRAM.handle}`}
+              data-cursor="hover"
+              className="inline-flex items-center gap-2.5 rounded-full border border-creme/30 px-8 py-3.5 font-sans text-xs uppercase tracking-[0.14em] text-creme transition-all hover:border-transparent hover:bg-[#E4405F] hover:text-white focus-visible:ring-2 focus-visible:ring-pink/60"
+            >
+              <InstagramIcon className="h-4 w-4" /> {INSTAGRAM.handle}
+            </a>
           </div>
         </div>
       </div>
