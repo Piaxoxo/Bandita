@@ -101,7 +101,7 @@ export default function RootLayout({
     name: "BANDITA",
     alternateName: "Bandita Creative Studio",
     url: `${SITE_URL}/${lang}`,
-    slogan: "Verr√ºckt. Hip. Aus Wien.",
+    slogan: "Verrückt. Hip. Aus Wien.",
     description: dict.meta.description,
     address: {
       "@type": "PostalAddress",
