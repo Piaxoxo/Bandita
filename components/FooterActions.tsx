@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import NewsletterSignup from "./NewsletterSignup";
@@ -78,6 +79,13 @@ export default function FooterActions({ lang }: { lang: Locale }) {
           className="mt-5 inline-block font-sans text-sm lowercase tracking-[0.06em] text-creme/70 underline decoration-creme/30 underline-offset-4 transition-colors hover:text-pink">
           {OFFICE_EMAIL}
         </a>
+        {/* internal link to the local-SEO landing page */}
+        <p className="mt-2">
+          <Link href={`/${lang}/marketing-agentur-wien`} data-cursor="link"
+            className="font-sans text-xs uppercase tracking-[0.14em] text-creme/50 transition-colors hover:text-pink">
+            {de ? "Marketing Agentur Wien" : "Marketing Agency Vienna"}
+          </Link>
+        </p>
       </div>
     </div>
   );

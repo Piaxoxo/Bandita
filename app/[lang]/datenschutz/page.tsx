@@ -30,9 +30,10 @@ const CONTENT: Record<Locale, { title: string; sub: string; sections: { h: strin
         p: [`${OWNER}, ${ADDRESS}`, `E-Mail: ${OFFICE_EMAIL}`],
       },
       {
-        h: "Keine Cookies, kein Tracking",
+        h: "Keine Cookies, keine Wiedererkennung",
         p: [
-          "Diese Website setzt keine Tracking-Cookies und nutzt keine Analyse-Tools. Deshalb gibt es hier auch kein Cookie-Banner — es gibt schlicht nichts einzuwilligen.",
+          "Diese Website setzt keine Cookies und arbeitet ohne Werbe- oder Profiling-Tracker. Deshalb gibt es hier auch kein Cookie-Banner.",
+          "Zur Reichweitenmessung nutzen wir Vercel Web Analytics. Dieses Tool arbeitet cookielos und ohne Cross-Site-Tracking: Es speichert keine personenbezogenen Profile und erstellt aus technischen Angaben (z. B. Seitenaufruf, Referrer, grober Standort auf Länderebene, Gerätetyp) lediglich anonyme Statistiken. Ein Rückschluss auf einzelne Personen ist nicht möglich (Art. 6 Abs. 1 lit. f DSGVO — berechtigtes Interesse an einer funktionierenden Website).",
           "Links zu unseren Social-Media-Profilen enthalten UTM-Parameter; die werten die jeweiligen Plattformen aus, nicht wir.",
         ],
       },
@@ -76,9 +77,10 @@ const CONTENT: Record<Locale, { title: string; sub: string; sections: { h: strin
         p: [`${OWNER}, ${ADDRESS}`, `Email: ${OFFICE_EMAIL}`],
       },
       {
-        h: "No cookies, no tracking",
+        h: "No cookies, no profiling",
         p: [
-          "This website sets no tracking cookies and uses no analytics tools. That's why there is no cookie banner — there's simply nothing to consent to.",
+          "This website sets no cookies and uses no advertising or profiling trackers. That's why there is no cookie banner.",
+          "For audience measurement we use Vercel Web Analytics. It works without cookies and without cross-site tracking: it stores no personal profiles and only derives anonymous statistics from technical data (e.g. page view, referrer, coarse country-level location, device type). No conclusions about individuals are possible (Art. 6(1)(f) GDPR — legitimate interest in a functioning website).",
           "Links to our social profiles carry UTM parameters; those are evaluated by the platforms, not by us.",
         ],
       },

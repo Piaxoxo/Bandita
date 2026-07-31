@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date("2026-06-29");
   const routes: { path: string; priority: number }[] = [
     { path: "", priority: 1 },
+    { path: "/marketing-agentur-wien", priority: 0.95 },
     { path: "/about", priority: 0.8 },
     { path: "/services", priority: 0.9 },
     { path: "/studio", priority: 0.8 },

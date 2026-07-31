@@ -4,6 +4,7 @@ import "../globals.css";
 import { i18n, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import SiteShell from "@/components/SiteShell";
+import { SOCIAL_LINKS } from "@/lib/social";
 import { Analytics } from "@vercel/analytics/next";
 
 // Only the weights actually used (400/500 + one 600) — fewer font files on
@@ -96,28 +97,76 @@ export default function RootLayout({
   const lang: Locale = isLocale(params.lang) ? params.lang : i18n.defaultLocale;
   const dict = getDictionary(lang);
 
+  // Local-business structured data. ProfessionalService + MarketingAgency is
+  // what Google and AI assistants actually parse for "Marketingagentur Wien"
+  // style queries — the address, geo, sameAs profiles and service catalogue
+  // are the signals that make the brand resolvable.
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CreativeWorkSeries",
-    additionalType: "https://schema.org/Organization",
+    "@type": ["ProfessionalService", "MarketingAgency"],
+    "@id": `${SITE_URL}/#organization`,
     name: "BANDITA",
-    alternateName: "Bandita Creative Studio",
+    legalName: "Bandita — Pia-Alice Stelzl",
+    alternateName: ["Bandita Agency", "Bandita Marketing Agency", "Bandita Creative Studio"],
     url: `${SITE_URL}/${lang}`,
+    logo: `${SITE_URL}/og/bandita-og.svg`,
+    image: `${SITE_URL}/og/bandita-og.svg`,
     slogan: "Verrückt. Hip. Aus Wien.",
     description: dict.meta.description,
+    email: "office@bandita.agency",
+    foundingDate: "2026",
+    founder: { "@type": "Person", name: "Pia-Alice Stelzl", jobTitle: "CEO · Head of Marketing" },
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Vienna",
+      streetAddress: "Königseggasse 5/6",
+      postalCode: "1060",
+      addressLocality: "Wien",
+      addressRegion: "Wien",
       addressCountry: "AT",
     },
-    areaServed: "Worldwide",
-    knowsAbout: [
-      "Brand Strategy",
-      "Creative Direction",
-      "Web Design",
-      "Film Production",
-      "Performance Marketing",
+    geo: { "@type": "GeoCoordinates", latitude: 48.1954, longitude: 16.3517 },
+    areaServed: [
+      { "@type": "City", name: "Wien" },
+      { "@type": "Country", name: "Österreich" },
+      { "@type": "Place", name: "Worldwide" },
     ],
+    priceRange: "€€",
+    currenciesAccepted: "EUR",
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "09:00",
+      closes: "18:00",
+    },
+    sameAs: SOCIAL_LINKS.map((s) => s.url),
+    knowsAbout: [
+      "Markenstrategie",
+      "Branding",
+      "Social Media Marketing",
+      "Filmproduktion",
+      "Fotografie",
+      "Webdesign",
+      "3D-Websites",
+      "SEO",
+      "Künstliche Intelligenz",
+      "Neuromarketing",
+    ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: lang === "de" ? "Leistungen" : "Services",
+      itemListElement: [
+        "Markenstrategie & Branding",
+        "Social Media Content",
+        "Filmproduktion",
+        "Fotografie",
+        "Web & 3D",
+        "SEO & Growth",
+        "KI-Lösungen & KI-Content",
+      ].map((s) => ({
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: s, provider: { "@id": `${SITE_URL}/#organization` } },
+      })),
+    },
   };
 
   return (
