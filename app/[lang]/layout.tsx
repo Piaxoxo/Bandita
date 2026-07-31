@@ -5,6 +5,7 @@ import { i18n, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import SiteShell from "@/components/SiteShell";
 import { SOCIAL_LINKS } from "@/lib/social";
+import { Analytics } from "@vercel/analytics/next";
 
 // Only the weights actually used (400/500 + one 600) — fewer font files on
 // the critical path means faster first paint.
@@ -182,6 +183,7 @@ export default function RootLayout({
         <SiteShell lang={lang} dict={dict}>
           {children}
         </SiteShell>
+        <Analytics />
       </body>
     </html>
   );
