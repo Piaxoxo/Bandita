@@ -165,7 +165,7 @@ function Particles({ count }: { count: number }) {
     aboutScene.heroReleased = false; // fresh film on (re)mount
     const build = async () => {
       const wordRes = sampleWord(count);
-      const imgRes = await sampleImage("/about/illustration.png", count);
+      const imgRes = await sampleImage("/about/illustration.webp", count);
       if (!alive || !wordRes || !imgRes) return;
       const womanPts = imgRes.pts;
       const wordPts = wordRes.pts;
@@ -314,7 +314,11 @@ export default function AboutScene({
 }) {
   return (
     <Canvas
-      dpr={[1, quality === "high" ? 1.6 : 1.35]}
+      // Four chained post effects over a heavily overdrawn particle field make
+      // this the most fill-rate-bound canvas on the site, so resolution is the
+      // knob that matters. The particles are soft points — extra pixels buy
+      // nothing visible here.
+      dpr={[1, quality === "high" ? 1.35 : 1.05]}
       performance={{ min: 0.5 }}
       camera={{ position: [0, 0, 12], fov: 46 }}
       gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
@@ -331,6 +335,7 @@ export default function AboutScene({
           luminanceSmoothing={0.35}
           mipmapBlur
           radius={quality === "high" ? 0.6 : 0.5}
+          resolutionScale={0.5}
         />
         <ChromaticAberration
           offset={new THREE.Vector2(0.0003, 0.0003)}

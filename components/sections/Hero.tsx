@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import type { Locale } from "@/i18n/config";
@@ -8,6 +8,7 @@ import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
 import MagneticButton from "@/components/MagneticButton";
+import { skipHeavyMedia } from "@/lib/defer";
 
 /* split a line into per-letter spans so each character can rise on its own */
 function Chars({ text }: { text: string }) {
@@ -31,6 +32,26 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
   const router = useRouter();
   const { introDone, reducedMotion } = useSite();
   const root = useRef<HTMLDivElement>(null);
+  const filmRef = useRef<HTMLVideoElement>(null);
+  const [film, setFilm] = useState(false);
+
+  // Attach the hero film one paint after mount, so the poster + headline own
+  // the first frame. Skipped entirely on metered / 2G connections.
+  useEffect(() => {
+    if (skipHeavyMedia()) return;
+    const id = window.requestAnimationFrame(() =>
+      window.requestAnimationFrame(() => setFilm(true)),
+    );
+    return () => window.cancelAnimationFrame(id);
+  }, []);
+
+  useEffect(() => {
+    const v = filmRef.current;
+    if (film && v) {
+      v.muted = true;
+      v.play().catch(() => {});
+    }
+  }, [film]);
 
   useEffect(() => {
     if (!introDone) return;
@@ -70,13 +91,16 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
       className="relative flex min-h-[100svh] items-center overflow-hidden"
     >
       {/* Cinematic content-film hero — one of BANDITA's own reels, graded dark
-          so the headline stays legible. */}
+          so the headline stays legible. The 40 KB poster paints instantly and
+          carries the LCP; the film itself is attached one frame later so it
+          never competes with the headline, fonts and intro animation. */}
       {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
       <video
+        ref={filmRef}
         className="absolute inset-0 h-full w-full object-cover"
-        src="/video/reel-mojito.mp4"
+        src={film ? "/video/reel-mojito.mp4" : undefined}
         poster="/video/reel-mojito.jpg"
-        autoPlay
+        preload="none"
         muted
         loop
         playsInline

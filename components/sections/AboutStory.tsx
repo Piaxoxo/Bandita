@@ -292,7 +292,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
             {staticIllo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src="/about/illustration.png"
+                src="/about/illustration.webp"
                 alt={a.name.illoAlt}
                 className="max-h-[70vh] w-auto opacity-90 mix-blend-screen"
               />

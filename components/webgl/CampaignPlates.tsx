@@ -5,6 +5,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { aboutScene } from "@/lib/about-scene";
+import { afterLoad, skipHeavyMedia } from "@/lib/defer";
 
 // Real Bandita work — floated as premium prints (and one moving reel) through
 // the story. Each item carries its own aspect so portraits never stretch.
@@ -183,7 +184,17 @@ function VideoPlate({ index, item, compact }: { index: number; item: PlateItem; 
   const [live, setLive] = useState(false);
   const vidRef = useRef<HTMLVideoElement | null>(null);
 
+  // The reel is 2.3 MB and the poster above is already a real frame, so the
+  // download waits until the page has finished loading — and is skipped
+  // entirely on a metered connection.
+  const [allowed, setAllowed] = useState(false);
   useEffect(() => {
+    if (skipHeavyMedia()) return;
+    return afterLoad(() => setAllowed(true));
+  }, []);
+
+  useEffect(() => {
+    if (!allowed) return;
     const v = document.createElement("video");
     v.src = item.src;
     v.muted = true;
@@ -215,7 +226,7 @@ function VideoPlate({ index, item, compact }: { index: number; item: PlateItem; 
       v.removeAttribute("src");
       v.remove();
     };
-  }, [item.src]);
+  }, [item.src, allowed]);
 
   const onNear = (near: boolean) => {
     const v = vidRef.current;

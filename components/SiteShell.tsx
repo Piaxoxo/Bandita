@@ -13,7 +13,6 @@ import AccessibilityPanel from "./AccessibilityPanel";
 import FloatingCTA from "./FloatingCTA";
 import SceneLayer from "./webgl/SceneLayer";
 import CinemaOverlay from "./CinemaOverlay";
-import SoundControl from "./SoundControl";
 import PageTransition from "./PageTransition";
 import ScrollFlight from "./ScrollFlight";
 
@@ -38,7 +37,6 @@ export default function SiteShell({
         <Footer lang={lang} dict={dict} />
         <FloatingCTA lang={lang} />
         <AccessibilityPanel lang={lang} dict={dict} />
-        <SoundControl />
         <PageTransition />
         <ScrollFlight />
         <CinemaOverlay />

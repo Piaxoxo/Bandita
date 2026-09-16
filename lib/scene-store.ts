@@ -47,13 +47,20 @@ export function detectTier(): DeviceTier {
 // Per-tier tuning knobs used across the WebGL components.
 export const TIER_CONFIG: Record<
   DeviceTier,
-  { field: number; intro: number; dpr: [number, number] }
+  { field: number; intro: number; dpr: [number, number]; worldDpr: [number, number] }
 > = {
   // DPR capped at 1.5 — on retina that's ~27% fewer pixels per frame with no
   // visible difference (AdaptiveDpr regresses further under load anyway).
-  high: { field: 6500, intro: 3200, dpr: [1, 1.5] },
-  mid: { field: 4200, intro: 2400, dpr: [1, 1.35] },
-  low: { field: 2800, intro: 1500, dpr: [1, 1.2] },
+  //
+  // `worldDpr` is lower still and applies only to the glass world behind the
+  // page. Its materials use `transmission`, which makes three.js render the
+  // whole scene a second time into a full-viewport target and build its mipmap
+  // chain every frame — so pixel count is by far the most expensive knob there.
+  // The world is a soft, out-of-focus backdrop; at 0.9× nobody can tell, and it
+  // costs roughly half the pixels of 1.5×.
+  high: { field: 6500, intro: 3200, dpr: [1, 1.5], worldDpr: [0.75, 1] },
+  mid: { field: 4200, intro: 2400, dpr: [1, 1.35], worldDpr: [0.65, 0.9] },
+  low: { field: 2800, intro: 1500, dpr: [1, 1.2], worldDpr: [0.6, 0.75] },
 };
 
 let lastScrollPx = 0;

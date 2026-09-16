@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSite } from "@/lib/site-context";
 import { detectTier } from "@/lib/scene-store";
 import { attachAboutInputs } from "@/lib/about-scene";
+import { afterLoad } from "@/lib/defer";
 
 const AboutScene = dynamic(() => import("./AboutScene"), { ssr: false });
 
@@ -14,17 +15,17 @@ function DarkGround() {
   return (
     <div className="absolute inset-0 overflow-hidden bg-creme">
       <div
-        className="absolute left-1/2 top-[18%] h-[80vmax] w-[80vmax] -translate-x-1/2 rounded-full opacity-[0.55] blur-[130px]"
+        className="absolute left-1/2 top-[18%] h-[80vmax] w-[80vmax] -translate-x-1/2 rounded-full opacity-[0.55]"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(255,140,176,0.28), rgba(251,0,63,0.12) 45%, transparent 72%)",
+            "radial-gradient(circle at 50% 50%, rgba(255,140,176,0.28) 0%, rgba(253,70,110,0.18) 26%, rgba(251,0,63,0.11) 48%, rgba(251,0,63,0.04) 66%, transparent 82%)",
         }}
       />
       <div
-        className="absolute bottom-0 right-0 h-[55vmax] w-[55vmax] translate-x-1/4 translate-y-1/4 rounded-full opacity-45 blur-[130px]"
+        className="absolute bottom-0 right-0 h-[55vmax] w-[55vmax] translate-x-1/4 translate-y-1/4 rounded-full opacity-45"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(255,92,158,0.22), transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(255,92,158,0.22) 0%, rgba(255,92,158,0.14) 28%, rgba(255,92,158,0.06) 50%, rgba(255,92,158,0.02) 68%, transparent 84%)",
         }}
       />
     </div>
@@ -39,9 +40,10 @@ export default function AboutSceneLayer() {
   useEffect(() => {
     setTier(detectTier());
     const detach = attachAboutInputs();
-    const id = window.requestAnimationFrame(() => setMounted(true));
+    // same reasoning as SceneLayer: pay for three.js after the page is up
+    const stop = afterLoad(() => setMounted(true));
     return () => {
-      window.cancelAnimationFrame(id);
+      stop();
       detach();
     };
   }, []);

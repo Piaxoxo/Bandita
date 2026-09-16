@@ -35,24 +35,28 @@ export default function Reveal({
     if (!el) return;
 
     if (reducedMotion) {
-      gsap.set(el, { opacity: 1, y: 0, filter: "none" });
-      if (stagger) gsap.set(el.children, { opacity: 1, y: 0, filter: "none" });
+      gsap.set(el, { opacity: 1, y: 0, scale: 1 });
+      if (stagger) gsap.set(el.children, { opacity: 1, y: 0, scale: 1 });
       return;
     }
 
     const targets = stagger ? Array.from(el.children) : el;
     const ctx = gsap.context(() => {
+      // This wrapper is used on nearly every block of the site, so it must be
+      // compositor-only: a `filter: blur()` here meant the browser re-rasterised
+      // the whole element on every frame of every reveal, while scrolling.
+      // `scale` reproduces the soft "settle" and runs on the GPU.
       gsap.fromTo(
         targets,
         {
           opacity: 0,
           y,
-          filter: blur ? "blur(10px)" : "blur(0px)",
+          scale: blur ? 1.03 : 1,
         },
         {
           opacity: 1,
           y: 0,
-          filter: "blur(0px)",
+          scale: 1,
           duration: 1.1,
           delay,
           ease: "expo.out",
@@ -60,6 +64,7 @@ export default function Reveal({
           scrollTrigger: {
             trigger: el,
             start: "top 82%",
+            once: true,
           },
         },
       );

@@ -103,10 +103,13 @@ export default function CustomCursor() {
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[70] hidden md:block">
       <div
         ref={glowRef}
-        className="fixed left-0 top-0 h-32 w-32 rounded-full opacity-35 blur-3xl"
+        // No blur filter: this element is transform-animated on every frame the
+        // pointer moves, and a 64px blur would be re-rasterised each time. The
+        // extra gradient stops give the same soft falloff for free.
+        className="fixed left-0 top-0 h-32 w-32 rounded-full opacity-35"
         style={{
           background:
-            "radial-gradient(circle, rgba(251,0,63,0.3), rgba(255,92,158,0.1) 50%, transparent 70%)",
+            "radial-gradient(circle at 50% 50%, rgba(251,0,63,0.30) 0%, rgba(253,46,101,0.22) 22%, rgba(255,92,158,0.12) 44%, rgba(255,92,158,0.05) 64%, rgba(255,92,158,0.015) 80%, transparent 92%)",
         }}
       />
       {/* precise click point — inverts against ANY background so it is never

@@ -13,7 +13,6 @@ import {
 import { BlendFunction } from "postprocessing";
 import * as THREE from "three";
 import { scene as store, tickScene, TIER_CONFIG, type DeviceTier } from "@/lib/scene-store";
-import { audioState } from "@/lib/audio-store";
 
 /*
   BANDITA — "THE HEIST".
@@ -99,7 +98,7 @@ function Lasers({ tier }: { tier: DeviceTier }) {
     group.current?.children.forEach((m, i) => {
       const mesh = m as THREE.Mesh;
       const mat = mesh.material as THREE.MeshBasicMaterial;
-      const flick = 0.5 + Math.sin(t * 6 + defs[i].seed) * 0.2 + audioState.level * 1.2;
+      const flick = 0.5 + Math.sin(t * 6 + defs[i].seed) * 0.2 ;
       mat.opacity = Math.min(1, Math.max(0.15, flick));
     });
   });
@@ -195,11 +194,10 @@ function Rig() {
     tickScene();
     const t = state.clock.elapsedTime;
     const s = store.scroll;
-    const beat = audioState.level;
     const targetZ = START_Z - s * DEPTH;
     camera.position.z += (targetZ - camera.position.z) * 0.06;
     camera.position.x += (store.pointerX * 1.4 - camera.position.x) * 0.05;
-    camera.position.y += (store.pointerY * 0.7 + 0.3 + beat * 0.15 - camera.position.y) * 0.05;
+    camera.position.y += (store.pointerY * 0.7 + 0.3 - camera.position.y) * 0.05;
     camera.lookAt(store.pointerX * 0.6, 0, camera.position.z - 10);
     camera.rotation.z += (Math.sin(t * 0.08) * 0.02 + store.pointerX * 0.02 - camera.rotation.z) * 0.05;
   });
