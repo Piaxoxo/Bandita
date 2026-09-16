@@ -6,7 +6,6 @@ import { Environment, Lightformer, Float, AdaptiveDpr } from "@react-three/drei"
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { scene as store, tickScene, TIER_CONFIG, type DeviceTier } from "@/lib/scene-store";
-import { audioState } from "@/lib/audio-store";
 
 /*
   BANDITA — a floating GLASS 3D world that changes theme with every section.
@@ -14,12 +13,43 @@ import { audioState } from "@/lib/audio-store";
   As you scroll, the drifting forms morph from abstract glass → cocktails →
   cameras → aeroplanes: recognisable glass models composed from primitives.
   Each theme fades in around its section, everything drifts constantly, parallax
-  hard on scroll, reacts to pointer + the music beat. Built for the "mother of
+  hard on scroll and reacts to the pointer. Built for the "mother of
   all 3D sites" brief.
 */
 
 // ── materials ───────────────────────────────────────────────────────────────
+/*
+  Real refractive glass costs a lot: `transmission` makes three.js render the
+  entire scene a second time into a full-viewport target and rebuild its mipmap
+  chain on every single frame. Top-tier machines get it. Everything else gets a
+  polished translucent version — same tint, same clearcoat highlights, same
+  environment reflections, but one pass instead of two.
+*/
+// Real glass gets its saturation from `attenuationColor` as light travels
+// through the body. The cheap version has no light path, so it has to carry
+// that tint in the base colour instead — otherwise the forms wash out to
+// near-invisible against the creme background.
+const ATTENUATION = new THREE.Color("#ff8fb8");
+function tinted(color: string): THREE.Color {
+  return new THREE.Color(color).lerp(ATTENUATION, 0.62);
+}
+
 function Glass({ color = "#ffd0e2" }: { color?: string }) {
+  if (store.tier !== "high") {
+    return (
+      <meshPhysicalMaterial
+        color={tinted(color)}
+        transparent
+        opacity={0.88}
+        roughness={0.12}
+        ior={1.35}
+        metalness={0}
+        clearcoat={1}
+        clearcoatRoughness={0.1}
+        envMapIntensity={1.3}
+      />
+    );
+  }
   return (
     <meshPhysicalMaterial
       color={color}
@@ -157,10 +187,9 @@ function FloatingModel({ item, center }: { item: Item; center: number }) {
     if (!g) return;
     const t = state.clock.elapsedTime;
     const scroll = store.scroll;
-    const beat = audioState.level;
     // visible around this theme's section, cross-fading to neighbours
     const active = Math.max(0, 1 - Math.abs(scroll - center) / 0.14);
-    const s = item.scale * 1.55 * active * (1 + beat * 0.15); // bigger + beat
+    const s = item.scale * 1.55 * active;
     g.visible = s > 0.002;
     if (!g.visible) return;
     g.scale.setScalar(s);
@@ -216,9 +245,12 @@ export default function WorldScene() {
 
   return (
     <Canvas
-      dpr={cfg.dpr}
+      dpr={cfg.worldDpr}
       camera={{ position: [0, 0, 10], fov: 45 }}
-      gl={{ antialias: tier !== "low", alpha: false, powerPreference: "high-performance" }}
+      // No MSAA: the composer renders into its own buffers, so canvas
+      // antialiasing is paid for and thrown away — and a soft glass backdrop
+      // has no hard edges to alias in the first place.
+      gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
     >
       <color attach="background" args={["#FBF4EE"]} />
       <AdaptiveDpr pixelated />
@@ -238,9 +270,18 @@ export default function WorldScene() {
       )}
 
       <Rig />
-      {tier !== "low" && (
-        <EffectComposer>
-          <Bloom intensity={0.45} luminanceThreshold={0.75} luminanceSmoothing={0.3} mipmapBlur radius={0.8} />
+      {tier === "high" && (
+        // multisampling 0: see the `antialias` note above. The bloom itself runs
+        // at half resolution — it is a glow, it is blurred by definition.
+        <EffectComposer multisampling={0}>
+          <Bloom
+            intensity={0.5}
+            luminanceThreshold={0.75}
+            luminanceSmoothing={0.3}
+            mipmapBlur
+            radius={0.8}
+            resolutionScale={0.5}
+          />
         </EffectComposer>
       )}
     </Canvas>

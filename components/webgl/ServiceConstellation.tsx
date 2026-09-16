@@ -39,7 +39,27 @@ export default function ServiceConstellation({ items }: { items: string[] }) {
     container.addEventListener("pointermove", onMove);
     container.addEventListener("pointerleave", onLeave);
 
+    // The loop only runs while the constellation is actually on screen —
+    // otherwise it burned a frame budget on every scroll of the whole page.
+    let visible = true;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const next = entries.some((e) => e.isIntersecting);
+        if (next && !visible) {
+          last = performance.now();
+          raf = requestAnimationFrame(render);
+        }
+        visible = next;
+      },
+      { rootMargin: "120px 0px" },
+    );
+    io.observe(container);
+
     const render = (t: number) => {
+      if (!visible) {
+        raf = 0;
+        return;
+      }
       const dt = Math.min(0.05, (t - last) / 1000);
       last = t;
       mx += (targetMX - mx) * 0.05;
@@ -57,12 +77,13 @@ export default function ServiceConstellation({ items }: { items: string[] }) {
         const norm = (depth + 1) / 2;
         const x = Math.sin(a) * R;
         const y = baseY[i] + my * 36 + Math.sin(t / 1000 + i * 1.3) * 7;
-        const scale = 0.5 + norm * 0.65;
-        const opacity = 0.1 + norm * 0.9;
-        const blur = (1 - norm) * 2.6;
+        // Depth is carried by scale + opacity + z-order alone. A per-frame
+        // `filter: blur()` on every word meant N full re-rasterisations every
+        // single frame — by far the most expensive thing on the services page.
+        const scale = 0.48 + norm * 0.67;
+        const opacity = 0.08 + norm * 0.92;
         el.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scale})`;
         el.style.opacity = String(opacity);
-        el.style.filter = blur > 0.25 ? `blur(${blur}px)` : "none";
         el.style.zIndex = String(Math.round(norm * 100));
       }
       raf = requestAnimationFrame(render);
@@ -71,6 +92,7 @@ export default function ServiceConstellation({ items }: { items: string[] }) {
 
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       container.removeEventListener("pointermove", onMove);
       container.removeEventListener("pointerleave", onLeave);
     };

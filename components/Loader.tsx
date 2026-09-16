@@ -51,8 +51,10 @@ export default function Loader({ dict }: { dict: Dictionary }) {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setReduced(isReduced);
 
-    // absolute safety net so the intro can never trap the page
-    const safety = window.setTimeout(done, isReduced ? 900 : 7500);
+    // Absolute safety net so the intro can never trap the page. Kept tight:
+    // if the particle canvas is slow to arrive on a poor connection, the
+    // visitor lands on the site instead of watching a black screen.
+    const safety = window.setTimeout(done, isReduced ? 900 : 4200);
 
     if (isReduced) {
       setCount(100);

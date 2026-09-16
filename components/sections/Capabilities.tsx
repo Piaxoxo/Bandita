@@ -15,10 +15,10 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
       {/* subtle radial depth glow */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[80vmin] w-[80vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40 blur-[120px]"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[80vmin] w-[80vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40"
         style={{
           background:
-            "radial-gradient(circle, rgba(251,0,63,0.35), rgba(255,92,158,0.12) 45%, transparent 70%)",
+            "radial-gradient(circle, rgba(251,0,63,0.32) 0%, rgba(251,0,63,0.20) 24%, rgba(255,92,158,0.10) 48%, rgba(255,92,158,0.03) 66%, transparent 82%)",
         }}
       />
 

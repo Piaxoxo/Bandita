@@ -44,10 +44,10 @@ export default function Philosophy({ dict }: { dict: Dictionary }) {
       {/* atmospheric gradient field */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div
-          className="absolute left-0 top-1/4 h-[36vmax] w-[36vmax] rounded-full opacity-[0.15] blur-[110px]"
+          className="absolute left-0 top-1/4 h-[36vmax] w-[36vmax] rounded-full opacity-[0.15]"
           style={{
             background:
-              "radial-gradient(circle, rgba(255,92,158,0.5), transparent 70%)",
+              "radial-gradient(circle, rgba(255,92,158,0.5) 0%, rgba(255,92,158,0.32) 26%, rgba(255,92,158,0.14) 48%, rgba(255,92,158,0.05) 66%, transparent 84%)",
           }}
         />
       </div>

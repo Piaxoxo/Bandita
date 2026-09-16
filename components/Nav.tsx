@@ -95,7 +95,10 @@ export default function Nav({
       ref={barRef}
       className={`fixed inset-x-0 top-0 z-[55] transition-all duration-500 ease-bandita ${
         scrolled
-          ? "border-b border-ink/10 bg-creme/80 py-3 shadow-[0_1px_24px_rgba(20,12,18,0.05)] backdrop-blur-md"
+          // A full-width backdrop blur has to be re-rasterised on every scrolled
+          // frame. A denser creme at a small blur radius reads the same but is
+          // an order of magnitude cheaper — this bar is on screen the whole time.
+          ? "border-b border-ink/10 bg-creme/90 py-3 shadow-[0_1px_24px_rgba(20,12,18,0.05)] backdrop-blur-sm"
           : "py-5"
       }`}
       style={{ opacity: introDone ? undefined : 0 }}

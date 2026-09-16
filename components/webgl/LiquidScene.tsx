@@ -13,7 +13,6 @@ import {
 import { BlendFunction } from "postprocessing";
 import * as THREE from "three";
 import { scene as store, tickScene, TIER_CONFIG, type DeviceTier } from "@/lib/scene-store";
-import { audioState } from "@/lib/audio-store";
 
 /*
   BANDITA — flowing 3D liquid-gradient world.
@@ -28,7 +27,6 @@ import { audioState } from "@/lib/audio-store";
 const vert = /* glsl */ `
   uniform float uTime;
   uniform float uScroll;
-  uniform float uBeat;
   uniform vec2 uPointer;
   varying vec3 vNormal;
   varying float vH;
@@ -54,14 +52,12 @@ const vert = /* glsl */ `
   void main(){
     vec3 pos = position;
     vec2 p = pos.xy * mix(0.13, 0.22, clamp(uScroll, 0.0, 1.0));
-    float amp = mix(2.6, 5.6, smoothstep(0.0, 0.75, uScroll)) * (1.0 + uBeat * 0.9);
+    float amp = mix(2.6, 5.6, smoothstep(0.0, 0.75, uScroll)) ;
     float h = height(p);
     float e = 0.05;
     float hx = height(p + vec2(e,0.0));
     float hy = height(p + vec2(0.0,e));
     pos.z += (h-0.5)*amp;
-    // beat-driven ripple pulsing out through the surface
-    pos.z += sin(length(p)*3.5 - uTime*2.2) * uBeat * 0.6;
     vec3 n = normalize(vec3(-(hx-h)/e*0.16*amp, -(hy-h)/e*0.16*amp, 1.0));
     vNormal = n; vH = h; vPos = pos;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
@@ -71,7 +67,6 @@ const vert = /* glsl */ `
 const frag = /* glsl */ `
   precision highp float;
   uniform float uTime;
-  uniform float uBeat;
   uniform float uScroll;
   varying vec3 vNormal;
   varying float vH;
@@ -105,8 +100,7 @@ const frag = /* glsl */ `
 
     float lit = clamp(0.5 + diff * 0.62, 0.0, 1.0);
     col = mix(base * 0.5, col, lit);                    // shadows keep the world's hue
-    col += vec3(1.0, 0.35, 0.55) * spec * (1.0 + uBeat * 1.8); // crest flares on the beat
-    col += base * uBeat * 0.2;                          // whole surface breathes with the music
+    col += vec3(1.0, 0.35, 0.55) * spec;
     col = mix(col, vec3(1.0, 0.95, 0.97), fres * 0.14);
     gl_FragColor = vec4(col, 1.0);
   }
@@ -120,7 +114,6 @@ function LiquidSurface({ tier }: { tier: DeviceTier }) {
     () => ({
       uTime: { value: 0 },
       uScroll: { value: 0 },
-      uBeat: { value: 0 },
       uPointer: { value: new THREE.Vector2(0, 0) },
     }),
     [],
@@ -130,7 +123,6 @@ function LiquidSurface({ tier }: { tier: DeviceTier }) {
     if (!u) return;
     u.uTime.value += delta;
     u.uScroll.value += (store.scroll - u.uScroll.value) * 0.05;
-    u.uBeat.value += (audioState.level - u.uBeat.value) * 0.3;
     (u.uPointer.value as THREE.Vector2).set(store.pointerX, store.pointerY);
   });
   // size to more than cover the frame at this depth
@@ -175,14 +167,13 @@ function Rig() {
     tickScene();
     const t = state.clock.elapsedTime;
     const s = store.scroll;
-    const beat = audioState.level;
     const compact = size.width < 768;
     const baseZ = compact ? 16.5 : 13.5;
     // a dramatic continuous flight: hard lateral weave, a steep climb and a
     // deep dive into the world, with strong banking through every turn.
     const flyX = Math.sin(s * Math.PI * 3.5) * (compact ? 3.4 : 7.0) + store.pointerX * 1.8;
     const flyY = s * 10.0 + store.pointerY * 1.0 + Math.sin(t * 0.12) * 0.6;
-    const flyZ = baseZ - s * 8.0 - beat * 0.9; // dive deep through the scroll
+    const flyZ = baseZ - s * 8.0; // dive deep through the scroll
     camera.position.x += (flyX - camera.position.x) * 0.055;
     camera.position.y += (flyY - camera.position.y) * 0.055;
     camera.position.z += (flyZ - camera.position.z) * 0.055;

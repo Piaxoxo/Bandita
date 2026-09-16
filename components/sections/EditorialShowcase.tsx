@@ -102,11 +102,12 @@ function Heading({
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ref.current!.children,
-        { y: 40, opacity: 0, filter: "blur(8px)" },
+        // compositor-only (no filter) — see components/anim/Reveal.tsx
+        { y: 40, opacity: 0, scale: 1.03 },
         {
-          y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, ease: "expo.out",
+          y: 0, opacity: 1, scale: 1, duration: 1.4, ease: "expo.out",
           stagger: 0.12,
-          scrollTrigger: { trigger: ref.current, start: "top 85%" },
+          scrollTrigger: { trigger: ref.current, start: "top 85%", once: true },
         },
       );
     }, ref);

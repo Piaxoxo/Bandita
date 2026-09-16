@@ -13,6 +13,7 @@ import Reveal from "@/components/anim/Reveal";
 import Reveal3D from "@/components/anim/Reveal3D";
 import SplitText from "@/components/anim/SplitText";
 import MagneticButton from "@/components/MagneticButton";
+import LazyVideo from "@/components/LazyVideo";
 import ContactCTA from "@/components/sections/ContactCTA";
 import InlineCTA from "@/components/InlineCTA";
 import { useQuote } from "@/components/quote/QuoteProvider";
@@ -50,18 +51,9 @@ function useTilt(reduced: boolean, max = 10) {
   return { ref, onMove, onLeave };
 }
 
-// Muted, looping, autoplay background video.
+// Muted, looping background video — bytes only spent once it nears the viewport.
 function AutoVideo({ src, poster, className = "" }: { src: string; poster?: string; className?: string }) {
-  const ref = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const v = ref.current;
-    if (v) { v.muted = true; v.play().catch(() => {}); }
-  }, []);
-  return (
-    <video ref={ref} className={className} autoPlay muted loop playsInline preload="metadata" poster={poster} aria-hidden>
-      <source src={src} type="video/mp4" />
-    </video>
-  );
+  return <LazyVideo src={src} poster={poster} className={className} aria-hidden />;
 }
 
 function Chips({ active, onPick, all, filters, lang }: {

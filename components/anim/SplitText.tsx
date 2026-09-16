@@ -29,18 +29,21 @@ export default function SplitText({
     if (!el) return;
     const chars = el.querySelectorAll<HTMLElement>(".split-char");
     if (reducedMotion) {
-      gsap.set(chars, { opacity: 1, yPercent: 0, filter: "none" });
+      gsap.set(chars, { opacity: 1, yPercent: 0, scale: 1 });
       return;
     }
     const ctx = gsap.context(() => {
+      // Transform + opacity only. The old blur(6px) → blur(0) ran a filter
+      // re-rasterisation per character per frame, right while the visitor was
+      // scrolling. The scale settle gives the same focus-pull feel on the GPU.
       gsap.fromTo(
         chars,
-        { opacity: 0, yPercent: 90, filter: "blur(6px)" },
+        { opacity: 0, yPercent: 90, scale: 1.08 },
         {
           opacity: 1,
           yPercent: 0,
-          filter: "blur(0px)",
-          duration: 0.9,
+          scale: 1,
+          duration: 0.95,
           ease: "expo.out",
           stagger: 0.02,
           scrollTrigger: { trigger: el, start: "top 84%", once: true },

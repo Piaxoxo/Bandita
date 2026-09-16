@@ -8,6 +8,7 @@ import type { Dictionary } from "@/i18n/types";
 import { STATIONS, projectMedia } from "./portfolio-data";
 import { setMood } from "@/lib/portfolio-scene";
 import MagneticButton from "@/components/MagneticButton";
+import LazyVideo from "@/components/LazyVideo";
 import { useQuote } from "@/components/quote/QuoteProvider";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
@@ -225,19 +226,18 @@ export default function PortfolioProject({
           >
             <div
               aria-hidden
-              className="absolute -inset-6 -z-10 rounded-[2rem] opacity-40 blur-3xl"
-              style={{ background: `radial-gradient(closest-side, ${st.color}55, transparent)` }}
+              // gradient instead of blur: the figure above is tilt-transformed
+              // on pointer move, and a filter would be re-rasterised each frame
+              className="absolute -inset-10 -z-10 rounded-[2.5rem] opacity-40"
+              style={{
+                background: `radial-gradient(closest-side, ${st.color}55 0%, ${st.color}3a 26%, ${st.color}1f 48%, ${st.color}0d 68%, transparent 86%)`,
+              }}
             />
             <div className="pf-inner overflow-hidden rounded-[1.1rem] ring-1 ring-creme/10 will-change-transform">
               {m.isVideo ? (
-                // eslint-disable-next-line jsx-a11y/media-has-caption
-                <video
+                <LazyVideo
                   src={m.src}
                   poster={m.poster}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
                   className="mx-auto max-h-[82vh] w-full bg-black object-contain"
                 />
               ) : (

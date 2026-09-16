@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
+import LazyVideo from "@/components/LazyVideo";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -65,9 +66,10 @@ export default function Manifesto({ dict }: { dict: Dictionary }) {
         Bandita
       </span>
 
-      {/* the orange cocktail film, edge-feathered so it floats free, tilting in 3D */}
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-      <video
+      {/* the orange cocktail film, edge-feathered so it floats free, tilting in 3D.
+          Lazy: it sits below the fold and is hidden entirely under lg — no reason
+          to spend 1.4 MB on it during the first paint. */}
+      <LazyVideo
         aria-hidden
         className="hero-cocktail pointer-events-none absolute right-[4%] top-1/2 hidden aspect-[3/4] w-[300px] object-cover lg:block xl:w-[340px]"
         style={{
@@ -77,10 +79,6 @@ export default function Manifesto({ dict }: { dict: Dictionary }) {
         }}
         src="/video/cocktail.mp4"
         poster="/video/cocktail.jpg"
-        autoPlay
-        muted
-        loop
-        playsInline
       />
 
       <div data-fly className="relative mx-auto max-w-[1400px] px-5 md:px-10">
