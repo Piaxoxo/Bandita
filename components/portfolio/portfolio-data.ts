@@ -5,7 +5,7 @@ export type Bi = { en: string; de: string };
 
 export type Station = {
   id: string;
-  kind: "photo" | "video";
+  kind: "photo" | "video" | "web";
   name: Bi; // big display name (shown on the wall + as the chapter title)
   tag: Bi; // small descriptor line
   note?: Bi; // optional cheeky one-liner shown in the chapter
@@ -14,9 +14,41 @@ export type Station = {
   cover?: string; // wall cover (defaults to images[0])
   orientation: "landscape" | "portrait" | "square";
   color: string; // mood accent (rim, glow, fog tint)
+  /*
+    "web" projects carry a real, clickable page. `src` is a self-hosted copy
+    under /portfolio/sites/<id>/ — hosting it ourselves means no foreign server
+    can refuse to be framed, and the copy is noindexed so it never competes
+    with the client's live site in search.
+  */
+  site?: {
+    src: string;
+    domain: string; // what the fake address bar shows
+    live?: string; // the real site, if it is online
+  };
 };
 
 export const STATIONS: Station[] = [
+  {
+    id: "antislop",
+    kind: "web",
+    name: { en: "ANTISLOP+", de: "ANTISLOP+" },
+    tag: { en: "Logo & Branding · Design AI", de: "Logo & Branding · Design-KI" },
+    note: {
+      en: "A brand identity for an AI — built so nothing about it looks AI-made.",
+      de: "Eine Markenidentität für eine KI — gebaut, damit nichts daran nach KI aussieht.",
+    },
+    images: [
+      "/portfolio/antislop/01.jpg",
+      "/portfolio/antislop/02.jpg",
+      "/portfolio/antislop/03.jpg",
+      "/portfolio/antislop/04.jpg",
+      "/portfolio/antislop/05.jpg",
+      "/portfolio/antislop/06.jpg",
+    ],
+    site: { src: "/portfolio/sites/antislop/index.html", domain: "antislop.ai" },
+    orientation: "landscape",
+    color: "#00FF00",
+  },
   {
     id: "plein",
     kind: "photo",

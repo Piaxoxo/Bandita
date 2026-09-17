@@ -135,11 +135,19 @@ export default function PortfolioWall({
                     <span className="absolute left-4 top-3 font-sans text-[11px] tabular-nums tracking-[0.2em] text-creme/60">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    {st.video && (
+                    {st.site ? (
+                      <span
+                        className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/55 px-2.5 py-1 font-sans text-[9px] uppercase tracking-[0.18em] backdrop-blur"
+                        style={{ color: st.color }}
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full" style={{ background: st.color }} />
+                        {lang === "de" ? "Zum Durchklicken" : "Clickable"}
+                      </span>
+                    ) : st.video ? (
                       <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/40 px-2 py-1 font-sans text-[9px] uppercase tracking-[0.18em] text-creme/80 backdrop-blur">
                         ▶ Film
                       </span>
-                    )}
+                    ) : null}
                     {/* name block */}
                     <div className="absolute inset-x-4 bottom-4">
                       <h2 className="font-display text-xl font-medium leading-tight tracking-[-0.01em] text-creme md:text-2xl">
