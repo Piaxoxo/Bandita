@@ -9,6 +9,7 @@ import { STATIONS, projectMedia } from "./portfolio-data";
 import { setMood } from "@/lib/portfolio-scene";
 import MagneticButton from "@/components/MagneticButton";
 import LazyVideo from "@/components/LazyVideo";
+import SitePreview from "./SitePreview";
 import { useQuote } from "@/components/quote/QuoteProvider";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
@@ -209,6 +210,23 @@ export default function PortfolioProject({
       </header>
 
       {/* media stream */}
+      {/* Web projects lead with the real, clickable page — the stills below are
+          the tour, this is the thing itself. It sits OUTSIDE .pf-stream on
+          purpose: that container is skewed by scroll velocity, and a browser
+          window that leans is both ugly and hard to click accurately into. */}
+      {st.site && (
+        <div className="mx-auto mt-20 max-w-[1300px] px-5 md:mt-28 md:px-10">
+          <SitePreview
+            src={st.site.src}
+            domain={st.site.domain}
+            live={st.site.live}
+            poster={st.images[0]}
+            color={st.color}
+            lang={lang}
+          />
+        </div>
+      )}
+
       <div className="pf-stream mx-auto mt-20 flex max-w-[1300px] flex-col gap-16 px-5 pb-16 will-change-transform md:mt-28 md:gap-28 md:px-10">
         {media.map((m, i) => (
           <div key={m.src} className="contents">
