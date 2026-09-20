@@ -1,27 +1,42 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Locale } from "@/i18n/config";
-import { afterLoad } from "@/lib/defer";
 
 /*
-  A real, clickable copy of a website inside a browser mock-up.
+  A real, clickable website inside a browser mock-up.
 
-  Two things make this behave instead of fighting the page:
+  Three decisions carry this component:
 
   1. The frame starts inert (`pointer-events: none`). An active iframe swallows
      wheel events, so a visitor scrolling past would get stuck inside the
      embedded site. One click arms it; Escape or a click outside releases it.
-  2. The iframe's `src` is attached only once the frame is near the viewport and
-     the page has finished loading — same rule as the films elsewhere on the
-     site. Until then it is a poster image, so nothing pops in.
+
+  2. The page is rendered at a full logical viewport and scaled down, instead
+     of being squeezed into a narrow box. A 900px-wide frame would otherwise
+     trigger the site's own mobile breakpoints — the same site, but not the one
+     that was designed. `Mobil` switches to a real phone viewport on purpose,
+     because there that layout IS the honest one.
+
+  3. Nothing loads until that click. Embedded sites weigh half a megabyte and
+     up; a portfolio visitor scrolling past several projects should not pay for
+     all of them. The poster carries the frame until someone actually wants in
+     — and it stays behind the iframe, so a site that is slow, moved or down
+     degrades to a photograph instead of a white browser error page.
 */
+
+const VIEWPORT = {
+  desktop: { w: 1440, h: 900 },
+  mobile: { w: 430, h: 880 },
+};
 
 const COPY = {
   de: {
     hint: "Klicken zum Reinklicken",
     live: "Du bist drin — Escape zum Verlassen",
+    loading: "Website wird geladen …",
+    slow: "Die Seite antwortet gerade nicht.",
     exit: "Verlassen",
     full: "Vollbild",
     close: "Schließen",
@@ -33,6 +48,8 @@ const COPY = {
   en: {
     hint: "Click to step inside",
     live: "You're inside — press Escape to leave",
+    loading: "Loading the site …",
+    slow: "The site isn't responding right now.",
     exit: "Leave",
     full: "Fullscreen",
     close: "Close",
@@ -60,29 +77,71 @@ export default function SitePreview({
 }) {
   const t = COPY[lang] ?? COPY.de;
   const wrap = useRef<HTMLDivElement>(null);
-  const [near, setNear] = useState(false);
-  const [ready, setReady] = useState(false);
+  const stage = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
+  const [painted, setPainted] = useState(false);
+  const [slow, setSlow] = useState(false);
+  const [reachable, setReachable] = useState<boolean | null>(null);
   const [full, setFull] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [fit, setFit] = useState({ scale: 1, left: 0, top: 0 });
 
+  // Narrow screens open in the phone viewport — scaling a 1440px desktop
+  // layout down to 390px would make it unreadable rather than impressive.
   useEffect(() => {
-    const el = wrap.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setNear(true);
-          io.disconnect();
-        }
-      },
-      { rootMargin: "400px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    setMobile(window.matchMedia("(max-width: 700px)").matches);
   }, []);
 
-  useEffect(() => afterLoad(() => setReady(true)), []);
+  /*
+    A cross-origin iframe cannot be inspected, and its `load` event fires even
+    for the browser's own error page — so "did it work?" is unanswerable from
+    the frame itself. A no-cors probe answers it before we mount anything: the
+    opaque response resolves when the host is reachable and rejects when it is
+    not. On failure we keep the poster and say so, instead of handing the
+    visitor a grey error page inside a Bandita browser mock-up.
+  */
+  const external = /^https?:\/\//i.test(src);
+  useEffect(() => {
+    if (!active || !external) return;
+    let cancelled = false;
+    fetch(src, { mode: "no-cors", cache: "no-store" })
+      .then(() => !cancelled && setReachable(true))
+      .catch(() => !cancelled && setReachable(false));
+    return () => {
+      cancelled = true;
+    };
+  }, [active, external, src]);
+
+  // Slow, but not (yet) known to be broken.
+  useEffect(() => {
+    if (!active || painted || reachable === false) return;
+    const id = window.setTimeout(() => setSlow(true), 8000);
+    return () => window.clearTimeout(id);
+  }, [active, painted, reachable]);
+
+  // Fit the logical viewport into whatever space the stage has, and centre it.
+  const measure = useCallback(() => {
+    const el = stage.current;
+    if (!el) return;
+    const box = el.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    const v = mobile ? VIEWPORT.mobile : VIEWPORT.desktop;
+    const scale = Math.min(box.width / v.w, box.height / v.h);
+    setFit({
+      scale,
+      left: Math.round((box.width - v.w * scale) / 2),
+      top: Math.round((box.height - v.h * scale) / 2),
+    });
+  }, [mobile]);
+
+  useLayoutEffect(() => {
+    measure();
+    const el = stage.current;
+    if (!el) return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [measure, full]);
 
   // Escape leaves the frame, then closes fullscreen.
   useEffect(() => {
@@ -113,7 +172,7 @@ export default function SitePreview({
     };
   }, [full]);
 
-  const loaded = near && ready;
+  const v = mobile ? VIEWPORT.mobile : VIEWPORT.desktop;
 
   const frame = (
     <div
@@ -156,55 +215,95 @@ export default function SitePreview({
         </button>
       </div>
 
-      {/* the page itself */}
+      {/* The stage. Its aspect ratio fixes the height up front, so nothing
+          jumps while the site loads. */}
       <div
-        className={`relative bg-black ${
-          full ? "min-h-0 flex-1" : "h-[62vh] min-h-[420px] md:h-[76vh]"
-        }`}
+        ref={stage}
+        className={`relative overflow-hidden bg-black ${full ? "min-h-0 flex-1" : ""}`}
+        style={full ? undefined : { aspectRatio: `${VIEWPORT.desktop.w} / ${VIEWPORT.desktop.h}` }}
       >
-        <div
-          className={`mx-auto h-full transition-[max-width] duration-500 ease-bandita ${
-            mobile ? "max-w-[400px] border-x border-creme/10" : "max-w-none"
-          }`}
-        >
-          {loaded ? (
+        {/* Poster sits under everything, for good: until the visitor clicks,
+            and afterwards as the floor a slow or unreachable site falls back
+            onto instead of a white browser error page. */}
+        {poster && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={poster}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ opacity: active ? 0.3 : 0.45 }}
+          />
+        )}
+
+        {active && reachable !== false && (
+          <div
+            className="absolute origin-top-left transition-opacity duration-700"
+            style={{
+              width: v.w,
+              height: v.h,
+              left: fit.left,
+              top: fit.top,
+              transform: `scale(${fit.scale})`,
+              opacity: painted ? 1 : 0,
+            }}
+          >
             <iframe
               src={src}
               title={domain}
               loading="lazy"
-              // The copy is ours, but it is still a separate document: keep it
-              // sandboxed to scripts only — no forms, no top-level navigation.
-              sandbox="allow-scripts allow-same-origin"
+              /*
+                Scripts yes — these are real sites and most need them. Forms NO:
+                a portfolio visitor must never be able to send a live enquiry,
+                booking or reservation to the client. Top-level navigation stays
+                off too, so an embedded page cannot hijack the portfolio.
+              */
+              sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+              referrerPolicy="no-referrer-when-downgrade"
+              onLoad={() => setPainted(true)}
               className="h-full w-full border-0"
-              style={{ pointerEvents: active ? "auto" : "none" }}
             />
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={poster}
-              alt=""
-              aria-hidden
-              className="h-full w-full object-cover object-top opacity-70"
-            />
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* click-to-activate veil */}
+        {/* click-to-activate veil — this click both loads and arms the frame */}
         {!active && (
           <button
             onClick={() => setActive(true)}
             data-cursor="link"
             aria-label={t.hint}
-            className="group absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-transparent to-transparent pb-8 transition-colors hover:from-black/50"
+            className="group absolute inset-0 flex items-end justify-center pb-8"
           >
+            <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent transition-opacity group-hover:opacity-80" />
             <span
-              className="flex items-center gap-2.5 rounded-full px-5 py-3 font-sans text-[11px] uppercase tracking-[0.2em] text-black transition-transform duration-500 ease-bandita group-hover:scale-105"
+              className="relative flex items-center gap-2.5 rounded-full px-5 py-3 font-sans text-[11px] uppercase tracking-[0.2em] text-black transition-transform duration-500 ease-bandita group-hover:scale-105"
               style={{ background: color }}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-black/70" />
               {t.hint}
             </span>
           </button>
+        )}
+
+        {/* loading / unreachable notice */}
+        {active && (!painted || reachable === false) && (
+          <span className="absolute inset-x-0 bottom-8 flex flex-wrap items-center justify-center gap-3 px-4">
+            <span className="rounded-full bg-black/75 px-4 py-2 font-sans text-[10px] uppercase tracking-[0.2em] text-creme/70">
+              {reachable === false || slow ? t.slow : t.loading}
+            </span>
+            {reachable === false && (
+              <a
+                href={live ?? src}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="link"
+                className="rounded-full px-4 py-2 font-sans text-[10px] uppercase tracking-[0.2em] text-black"
+                style={{ background: color }}
+              >
+                {t.open}
+              </a>
+            )}
+          </span>
         )}
       </div>
 
@@ -223,26 +322,14 @@ export default function SitePreview({
           </button>
         )}
         <a
-          href={src}
+          href={live ?? src}
           target="_blank"
           rel="noopener noreferrer"
           data-cursor="link"
           className="ml-auto text-creme/45 underline-offset-4 transition-colors hover:text-creme hover:underline"
         >
-          {t.open}
+          {live ? t.realsite : t.open}
         </a>
-        {live && (
-          <a
-            href={live}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="link"
-            className="underline-offset-4 transition-opacity hover:underline hover:opacity-80"
-            style={{ color }}
-          >
-            {t.realsite}
-          </a>
-        )}
       </div>
     </div>
   );

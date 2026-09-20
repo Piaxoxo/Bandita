@@ -91,10 +91,19 @@ export const STATIONS: Station[] = [
   },
   {
     id: "innsider",
-    kind: "photo",
+    kind: "web",
     name: { en: "Inn|Sider", de: "Inn|Sider" },
-    tag: { en: "Restaurant & Bar · Vienna", de: "Restaurant & Bar · Wien" },
+    tag: { en: "Website & Content · Vienna", de: "Website & Content · Wien" },
+    note: {
+      en: "A restaurant you can walk into before you've booked a table.",
+      de: "Ein Lokal, das man betreten kann, bevor man einen Tisch reserviert hat.",
+    },
     images: ["/portfolio/innsider/01.jpg", "/portfolio/innsider/02.jpg", "/portfolio/innsider/03.jpg"],
+    site: {
+      src: "https://inn-sider.vercel.app/",
+      domain: "innsider-restaurant.at",
+      live: "https://inn-sider.vercel.app/",
+    },
     orientation: "landscape",
     color: "#FF7A4D",
   },
