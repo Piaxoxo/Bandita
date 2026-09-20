@@ -9,9 +9,12 @@ import type { Locale } from "@/i18n/config";
 
   Three decisions carry this component:
 
-  1. The frame starts inert (`pointer-events: none`). An active iframe swallows
-     wheel events, so a visitor scrolling past would get stuck inside the
-     embedded site. One click arms it; Escape or a click outside releases it.
+  1. The site shows itself straight away — no splash, no play button. It loads
+     as the frame comes into range, so by the time you reach it, it is simply
+     there. But it stays INERT until you click it: an armed iframe swallows
+     wheel events, and a visitor scrolling past would get stuck inside it. The
+     click only hands over the pointer. Escape, or a click outside, gives it
+     back.
 
   2. The page is rendered at a full logical viewport and scaled down, instead
      of being squeezed into a narrow box. A 900px-wide frame would otherwise
@@ -19,11 +22,9 @@ import type { Locale } from "@/i18n/config";
      that was designed. `Mobil` switches to a real phone viewport on purpose,
      because there that layout IS the honest one.
 
-  3. Nothing loads until that click. Embedded sites weigh half a megabyte and
-     up; a portfolio visitor scrolling past several projects should not pay for
-     all of them. The poster carries the frame until someone actually wants in
-     — and it stays behind the iframe, so a site that is slow, moved or down
-     degrades to a photograph instead of a white browser error page.
+  3. The poster stays mounted underneath the iframe, so a site that is slow,
+     moved or offline degrades to a photograph rather than a white browser
+     error page.
 */
 
 const VIEWPORT = {
@@ -33,7 +34,7 @@ const VIEWPORT = {
 
 const COPY = {
   de: {
-    hint: "Klicken zum Reinklicken",
+    hint: "Klicken zum Bedienen",
     live: "Du bist drin — Escape zum Verlassen",
     loading: "Website wird geladen …",
     slow: "Die Seite antwortet gerade nicht.",
@@ -43,10 +44,9 @@ const COPY = {
     desktop: "Desktop",
     mobile: "Mobil",
     open: "In neuem Tab öffnen",
-    realsite: "Echte Seite ansehen",
   },
   en: {
-    hint: "Click to step inside",
+    hint: "Click to interact",
     live: "You're inside — press Escape to leave",
     loading: "Loading the site …",
     slow: "The site isn't responding right now.",
@@ -56,7 +56,6 @@ const COPY = {
     desktop: "Desktop",
     mobile: "Mobile",
     open: "Open in a new tab",
-    realsite: "View the real site",
   },
 };
 
@@ -78,6 +77,7 @@ export default function SitePreview({
   const t = COPY[lang] ?? COPY.de;
   const wrap = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
   const [active, setActive] = useState(false);
   const [painted, setPainted] = useState(false);
   const [slow, setSlow] = useState(false);
@@ -102,7 +102,7 @@ export default function SitePreview({
   */
   const external = /^https?:\/\//i.test(src);
   useEffect(() => {
-    if (!active || !external) return;
+    if (!shown || !external) return;
     let cancelled = false;
     fetch(src, { mode: "no-cors", cache: "no-store" })
       .then(() => !cancelled && setReachable(true))
@@ -110,14 +110,35 @@ export default function SitePreview({
     return () => {
       cancelled = true;
     };
-  }, [active, external, src]);
+  }, [shown, external, src]);
 
   // Slow, but not (yet) known to be broken.
   useEffect(() => {
-    if (!active || painted || reachable === false) return;
+    if (!shown || painted || reachable === false) return;
     const id = window.setTimeout(() => setSlow(true), 8000);
     return () => window.clearTimeout(id);
-  }, [active, painted, reachable]);
+  }, [shown, painted, reachable]);
+
+  /*
+    Load as the frame comes into range. Only one project chapter is open at a
+    time, so this is a single site — but starting it early still keeps it out
+    of the way of the chapter's own entrance animation.
+  */
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "900px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // Fit the logical viewport into whatever space the stage has, and centre it.
   const measure = useCallback(() => {
@@ -222,21 +243,21 @@ export default function SitePreview({
         className={`relative overflow-hidden bg-black ${full ? "min-h-0 flex-1" : ""}`}
         style={full ? undefined : { aspectRatio: `${VIEWPORT.desktop.w} / ${VIEWPORT.desktop.h}` }}
       >
-        {/* Poster sits under everything, for good: until the visitor clicks,
-            and afterwards as the floor a slow or unreachable site falls back
-            onto instead of a white browser error page. */}
+        {/* Poster sits under everything, for good: it covers the moment before
+            the site paints, and stays as the floor a slow or unreachable site
+            falls back onto instead of a white browser error page. */}
         {poster && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={poster}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full object-cover"
-            style={{ opacity: active ? 0.3 : 0.45 }}
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
+            style={{ opacity: painted ? 0.25 : 0.5 }}
           />
         )}
 
-        {active && reachable !== false && (
+        {shown && reachable !== false && (
           <div
             className="absolute origin-top-left transition-opacity duration-700"
             style={{
@@ -262,31 +283,39 @@ export default function SitePreview({
               referrerPolicy="no-referrer-when-downgrade"
               onLoad={() => setPainted(true)}
               className="h-full w-full border-0"
+              // The catcher above already intercepts clicks, but the guarantee
+              // that a scroll can never be swallowed belongs on the iframe.
+              style={{ pointerEvents: active ? "auto" : "none" }}
             />
           </div>
         )}
 
-        {/* click-to-activate veil — this click both loads and arms the frame */}
+        {/*
+          Transparent catcher over the site. It hands the pointer to the iframe
+          on click, and nothing else — no veil, no splash, the site is visible
+          underneath the whole time. Wheel events pass straight through a plain
+          div, which is exactly why the iframe itself must stay inert until
+          this is gone.
+        */}
         {!active && (
           <button
             onClick={() => setActive(true)}
             data-cursor="link"
             aria-label={t.hint}
-            className="group absolute inset-0 flex items-end justify-center pb-8"
+            className="group absolute inset-0 flex items-end justify-end p-4"
           >
-            <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent transition-opacity group-hover:opacity-80" />
             <span
-              className="relative flex items-center gap-2.5 rounded-full px-5 py-3 font-sans text-[11px] uppercase tracking-[0.2em] text-black transition-transform duration-500 ease-bandita group-hover:scale-105"
-              style={{ background: color }}
+              className="flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-2 font-sans text-[10px] uppercase tracking-[0.18em] text-creme/70 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+              style={{ boxShadow: `inset 0 0 0 1px ${color}55` }}
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-black/70" />
+              <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
               {t.hint}
             </span>
           </button>
         )}
 
         {/* loading / unreachable notice */}
-        {active && (!painted || reachable === false) && (
+        {shown && (!painted || reachable === false) && (
           <span className="absolute inset-x-0 bottom-8 flex flex-wrap items-center justify-center gap-3 px-4">
             <span className="rounded-full bg-black/75 px-4 py-2 font-sans text-[10px] uppercase tracking-[0.2em] text-creme/70">
               {reachable === false || slow ? t.slow : t.loading}
@@ -321,15 +350,7 @@ export default function SitePreview({
             {t.exit}
           </button>
         )}
-        <a
-          href={live ?? src}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-cursor="link"
-          className="ml-auto text-creme/45 underline-offset-4 transition-colors hover:text-creme hover:underline"
-        >
-          {live ? t.realsite : t.open}
-        </a>
+        <span className="ml-auto text-creme/25">{domain}</span>
       </div>
     </div>
   );
