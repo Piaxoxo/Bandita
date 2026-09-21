@@ -77,20 +77,111 @@ export default function SitePreview({
   const t = COPY[lang] ?? COPY.de;
   const wrap = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
   const [shown, setShown] = useState(false);
   const [active, setActive] = useState(false);
   const [painted, setPainted] = useState(false);
   const [slow, setSlow] = useState(false);
   const [reachable, setReachable] = useState<boolean | null>(null);
-  const [full, setFull] = useState(false);
+  const [nativeFull, setNativeFull] = useState(false);
+  const [overlayFull, setOverlayFull] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const [fit, setFit] = useState({ scale: 1, left: 0, top: 0 });
+  const [touch, setTouch] = useState(false);
+  const [fit, setFit] = useState({
+    w: VIEWPORT.desktop.w,
+    h: VIEWPORT.desktop.h,
+    scale: 1,
+    left: 0,
+    top: 0,
+  });
+  const full = nativeFull || overlayFull;
 
   // Narrow screens open in the phone viewport — scaling a 1440px desktop
   // layout down to 390px would make it unreadable rather than impressive.
   useEffect(() => {
     setMobile(window.matchMedia("(max-width: 700px)").matches);
+    setTouch(window.matchMedia("(hover: none)").matches);
   }, []);
+
+  /*
+    Real browser fullscreen, not an overlay, wherever it exists.
+
+    The overlay version had to re-mount the frame into a portal, which reloads
+    the embedded site and throws away wherever the visitor had scrolled to.
+    A fullscreen element is promoted to the browser's top layer instead: same
+    DOM node, nothing reloads, and it escapes the transformed ancestor that
+    made a plain `position: fixed` stack below the site nav. iOS Safari has no
+    element fullscreen, so the overlay stays as the fallback.
+  */
+  const enterFull = useCallback(async () => {
+    const el = wrap.current as (HTMLDivElement & {
+      webkitRequestFullscreen?: () => Promise<void>;
+    }) | null;
+    if (!el) return;
+    const request = el.requestFullscreen?.bind(el) ?? el.webkitRequestFullscreen?.bind(el);
+    if (request) {
+      try {
+        await request();
+        return;
+      } catch {
+        /* fall through to the overlay */
+      }
+    }
+    setOverlayFull(true);
+  }, []);
+
+  const exitFull = useCallback(async () => {
+    const d = document as Document & { webkitExitFullscreen?: () => Promise<void> };
+    if (d.fullscreenElement || (d as { webkitFullscreenElement?: Element }).webkitFullscreenElement) {
+      try {
+        await (d.exitFullscreen?.() ?? d.webkitExitFullscreen?.());
+      } catch {
+        /* ignore — the state listener below keeps us honest either way */
+      }
+    }
+    setOverlayFull(false);
+  }, []);
+
+  // The browser can leave fullscreen without us (Escape, F11, gestures), so the
+  // element is the source of truth, never our own click handler.
+  useEffect(() => {
+    const sync = () => {
+      const d = document as Document & { webkitFullscreenElement?: Element };
+      setNativeFull(!!wrap.current && (d.fullscreenElement === wrap.current || d.webkitFullscreenElement === wrap.current));
+    };
+    document.addEventListener("fullscreenchange", sync);
+    document.addEventListener("webkitfullscreenchange", sync);
+    return () => {
+      document.removeEventListener("fullscreenchange", sync);
+      document.removeEventListener("webkitfullscreenchange", sync);
+    };
+  }, []);
+
+  /*
+    Fullscreen means "I want to use this". Waiting for a second click there was
+    the main reason the frame felt dead — and the scroll-trap that click guards
+    against cannot happen in fullscreen, because there is no page behind to
+    scroll. Arm on the way in, disarm on the way out.
+  */
+  useEffect(() => {
+    setActive(full);
+  }, [full]);
+
+  /*
+    In fullscreen, hand the keyboard over too: otherwise the frame is armed but
+    unfocused, and arrow keys, Page Down and Space scroll the portfolio hidden
+    behind it instead of the site filling the screen — which reads as the keys
+    being broken.
+
+    Only in fullscreen. In the page, focus stays with the parent so Escape can
+    still release the frame; a cross-origin iframe swallows key events entirely
+    once focused, and there the natural way out is a click anywhere outside.
+  */
+  useEffect(() => {
+    if (!full) return;
+    const id = window.setTimeout(() => frameRef.current?.focus({ preventScroll: true }), 80);
+    return () => window.clearTimeout(id);
+  }, [full]);
 
   /*
     A cross-origin iframe cannot be inspected, and its `load` event fires even
@@ -140,15 +231,35 @@ export default function SitePreview({
     return () => io.disconnect();
   }, []);
 
-  // Fit the logical viewport into whatever space the stage has, and centre it.
+  /*
+    Fit the logical viewport into whatever space the stage has, and centre it.
+
+    In desktop mode the logical HEIGHT follows the stage's own proportions at a
+    fixed 1440px width: a desktop browser window is whatever shape the screen
+    is, so letterboxing one inside a fullscreen frame would be wrong as well as
+    wasteful. Phone mode keeps its fixed 430x880 — a phone has a shape, and
+    stretching it would be a lie about the layout.
+  */
   const measure = useCallback(() => {
     const el = stage.current;
     if (!el) return;
     const box = el.getBoundingClientRect();
     if (!box.width || !box.height) return;
-    const v = mobile ? VIEWPORT.mobile : VIEWPORT.desktop;
+    const v = mobile
+      ? VIEWPORT.mobile
+      : {
+          w: VIEWPORT.desktop.w,
+          h: Math.round(
+            Math.min(
+              1600,
+              Math.max(720, (VIEWPORT.desktop.w * box.height) / box.width),
+            ),
+          ),
+        };
     const scale = Math.min(box.width / v.w, box.height / v.h);
     setFit({
+      w: v.w,
+      h: v.h,
       scale,
       left: Math.round((box.width - v.w * scale) / 2),
       top: Math.round((box.height - v.h * scale) / 2),
@@ -164,42 +275,57 @@ export default function SitePreview({
     return () => ro.disconnect();
   }, [measure, full]);
 
-  // Escape leaves the frame, then closes fullscreen.
+  /*
+    One Escape, one exit. The old version disarmed first and closed fullscreen
+    on a second press, which read as "the key didn't work". In fullscreen,
+    Escape always means leave fullscreen; in the page, it means release the
+    frame. Native fullscreen handles its own Escape, so we only step in for the
+    overlay fallback.
+  */
   useEffect(() => {
     if (!active && !full) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (active) setActive(false);
-      else setFull(false);
+      if (full) {
+        // Browsers exit native fullscreen on Escape by themselves; this is the
+        // belt for the overlay fallback and for anything that does not.
+        e.preventDefault();
+        exitFull();
+      } else {
+        setActive(false);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [active, full]);
+  }, [active, full, exitFull]);
 
-  // Clicking anywhere outside the frame releases it again.
+  // Clicking outside releases the frame — but in fullscreen the only "outside"
+  // is the backdrop, and clicking that should close fullscreen, not leave a
+  // dead frame filling the screen.
   useEffect(() => {
-    if (!active) return;
+    if (!active || nativeFull) return;
     const onDown = (e: PointerEvent) => {
-      if (wrap.current && !wrap.current.contains(e.target as Node)) setActive(false);
+      if (wrap.current?.contains(e.target as Node)) return;
+      if (overlayFull) setOverlayFull(false);
+      else setActive(false);
     };
     window.addEventListener("pointerdown", onDown);
     return () => window.removeEventListener("pointerdown", onDown);
-  }, [active]);
+  }, [active, overlayFull, nativeFull]);
 
+  // Only the overlay needs the page locked; native fullscreen already covers it.
   useEffect(() => {
-    document.body.style.overflow = full ? "hidden" : "";
+    document.body.style.overflow = overlayFull ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [full]);
-
-  const v = mobile ? VIEWPORT.mobile : VIEWPORT.desktop;
+  }, [overlayFull]);
 
   const frame = (
     <div
       ref={wrap}
-      className={`relative flex flex-col overflow-hidden rounded-[1.1rem] ring-1 ring-creme/10 ${
-        full ? "h-full w-full" : ""
+      className={`relative flex flex-col overflow-hidden ${
+        full ? "h-full w-full rounded-none" : "rounded-[1.1rem] ring-1 ring-creme/10"
       }`}
       style={{ background: "#0a0a0a" }}
     >
@@ -227,12 +353,17 @@ export default function SitePreview({
           ))}
         </div>
 
+        {/* In fullscreen this is the visible way out — a visitor whose focus
+            has wandered into the embedded site needs to see it, not hunt. */}
         <button
-          onClick={() => setFull((f) => !f)}
+          onClick={() => (full ? exitFull() : enterFull())}
           data-cursor="link"
-          className="ml-1 rounded-sm px-2.5 py-1 font-sans text-[10px] uppercase tracking-[0.14em] text-creme/40 transition-colors hover:text-creme"
+          className={`ml-1 rounded-sm px-2.5 py-1 font-sans text-[10px] uppercase tracking-[0.14em] transition-colors ${
+            full ? "text-black" : "text-creme/40 hover:text-creme"
+          }`}
+          style={full ? { background: color } : undefined}
         >
-          {full ? t.close : t.full}
+          {full ? `${t.close} ⎋` : t.full}
         </button>
       </div>
 
@@ -261,8 +392,8 @@ export default function SitePreview({
           <div
             className="absolute origin-top-left transition-opacity duration-700"
             style={{
-              width: v.w,
-              height: v.h,
+              width: fit.w,
+              height: fit.h,
               left: fit.left,
               top: fit.top,
               transform: `scale(${fit.scale})`,
@@ -270,6 +401,7 @@ export default function SitePreview({
             }}
           >
             <iframe
+              ref={frameRef}
               src={src}
               title={domain}
               loading="lazy"
@@ -304,8 +436,12 @@ export default function SitePreview({
             aria-label={t.hint}
             className="group absolute inset-0 flex items-end justify-end p-4"
           >
+            {/* Touch devices never hover, so there the chip is simply always
+                on — otherwise the frame looks like a screenshot. */}
             <span
-              className="flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-2 font-sans text-[10px] uppercase tracking-[0.18em] text-creme/70 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100"
+              className={`flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-2 font-sans text-[10px] uppercase tracking-[0.18em] text-creme/70 transition-opacity duration-300 group-focus-visible:opacity-100 ${
+                touch ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              }`}
               style={{ boxShadow: `inset 0 0 0 1px ${color}55` }}
             >
               <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
@@ -343,7 +479,7 @@ export default function SitePreview({
         </span>
         {active && (
           <button
-            onClick={() => setActive(false)}
+            onClick={() => (full ? exitFull() : setActive(false))}
             data-cursor="link"
             className="text-creme/45 underline-offset-4 transition-colors hover:text-creme hover:underline"
           >
@@ -355,13 +491,16 @@ export default function SitePreview({
     </div>
   );
 
-  if (!full) return frame;
+  // Native fullscreen keeps the frame exactly where it is — the browser lifts
+  // the same node into its top layer, so nothing unmounts and the site keeps
+  // its scroll position.
+  if (!overlayFull) return frame;
 
   /*
-    Portalled to <body> on purpose. The portfolio chapter sits inside a
-    transformed container, and a transform creates a containing block — a
-    `position: fixed` child would be trapped inside it and stack *below* the
-    site nav instead of covering the viewport.
+    Overlay fallback (iOS Safari has no element fullscreen). Portalled to
+    <body>: the portfolio chapter sits inside a transformed container, and a
+    transform creates a containing block — a `position: fixed` child would be
+    trapped inside it and stack *below* the site nav.
   */
   return createPortal(
     <div className="fixed inset-0 z-[90] bg-black/95 p-3 md:p-8">{frame}</div>,
