@@ -61,14 +61,23 @@ const COPY = {
 
 export default function SitePreview({
   src,
-  domain,
+  chrome = "browser",
+  caption,
   live,
   poster,
   color,
   lang,
 }: {
   src: string;
-  domain: string;
+  /*
+    What the frame claims the work is. "browser" dresses it as a website we
+    built — dots, address bar. "document" is for a deliverable that merely
+    happens to be an HTML page, such as a brand kit: same scrollable frame, no
+    browser costume, because claiming a site we never shipped would be a lie
+    about the work.
+  */
+  chrome?: "browser" | "document";
+  caption: string;
   live?: string;
   poster?: string;
   color: string;
@@ -95,6 +104,7 @@ export default function SitePreview({
     top: 0,
   });
   const full = nativeFull || overlayFull;
+  const isBrowser = chrome === "browser";
 
   // Narrow screens open in the phone viewport — scaling a 1440px desktop
   // layout down to 390px would make it unreadable rather than impressive.
@@ -329,29 +339,42 @@ export default function SitePreview({
       }`}
       style={{ background: "#0a0a0a" }}
     >
-      {/* browser chrome */}
+      {/* chrome */}
       <div className="flex shrink-0 items-center gap-2 border-b border-creme/10 bg-[#141414] px-4 py-3">
-        <span className="h-2.5 w-2.5 rounded-full bg-creme/20" />
-        <span className="h-2.5 w-2.5 rounded-full bg-creme/20" />
-        <span className="h-2.5 w-2.5 rounded-full bg-creme/20" />
-        <span className="ml-3 flex-1 truncate rounded-sm border border-creme/10 bg-black/60 px-3 py-1.5 font-sans text-[11px] text-creme/45">
-          https://<span style={{ color }}>{domain}</span>
-        </span>
+        {isBrowser ? (
+          <>
+            <span className="h-2.5 w-2.5 rounded-full bg-creme/20" />
+            <span className="h-2.5 w-2.5 rounded-full bg-creme/20" />
+            <span className="h-2.5 w-2.5 rounded-full bg-creme/20" />
+            <span className="ml-3 flex-1 truncate rounded-sm border border-creme/10 bg-black/60 px-3 py-1.5 font-sans text-[11px] text-creme/45">
+              https://<span style={{ color }}>{caption}</span>
+            </span>
+          </>
+        ) : (
+          <span className="flex flex-1 items-center gap-2.5 truncate font-sans text-[11px] uppercase tracking-[0.18em] text-creme/50">
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
+            {caption}
+          </span>
+        )}
 
-        <div className="hidden items-center gap-1 sm:flex">
-          {([false, true] as const).map((m) => (
-            <button
-              key={String(m)}
-              onClick={() => setMobile(m)}
-              data-cursor="link"
-              className={`rounded-sm px-2.5 py-1 font-sans text-[10px] uppercase tracking-[0.14em] transition-colors ${
-                mobile === m ? "bg-creme/15 text-creme" : "text-creme/40 hover:text-creme/70"
-              }`}
-            >
-              {m ? t.mobile : t.desktop}
-            </button>
-          ))}
-        </div>
+        {/* A phone viewport is a claim about a responsive website; a document
+            does not need to make it. */}
+        {isBrowser && (
+          <div className="hidden items-center gap-1 sm:flex">
+            {([false, true] as const).map((m) => (
+              <button
+                key={String(m)}
+                onClick={() => setMobile(m)}
+                data-cursor="link"
+                className={`rounded-sm px-2.5 py-1 font-sans text-[10px] uppercase tracking-[0.14em] transition-colors ${
+                  mobile === m ? "bg-creme/15 text-creme" : "text-creme/40 hover:text-creme/70"
+                }`}
+              >
+                {m ? t.mobile : t.desktop}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* In fullscreen this is the visible way out — a visitor whose focus
             has wandered into the embedded site needs to see it, not hunt. */}
@@ -374,10 +397,15 @@ export default function SitePreview({
         className={`relative overflow-hidden bg-black ${full ? "min-h-0 flex-1" : ""}`}
         style={full ? undefined : { aspectRatio: `${VIEWPORT.desktop.w} / ${VIEWPORT.desktop.h}` }}
       >
-        {/* Poster sits under everything, for good: it covers the moment before
-            the site paints, and stays as the floor a slow or unreachable site
-            falls back onto instead of a white browser error page. */}
-        {poster && (
+        {/* What sits under everything: it covers the moment before the site
+            paints, and stays as the floor a slow or unreachable site falls back
+            onto instead of a white browser error page.
+
+            A photograph only belongs here when it actually is the work. For a
+            website, a neutral surface in the project's accent is the honest
+            choice — an unrelated photo would read as a screenshot of the page
+            behind it. */}
+        {poster ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={poster}
@@ -385,6 +413,15 @@ export default function SitePreview({
             aria-hidden
             className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
             style={{ opacity: painted ? 0.25 : 0.5 }}
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="absolute inset-0 transition-opacity duration-700"
+            style={{
+              opacity: painted ? 0.3 : 1,
+              background: `radial-gradient(120% 90% at 50% 0%, ${color}1f 0%, ${color}0d 38%, transparent 72%), #0b0b0c`,
+            }}
           />
         )}
 
@@ -403,7 +440,7 @@ export default function SitePreview({
             <iframe
               ref={frameRef}
               src={src}
-              title={domain}
+              title={caption}
               loading="lazy"
               /*
                 Scripts yes — these are real sites and most need them. Forms NO:
@@ -486,7 +523,7 @@ export default function SitePreview({
             {t.exit}
           </button>
         )}
-        <span className="ml-auto text-creme/25">{domain}</span>
+        <span className="ml-auto truncate pl-4 text-creme/25">{caption}</span>
       </div>
     </div>
   );

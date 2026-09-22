@@ -218,9 +218,10 @@ export default function PortfolioProject({
         <div className="mx-auto mt-20 max-w-[1300px] px-5 md:mt-28 md:px-10">
           <SitePreview
             src={st.site.src}
-            domain={st.site.domain}
+            chrome={st.site.chrome}
+            caption={st.site.label?.[lang] ?? st.site.domain ?? st.name[lang]}
             live={st.site.live}
-            poster={st.images[0]}
+            poster={st.site.poster}
             color={st.color}
             lang={lang}
           />

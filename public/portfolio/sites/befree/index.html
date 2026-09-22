@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Be Free Hostel — Wien</title>
+<style>
+  /* The fragment is designed to sit inside the site's own shell. Standing on
+     its own it needs the ground under it. */
+  html { background: #FFF7E4; }
+  body { margin: 0; background: #FFF7E4; }
+</style>
+</head>
+<body>
+<!-- Portfolio copy: the live booking engine (ibe.uphotel.agency) is stubbed out
+     so no visitor can place a real booking, and so this page makes no
+     third-party requests. The page's own guard keeps the book bar hidden when
+     no engine answers. -->
+<!-- Be Free Hostel — INHALT der Startseite.
+     Header und Footer sind eigene Dateien: header.html, footer.html.
+     Auf eine normale Seite (kein Canvas), ein HTML-Widget, alles hier hinein.
+     Seitentitel und Meta-Beschreibung setzt ihr in WordPress. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Shrikhand&family=Karla:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&display=swap" />
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   Be Free Hostel — Beingasse 13, 1150 Wien
+   Flower power meets street art. Pink leads, the logo palette follows.
+   Every brand colour below was sampled from the real logo artwork.
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root{
+  /* ── brand, sampled from Logo_BeFree_querformat_transparent.png ── */
+  --ink:       #0B0B0C;
+  --pink:      #FF3D9A;   /* the lead colour: booking, emphasis, bands */
+  --pink-mid:  #F97CB6;
+  --pink-soft: #FFD9E9;
+  --gold:      #E4B430;
+  --orange:    #E8871F;
+  --turq:      #4FC3CE;
+  --violet:    #B444E0;
+  --leaf:      #57D96B;
+  --cherry:    #E8404C;
+
+  /* ── ground: warm paper, pulled slightly toward the gold ── */
+  --paper:     #FFF7E4;
+  --paper-rgb: 255,247,228;
+  --paper-2:   #FFEFCF;
+  --card:      #FFFDF6;
+  --text:      #17130E;
+  --text-dim:  #6A5B45;
+  --rule:      rgba(11,11,12,.16);
+
+  --shadow:    6px 6px 0 var(--ink);
+  --shadow-sm: 3px 3px 0 var(--ink);
+
+  --maxw: 1200px;
+  --read: 66ch;
+  --nav-h: 74px;
+
+  --f-fat:     "Bagel Fat One","Shrikhand",system-ui,sans-serif;
+  --f-display: "Shrikhand",Georgia,"Times New Roman",serif;
+  --f-body:    "Karla","Helvetica Neue",Arial,sans-serif;
+  --f-mono:    "DM Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 12px)}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{margin:0;text-wrap:balance;font-weight:400}
+p{margin:0}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration-thickness:.08em;text-underline-offset:.18em}
+:focus-visible{outline:3px solid var(--pink);outline-offset:3px;border-radius:3px}
+
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:clamp(18px,5vw,44px)}
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:200;
+  background:var(--pink);color:var(--ink);font-weight:800;
+  border:2px solid var(--ink);border-radius:0 0 14px 0;padding:12px 20px;
+}
+.skip:focus{left:0}
+.vh{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+/* ═══ TYPE SCALE ══════════════════════════════════════════════════ */
+.t-fat{font-family:var(--f-fat);line-height:.9;letter-spacing:-.02em}
+.t-dsp{font-family:var(--f-display);line-height:1.04;letter-spacing:-.005em}
+.eyebrow{
+  font-family:var(--f-mono);font-size:12px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--text-dim);
+  display:inline-flex;align-items:center;gap:9px;
+}
+.eyebrow::before{
+  content:"";width:14px;height:14px;border-radius:50%;flex:none;
+  background:var(--dot,var(--pink));border:2px solid var(--ink);
+}
+.lede{font-size:clamp(17px,2vw,20px);line-height:1.6;max-width:var(--read)}
+.small{font-size:15px;line-height:1.6}
+.dim{color:var(--text-dim)}
+
+/* ═══ BUTTONS — pink is always the booking, nowhere else ══════════ */
+.pill{
+  display:inline-flex;align-items:center;gap:11px;
+  font-family:var(--f-body);font-weight:800;font-size:15px;
+  background:var(--pc,var(--pink));color:var(--ink);
+  border:2px solid var(--ink);border-radius:99px;
+  padding:8px 9px 8px 22px;box-shadow:var(--shadow-sm);
+  cursor:pointer;text-decoration:none;white-space:nowrap;
+  transition:transform .14s ease,box-shadow .14s ease;
+}
+.pill:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+.pill:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+.pill__a{
+  width:32px;height:32px;border-radius:50%;flex:none;
+  background:var(--paper);border:2px solid var(--ink);
+  display:grid;place-items:center;font-size:15px;line-height:1;
+}
+.pill--ghost{background:transparent;box-shadow:none;padding:8px 20px}
+.pill--ghost:hover{background:var(--pink-soft);transform:none;box-shadow:var(--shadow-sm)}
+
+/* ═══ STICKER TAGS ════════════════════════════════════════════════ */
+.stix{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.stix > *{
+  font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;
+  text-transform:uppercase;font-style:normal;
+  border:2px solid var(--ink);border-radius:99px;padding:5px 13px;
+  background:var(--sc,var(--card));color:var(--ink);
+  box-shadow:2px 2px 0 var(--ink);display:inline-block;
+}
+.stix > *:nth-child(2n){transform:rotate(-3deg)}
+.stix > *:nth-child(3n){transform:rotate(2.4deg)}
+
+/* ═══ NAV ═════════════════════════════════════════════════════════ */
+.nav{
+  position:fixed;inset:0 0 auto 0;z-index:50;height:var(--nav-h);
+  display:flex;align-items:center;
+  background:rgba(var(--paper-rgb),.90);
+  border-bottom:2px solid var(--ink);
+  backdrop-filter:blur(10px);
+}
+.nav__in{display:flex;align-items:center;gap:18px;width:100%}
+.nav__brand{display:flex;align-items:center;flex:none;text-decoration:none}
+.nav__brand img{height:46px;width:auto}
+.nav__links{
+  display:flex;gap:4px;margin-left:auto;list-style:none;margin-block:0;padding:0;
+}
+.nav__links a{
+  font-size:14.5px;font-weight:700;text-decoration:none;
+  padding:7px 13px;border-radius:99px;border:2px solid transparent;display:block;
+}
+.nav__links a:hover{background:var(--pink-soft);border-color:var(--ink)}
+.nav__side{display:flex;align-items:center;gap:10px;flex:none;margin-left:auto}
+.nav__links + .nav__side{margin-left:14px}
+
+.lang{display:inline-flex;border:2px solid var(--ink);border-radius:99px;overflow:hidden;flex:none}
+.lang button{
+  font-family:var(--f-mono);font-size:12.5px;letter-spacing:.08em;
+  border:0;background:var(--card);color:var(--text);
+  padding:7px 13px;cursor:pointer;line-height:1;
+}
+.lang button[aria-pressed="true"]{background:var(--turq);color:var(--ink);font-weight:500}
+
+.burger{
+  display:none;width:44px;height:38px;border:2px solid var(--ink);border-radius:12px;
+  background:var(--card);cursor:pointer;padding:0;place-items:center;
+}
+.burger span{display:block;width:20px;height:2.5px;background:var(--ink);box-shadow:0 -6px 0 var(--ink),0 6px 0 var(--ink)}
+
+@media (max-width:980px){
+  .nav__links{
+    position:fixed;inset:var(--nav-h) 0 auto 0;flex-direction:column;gap:2px;
+    background:var(--paper);border-bottom:2px solid var(--ink);
+    padding:14px clamp(18px,5vw,44px) 20px;display:none;
+  }
+  .nav__links.open{display:flex}
+  .nav__links a{padding:11px 14px;font-size:16px}
+  .burger{display:grid}
+  .nav__side{margin-left:auto}
+  .nav .pill{display:none}
+}
+
+/* ═══ HERO ════════════════════════════════════════════════════════ */
+.hero{
+  position:relative;min-height:100svh;display:flex;align-items:center;
+  padding-top:var(--nav-h);overflow:hidden;
+}
+#petals{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+.hero__scrim{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(96deg,
+    rgba(var(--paper-rgb),.97) 0%, rgba(var(--paper-rgb),.94) 30%,
+    rgba(var(--paper-rgb),.60) 50%, rgba(var(--paper-rgb),.08) 70%,
+    rgba(var(--paper-rgb),0) 82%);
+}
+.hero__in{position:relative;z-index:2;width:100%;padding-block:clamp(40px,7vw,80px)}
+.hero h1{
+  font-family:var(--f-fat);
+  font-size:clamp(48px,11vw,128px);
+  line-height:.88;letter-spacing:-.025em;margin-bottom:24px;
+}
+.hero h1 span{display:block}
+.hero h1 .c1{color:var(--pink)}
+.hero h1 .c2{color:var(--turq)}
+.hero__sub{max-width:46ch;font-size:clamp(16px,1.9vw,19px);line-height:1.58;margin-bottom:26px}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:24px}
+
+@media (max-width:760px){
+  .hero__scrim{
+    background:linear-gradient(180deg,
+      rgba(var(--paper-rgb),.92) 0%, rgba(var(--paper-rgb),.94) 50%,
+      rgba(var(--paper-rgb),.78) 80%, rgba(var(--paper-rgb),.40) 100%);
+  }
+}
+
+/* ═══ TICKER ══════════════════════════════════════════════════════ */
+.ticker{
+  border-block:2px solid var(--ink);background:var(--gold);color:var(--ink);
+  overflow:hidden;white-space:nowrap;padding-block:12px;
+}
+.ticker__row{display:inline-flex;animation:tick 30s linear infinite;will-change:transform}
+.ticker__row span{
+  font-family:var(--f-display);font-size:clamp(15px,2.1vw,23px);
+  padding-inline:18px;display:inline-block;
+}
+.ticker__row span::after{content:"✿";padding-left:18px;opacity:.6}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ═══ SECTIONS & BANDS ════════════════════════════════════════════ */
+.sec{padding-block:clamp(56px,8.5vw,104px);position:relative}
+.sec__head{display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(28px,4vw,44px)}
+.sec h2{font-size:clamp(30px,5.2vw,54px)}
+
+.band{
+  background:var(--bg,var(--pink-mid));color:var(--ink);
+  border-block:2px solid var(--ink);
+  padding-block:clamp(52px,8vw,96px);position:relative;overflow:hidden;
+}
+.band .eyebrow{color:rgba(11,11,12,.66)}
+.band .eyebrow::before{border-color:var(--ink)}
+.band .dim{color:rgba(11,11,12,.72)}
+.band h2{font-size:clamp(28px,5vw,50px)}
+.band .stix > *{box-shadow:2px 2px 0 rgba(0,0,0,.45)}
+
+.bleedmark{
+  font-family:var(--f-fat);
+  font-size:clamp(58px,15vw,190px);line-height:.82;letter-spacing:-.03em;
+  white-space:nowrap;text-align:center;user-select:none;pointer-events:none;
+  margin-inline:calc(50% - 50vw);margin-top:clamp(20px,3vw,34px);
+  color:var(--bm,rgba(255,255,255,.40));
+}
+
+/* ═══ CARDS ═══════════════════════════════════════════════════════ */
+.grid{display:grid;gap:clamp(14px,2vw,20px)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+
+.card{
+  background:var(--card);border:2px solid var(--ink);border-radius:22px;
+  padding:clamp(20px,2.5vw,28px);box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;gap:10px;
+}
+.card h3{font-family:var(--f-body);font-weight:800;font-size:clamp(18px,2.1vw,21px);line-height:1.25}
+.card__tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-dim)}
+
+.pcard{
+  border:2px solid var(--ink);border-radius:24px;overflow:hidden;
+  background:var(--bg,var(--pink-soft));color:var(--ink);box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;
+}
+.pcard img{
+  width:100%;height:auto;      /* height:auto or the img height attribute wins over aspect-ratio */
+  aspect-ratio:4/3;object-fit:cover;border-bottom:2px solid var(--ink);
+}
+.pcard__b{padding:18px 18px 22px;display:flex;flex-direction:column;gap:9px;flex:1}
+.pcard h3{font-family:var(--f-body);font-weight:800;font-size:19px}
+.pcard p{font-size:14.5px;line-height:1.55}
+.pcard__m{
+  font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+  margin-top:auto;padding-top:8px;border-top:2px solid rgba(11,11,12,.22);
+}
+
+/* numbered steps — a real sequence, so real numbers */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.step{
+  border:2px solid var(--ink);border-radius:22px;background:var(--card);
+  box-shadow:var(--shadow-sm);padding:22px 20px;display:flex;flex-direction:column;gap:10px;
+}
+.step__n{
+  font-family:var(--f-fat);font-size:38px;line-height:1;
+  color:var(--sc,var(--pink));-webkit-text-stroke:2px var(--ink);
+}
+.step h3{font-family:var(--f-body);font-weight:800;font-size:19px}
+.step p{font-size:14.5px;line-height:1.55;color:var(--text-dim)}
+
+/* ═══ LOCATION MARKERS ════════════════════════════════════════════ */
+.marks{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.mark{
+  border:2px solid var(--ink);border-radius:20px;background:var(--card);
+  box-shadow:var(--shadow-sm);padding:18px 17px;display:flex;flex-direction:column;gap:5px;
+}
+.mark b{font-family:var(--f-body);font-weight:800;font-size:16px}
+.mark span{font-size:14px;line-height:1.5;color:var(--text-dim)}
+
+/* ═══ PARALLAX GALLERY ════════════════════════════════════════════
+   Two columns that drift at different speeds, and inside every frame the
+   photograph itself shifts a little against it. The crop is deliberately
+   small — about 4% off the top or bottom at the extremes — so the picture
+   stays a picture: upright, whole, readable. Click it for the full frame. */
+.px{
+  position:relative;background:var(--paper);border-top:2px solid var(--ink);
+  padding-block:clamp(46px,7vw,96px);overflow:clip;
+}
+.px__grid{display:grid;gap:clamp(20px,3.4vw,46px);grid-template-columns:1fr;margin-top:clamp(26px,4vw,46px)}
+@media(min-width:860px){
+  .px__grid{grid-template-columns:1fr 1fr;gap:clamp(26px,3.4vw,54px)}
+  .px__item:nth-child(even){margin-top:clamp(44px,7vw,112px)}
+}
+.px__item{
+  -webkit-appearance:none;appearance:none;background:none;border:0;margin:0;padding:0;
+  display:block;width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer;
+}
+.px__frame{
+  display:block;position:relative;overflow:hidden;
+  border:2px solid var(--ink);border-radius:24px;background:var(--card);
+  box-shadow:var(--shadow);aspect-ratio:7/5;
+  transition:box-shadow .18s ease,transform .18s cubic-bezier(.2,.9,.3,1);
+}
+.px__item:hover .px__frame,
+.px__item:focus-visible .px__frame{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink)}
+.px__frame img{
+  position:absolute;left:0;top:-4%;width:100%;height:108%;
+  object-fit:cover;display:block;will-change:transform;
+}
+.px__tag{
+  position:absolute;left:12px;bottom:12px;z-index:2;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--pink);color:var(--ink);border:2px solid var(--ink);border-radius:99px;
+  padding:5px 12px;box-shadow:2px 2px 0 var(--ink);
+}
+.px__item:nth-child(4n+2) .px__tag{background:var(--turq)}
+.px__item:nth-child(4n+3) .px__tag{background:var(--gold)}
+.px__item:nth-child(4n+4) .px__tag{background:var(--leaf)}
+.px__cap{
+  display:flex;align-items:baseline;gap:11px;margin-top:13px;
+  font-family:var(--f-body);font-weight:800;font-size:clamp(15px,1.8vw,19px);line-height:1.3;
+}
+.px__cap i{
+  font-family:var(--f-mono);font-style:normal;font-size:12px;letter-spacing:.12em;
+  color:var(--text-dim);flex:none;
+}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:80;display:none;background:rgba(11,11,12,.92);padding:clamp(14px,3vw,34px)}
+.lb[open]{display:grid;grid-template-rows:1fr auto;gap:14px;place-items:center}
+.lb__fig{
+  margin:0;max-width:min(1200px,94vw);max-height:78svh;display:grid;
+  border:2px solid var(--ink);border-radius:20px;overflow:hidden;background:#000;
+  box-shadow:8px 8px 0 rgba(0,0,0,.5);
+}
+.lb__fig img{max-width:100%;max-height:78svh;object-fit:contain}
+.lb__bar{display:flex;flex-wrap:wrap;gap:11px;align-items:center;justify-content:center}
+.lb__cap{font-family:var(--f-mono);font-size:12.5px;letter-spacing:.07em;color:var(--paper);min-width:11ch;text-align:center}
+.lb__btn{
+  font-family:var(--f-body);font-weight:800;font-size:14px;
+  border:2px solid var(--ink);border-radius:99px;background:var(--paper);color:var(--ink);
+  padding:8px 17px;cursor:pointer;box-shadow:2px 2px 0 rgba(0,0,0,.55);
+}
+.lb__btn--x{background:var(--pink)}
+
+/* ═══ BOOKING WIDGET (UP Hotel IBE) ═══════════════════════════════ */
+.ibe{
+  width:100%;max-width:900px;min-height:64px;
+  background:var(--card);border:2px solid var(--ink);border-radius:22px;
+  padding:clamp(14px,2vw,20px);box-shadow:var(--shadow-sm);
+}
+.ibe[hidden]{display:none}
+/* A custom element the browser does not know is an INLINE box. The booking
+   engine then renders into something that shrink-wraps its own content, and
+   the search mask comes out squeezed. These three rules give the engine the
+   full width it expects and nothing else — no colours, no type, no borders,
+   so its own stylesheet stays in charge of how it looks. */
+/* Where the engine really took over, it gets the whole width: a search mask
+   squeezed into a column beside a headline is the "compressed" look. Our own
+   compact form was drawn for that column, so it keeps it. */
+[data-ibe-host].is-engine .ibe{max-width:none}
+@media(min-width:940px){
+  .bookbar.is-engine .bookbar__in{grid-template-columns:1fr}
+}
+.ibe ibe-up{display:block;width:100%}
+.ibe ibe-up > *{max-width:100%}
+.ibe iframe{display:block;width:100%;border:0}
+/* a booking spot running in its own document: the frame follows its
+   content's height, this is only the floor while it loads */
+.ibe__frame{min-height:340px}
+@media(max-width:620px){.ibe__frame{min-height:420px}}
+
+/* an inline display would outrank the UA rule for [hidden], so the
+   fallback carries its layout in CSS and hides on the attribute */
+.book-fb{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.book-fb[hidden]{display:none}
+
+/* ═══ BOOK BAR — the search sitting right under the hero ══════════ */
+.bookbar{
+  background:var(--gold);border-bottom:2px solid var(--ink);
+  padding-block:clamp(26px,3.6vw,44px);
+}
+.bookbar[hidden]{display:none}
+.bookbar__in{display:grid;gap:clamp(16px,2.4vw,28px);align-items:center}
+@media(min-width:940px){.bookbar__in{grid-template-columns:minmax(240px,1fr) minmax(0,1.55fr)}}
+.bookbar__t{display:flex;flex-direction:column;gap:8px;color:var(--ink)}
+.bookbar__t .eyebrow{color:rgba(11,11,12,.66)}
+.bookbar__t .eyebrow::before{border-color:var(--ink)}
+.bookbar__t h2{font-size:clamp(24px,3.4vw,38px)}
+.bookbar__t p{max-width:38ch;color:rgba(11,11,12,.78)}
+
+/* Shown only where the booking engine really failed to render: one line,
+   not a second booking path — the engine is the booking path. */
+.ibe-down{
+  max-width:60ch;font-size:15.5px;line-height:1.6;
+  background:var(--card);border:2px solid var(--ink);border-radius:18px;
+  padding:14px 16px;box-shadow:var(--shadow-sm);
+}
+.ibe-down[hidden]{display:none}
+.ibe-down a{font-weight:800;text-decoration-color:var(--pink)}
+.bookbar__w{display:flex;flex-direction:column;gap:12px;min-width:0}
+
+/* the third booking spot: a quiet strip closing the rooms section */
+.bookrooms{
+  border:2px solid var(--ink);border-radius:24px;background:var(--paper-2);
+  box-shadow:var(--shadow-sm);padding:clamp(16px,2.2vw,24px);
+  display:flex;flex-wrap:wrap;gap:14px 18px;align-items:center;justify-content:space-between;
+}
+.bookrooms__t{
+  font-family:var(--f-body);font-weight:800;font-size:clamp(16px,2vw,19px);
+}
+
+/* ═══ A BOOKING BUTTON THAT FOLLOWS ON PHONES ═════════════════════ */
+.bookfab{
+  position:fixed;z-index:45;left:50%;bottom:16px;transform:translate(-50%,140%);
+  display:none;align-items:center;gap:10px;
+  font-family:var(--f-body);font-weight:800;font-size:15px;text-decoration:none;
+  background:var(--pink);color:var(--ink);
+  border:2px solid var(--ink);border-radius:99px;
+  padding:9px 10px 9px 22px;box-shadow:var(--shadow);
+  transition:transform .3s cubic-bezier(.2,.9,.3,1);
+}
+.bookfab.in{transform:translate(-50%,0)}
+@media(max-width:980px){.bookfab{display:inline-flex}}
+
+/* ═══ CONTACT ═════════════════════════════════════════════════════ */
+.contact{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.ccard{
+  border:2px solid var(--ink);border-radius:22px;background:var(--card);
+  box-shadow:var(--shadow-sm);padding:24px 22px;display:flex;flex-direction:column;gap:10px;
+}
+.ccard__n{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;color:var(--text-dim)}
+.ccard h3{font-family:var(--f-body);font-weight:800;font-size:19px}
+.ccard a.big{
+  font-family:var(--f-display);font-size:clamp(18px,2.4vw,25px);line-height:1.25;
+  word-break:break-word;text-decoration-color:var(--pink);
+}
+
+/* ═══ FOOTER ══════════════════════════════════════════════════════ */
+.foot{background:var(--ink);color:var(--paper);border-top:2px solid var(--ink);padding-block:clamp(40px,6vw,68px)}
+.foot__grid{display:grid;gap:clamp(22px,3vw,38px);grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.foot h3{font-family:var(--f-display);font-size:clamp(22px,3.4vw,34px);line-height:1.1;color:var(--pink-soft)}
+.foot a{color:var(--paper)}
+.foot__l{display:flex;flex-direction:column;gap:7px;font-size:15px}
+.foot__k{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,247,228,.55);margin-bottom:4px}
+.foot__base{
+  margin-top:clamp(26px,4vw,42px);padding-top:20px;border-top:1px solid rgba(255,247,228,.22);
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;
+  font-family:var(--f-mono);font-size:12px;color:rgba(255,247,228,.6);
+}
+.foot__base a{color:rgba(255,247,228,.82)}
+
+/* ═══ REVEAL — cards grow out of a closed bud ═════════════════════ */
+[data-reveal]{
+  opacity:0;transform:translateY(26px) rotate(-4deg) scale(.93);
+  transition:opacity .6s cubic-bezier(.2,.9,.3,1),transform .6s cubic-bezier(.2,.9,.3,1);
+}
+[data-reveal].in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+  }
+  [data-reveal]{opacity:1;transform:none}
+}
+
+</style>
+<style>
+/* ── Be Free — Inhalt einer Theme-Seite ──────────────────────────────
+   Header und Footer liegen als eigene Dateien daneben: header.html und
+   footer.html.
+
+   --nav-h ist der Platz, den die Seite oben freihält:
+     74px  = ihr benutzt unseren header.html (Standard)
+     0px   = euer Theme-Header scrollt normal mit
+     eigene Höhe = euer Theme-Header bleibt beim Scrollen stehen        */
+:root{ --nav-h: 74px; }
+
+/* Volle Breite, egal wie schmal der Container des Themes ist.
+   Bewusst kein width:100vw — das rechnet die Scrollbar mit und erzeugt
+   genau das Querscrollen, das es verhindern soll. */
+.befree-full{ margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw) }
+</style>
+
+<div class="befree-full">
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   BILDER / PHOTOS — hier den Ordner eintragen, in dem eure Fotos liegen.
+   Beispiel WordPress-Mediathek:
+     window.BEFREE_IMG = "https://eure-domain.at/wp-content/uploads/befree/";
+   Leer lassen = die voreingestellten Adressen verwenden.
+   ══════════════════════════════════════════════════════════════════════ */
+window.BEFREE_IMG = "";
+
+(function () {
+  var DEFAULT = "https://cdn.jsdelivr.net/gh/Piaxoxo/Do-Step-Inn-Home@c30ae24d013d15758b8f47bd94ddf974f9501d51/befree/assets/img/";
+  var custom  = (window.BEFREE_IMG || "").trim();
+  if (custom && custom.slice(-1) !== "/") custom += "/";
+  window.BEFREE_IMG_BASE = custom || DEFAULT;
+  if (!custom) return;
+
+  function repoint() {
+    var imgs = document.querySelectorAll('img[src^="' + DEFAULT + '"]');
+    for (var i = 0; i < imgs.length; i++) {
+      imgs[i].src = custom + imgs[i].getAttribute("src").slice(DEFAULT.length);
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", repoint);
+  } else { repoint(); }
+})();
+</script>
+
+<!-- ══════════════════════════════════════ NAV ═══════════════════ -->
+
+<main id="main">
+<!-- ══════════════════════════════════════ HERO ══════════════════ -->
+<section class="hero" id="top">
+  <canvas id="petals" aria-hidden="true"></canvas>
+  <div class="hero__scrim" aria-hidden="true"></div>
+  <div class="hero__in wrap">
+    <h1><span data-i18n="hero.l1">Be Free.</span><span class="c1" data-i18n="hero.l2">Be You.</span><span class="c2" data-i18n="hero.l3">Be Here.</span></h1>
+    <p class="hero__sub" data-i18n="hero.sub">Be Free Hostel Vienna is a colorful and affordable place to stay near Westbahnhof, offering modern travelers a relaxed and flexible experience in the heart of the city. With easy self check-in, a central location and a vibrant atmosphere, it is the perfect base to explore Vienna your own way while connecting with people from around the world.</p>
+    <div class="hero__cta">
+      <a class="pill" href="#bookbar"><span data-i18n="cta.book">Book now</span><span class="pill__a" aria-hidden="true">→</span></a>
+      <a class="pill pill--ghost" href="#rooms" data-i18n="cta.rooms">See the rooms</a>
+    </div>
+    <div class="stix">
+      <i style="--sc:var(--pink-soft)" data-i18n="tag.selfcheckin">Self check-in</i>
+      <i style="--sc:var(--turq)" data-i18n="tag.noreception">No reception</i>
+      <i style="--sc:var(--gold)" data-i18n="tag.from15">From 15:00</i>
+      <i style="--sc:var(--leaf)" data-i18n="tag.wifi">Free WiFi</i>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div class="ticker__row" id="ticker"></div></div>
+
+<!-- ══════════════════════════════════════ BOOK BAR ══════════════ -->
+<!-- Unhidden by befree.js once the IBE key checks out, so a keyless or
+     unreachable engine never leaves an empty band under the hero. -->
+<section class="bookbar" id="bookbar" data-ibe-host aria-labelledby="bookbar-h">
+  <div class="wrap bookbar__in">
+    <div class="bookbar__t">
+      <span class="eyebrow" data-i18n="bar.k">Free tonight?</span>
+      <h2 class="t-dsp" id="bookbar-h" data-i18n="bar.h">Find your bed.</h2>
+      <p class="small" data-i18n="bar.p">Pick your dates and see what is free — payment online, key on your phone.</p>
+    </div>
+    <div class="bookbar__w">
+      <div class="ibe"><ibe-up ibe-key="75e0a485-2545-432c-8c13-e48b8a8a3fc8" language="en"></ibe-up></div>
+      <p class="ibe-down" data-ibe-down hidden data-i18n-html="bk.down">Our booking engine is not responding right now. Call <a href="tel:+4369919232769">+43 699 19232769</a> or write to <a href="mailto:befree-hostel@dostepinn.at">befree-hostel@dostepinn.at</a> and we will book it for you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ LOCATION ══════════════ -->
+<section class="band" id="location" style="--bg:var(--turq)">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow" data-i18n="loc.eyebrow">Top destination</span>
+      <h2 class="t-dsp" data-i18n-html="loc.h">Vienna is<br />right here</h2>
+    </div>
+    <div class="grid g2" style="align-items:start">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <p class="lede" data-i18n="loc.p1">Located at Beingasse 13, Vienna, Be Free Hostel gives you a vibrant base in one of the city's most connected areas. From here, you can move easily between culture, shopping, restaurants, nightlife, and everyday local life while staying flexible and independent.</p>
+        <p class="lede" data-i18n="loc.p2">Perfect for city breaks, backpacking trips, and longer stays, this location lets you experience Vienna with energy, convenience, and freedom. It is a smart starting point for travelers who want to stay close to the action and explore the city their own way.</p>
+      </div>
+      <div class="marks">
+        <div class="mark" data-reveal><b data-i18n="loc.m1t">Beingasse 13</b><span data-i18n="loc.m1d">Corner of Goldschlagstraße, 1150 Vienna — the 15th district, Rudolfsheim-Fünfhaus.</span></div>
+        <div class="mark" data-reveal><b data-i18n="loc.m2t">Central Vienna</b><span data-i18n="loc.m2d">Westbahnhof and Mariahilfer Straße, the city's long shopping street, are within walking distance.</span></div>
+        <div class="mark" data-reveal><b data-i18n="loc.m3t">Easy connections</b><span data-i18n="loc.m3d">300 m to U3 Schweglerstraße, 200 m to the Beingasse bus stop, tram straight to Hauptbahnhof.</span></div>
+        <div class="mark" data-reveal><b data-i18n="loc.m4t">Wiener Stadthalle</b><span data-i18n="loc.m4d">Vienna's biggest concert and event hall is a six-minute walk from the front door.</span></div>
+      </div>
+    </div>
+    <div class="stix" style="margin-top:26px">
+      <i style="--sc:#FFFFFF" data-i18n="loc.s1">300 m to U3</i>
+      <i style="--sc:var(--gold)" data-i18n="loc.s2">200 m to the bus</i>
+      <i style="--sc:var(--pink)" data-i18n="loc.s3">6 min to Stadthalle</i>
+      <i style="--sc:var(--leaf)" data-i18n="loc.s4">Westbahnhof on foot</i>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ CHECK-IN ══════════════ -->
+<section class="band" id="checkin" style="--bg:var(--pink-mid)">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow" data-i18n="chk.eyebrow">How you get in</span>
+      <h2 class="t-dsp" data-i18n-html="chk.h">A self-service house.<br />There is no reception.</h2>
+      <p class="lede" data-i18n="chk.lede">Everything happens before you arrive, so nothing has to happen when you do. Land at midnight, walk straight in — nobody is waiting at a desk, and nobody needs to be.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step" data-reveal><span class="step__n" style="--sc:var(--pink)">1</span>
+        <h3 data-i18n="chk.s1t">Book online</h3>
+        <p data-i18n="chk.s1d">Payment and registration are handled digitally. Nothing to print, nothing to sign at a desk.</p></div>
+      <div class="step" data-reveal><span class="step__n" style="--sc:var(--turq)">2</span>
+        <h3 data-i18n="chk.s2t">Your check-in link arrives</h3>
+        <p data-i18n="chk.s2d">By email if you booked with us directly. Booked through Booking.com or another platform? Then it arrives in that platform's message chat — check there, not your inbox.</p></div>
+      <div class="step" data-reveal><span class="step__n" style="--sc:var(--orange)">3</span>
+        <h3 data-i18n="chk.s3t">Your QR code opens the door</h3>
+        <p data-i18n="chk.s3d">Complete the check-in and the code lands on your phone. It opens the front door and your room, from 15:00 onwards, at any hour. No reception, no waiting, no curfew.</p></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:20px;align-items:start">
+      <div class="card" style="--card:#FFFFFF">
+        <span class="card__tag" data-i18n="chk.helpt">Trouble with the QR code or check-in?</span>
+        <h3 data-i18n="chk.helph">Call us. Someone always picks up.</h3>
+        <p class="small dim" data-i18n="chk.helpd">A door that will not open is the worst part of any trip, so we say this plainly: if your code fails or the check-in will not go through, ring this number and we will sort it out.</p>
+        <p><a class="pill" href="tel:+4369919232769" style="--pc:var(--gold)"><span>+43 699 19232769</span><span class="pill__a" aria-hidden="true">→</span></a></p>
+      </div>
+
+      <div class="card" style="--card:#FFFFFF">
+        <span class="card__tag" data-i18n="chk.facet">Want to see a real face?</span>
+        <h3 data-i18n="chk.faceh">Our reception is three minutes away.</h3>
+        <p class="small dim" data-i18n="chk.faced">We cannot always come over to Beingasse — but the reception at our sister house is a three-minute walk. Drop by whenever you would rather talk to a person than a screen.</p>
+        <p class="small"><b>Do Step Inn Home</b><br />Felberstraße 20, 1150 Wien</p>
+        <p><a class="pill" href="https://www.google.com/maps/dir/?api=1&amp;destination=Felberstra%C3%9Fe%2020%2C%201150%20Wien" target="_blank" rel="noopener noreferrer" style="--pc:var(--turq)"><span data-i18n="chk.faceb">Get directions</span><span class="pill__a" aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="bleedmark" style="--bm:rgba(255,255,255,.36)" aria-hidden="true">NO RECEPTION</div>
+</section>
+
+<!-- ══════════════════════════════════════ ROOMS ═════════════════ -->
+<section class="sec" id="rooms">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow" style="--dot:var(--pink)" data-i18n="room.eyebrow">Rooms</span>
+      <h2 class="t-dsp" data-i18n="room.h">Sleep your way</h2>
+      <p class="lede" data-i18n="room.lede">Three ways to sleep: behind your own door, behind your own lock, or in the open with everyone else. Everything is freshly renovated, bathrooms are shared throughout the house, and linen is included.</p>
+    </div>
+    <div class="grid g3">
+      <article class="pcard" style="--bg:var(--gold)" data-reveal>
+        <img src="https://cdn.jsdelivr.net/gh/Piaxoxo/Do-Step-Inn-Home@c30ae24d013d15758b8f47bd94ddf974f9501d51/befree/assets/img/room-private.jpg" alt="" loading="lazy" width="1000" height="750" />
+        <div class="pcard__b">
+          <h3 data-i18n="room.c1t">Private room</h3>
+          <p data-i18n="room.c1d">Double, twin, triple or quad. A wide bed on a solid wood platform, a window onto the street, a graffiti mural on the wall — and a door that closes behind you.</p>
+          <span class="pcard__m" data-i18n="room.c1m">2 to 4 people · Own door</span>
+        </div>
+      </article>
+
+      <article class="pcard" style="--bg:var(--pink-soft)" data-reveal>
+        <img src="https://cdn.jsdelivr.net/gh/Piaxoxo/Do-Step-Inn-Home@c30ae24d013d15758b8f47bd94ddf974f9501d51/befree/assets/img/room-capsule.jpg" alt="" loading="lazy" width="1000" height="750" />
+        <div class="pcard__b">
+          <h3 data-i18n="room.c2t">Capsule bed</h3>
+          <p data-i18n="room.c2d">A bed in a shared room that locks. Your own light, your own socket, a door you pull shut. The quiet, private way to sleep at a dorm price.</p>
+          <span class="pcard__m" data-i18n="room.c2m">Lockable · Own light · Own socket</span>
+        </div>
+      </article>
+
+      <article class="pcard" style="--bg:var(--turq)" data-reveal>
+        <!-- No open-bunk dorm in the shoot, and illustrating it with another
+             room type is how this card was wrong before. It reads as a colour
+             card among two photo cards rather than a frame with nothing in
+             it. Add an <img> here the day a real dorm photo exists. -->
+        <div class="pcard__b">
+          <h3 data-i18n="room.c3t">Classic dorm</h3>
+          <p data-i18n="room.c3d">Open bunk beds in a shared room, lockers for your things, and the lowest price in the house. The easiest way to meet the people you end up exploring the city with.</p>
+          <span class="pcard__m" data-i18n="room.c3m">Bunk beds · Lockers · Best price</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ BOOK 2 ════════════════ -->
+<section class="sec" id="book-rooms" style="padding-top:0">
+  <div class="wrap">
+    <div class="bookrooms">
+      <p class="bookrooms__t" data-i18n="bar.rooms">Seen a room you like? Pick your dates.</p>
+      <a class="pill" href="#bookbar"><span data-i18n="cta.dates">Pick your dates</span><span class="pill__a" aria-hidden="true">↑</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ WHY ═══════════════════ -->
+<section class="sec" id="why" style="background:var(--paper-2);border-block:2px solid var(--ink)">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow" style="--dot:var(--orange)" data-i18n="why.eyebrow">Why Be Free</span>
+      <h2 class="t-dsp" data-i18n="why.h">Easy, social, colorful.</h2>
+      <p class="lede" data-i18n="why.lede">Be Free is designed for travelers who want freedom, a strong location and a stay that feels modern, open and effortless from the moment they arrive.</p>
+    </div>
+    <div class="grid g3">
+      <div class="card" data-reveal><span class="card__tag" data-i18n="why.c1k">Freedom</span>
+        <h3 data-i18n="why.c1t">Nobody asks when you arrive</h3>
+        <p class="small dim" data-i18n="why.c1d">No reception hours, no curfew, no keys to hand back. The house runs on your schedule instead of ours.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="why.c2k">Together</span>
+        <h3 data-i18n="why.c2t">A kitchen that is open all night</h3>
+        <p class="small dim" data-i18n="why.c2d">The ground floor belongs to everyone, around the clock — a guest kitchen and a common room where trips get planned and people meet.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="why.c3k">Clean</span>
+        <h3 data-i18n="why.c3t">Freshly renovated, honestly kept</h3>
+        <p class="small dim" data-i18n="why.c3d">The thing guests mention most in their reviews is how clean it is. We would rather keep earning that than promise anything fancier.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="why.c4k">Colour</span>
+        <h3 data-i18n="why.c4t">Not a beige box</h3>
+        <p class="small dim" data-i18n="why.c4d">Yellow walls, graffiti murals painted straight onto the plaster, brick and warm wood. Nothing in here is beige, and no two rooms look the same.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ GALLERY ══════════════ -->
+<section class="px" id="gallery">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow" style="--dot:var(--gold)" data-i18n="gal.eyebrow">Inside Be Free</span>
+      <h2 class="t-dsp" data-i18n="gal.h">Inside the color of Be Free</h2>
+      <p class="lede" data-i18n="gal.lede">A look at the atmosphere, rooms and feeling of staying at Be Free Hostel Vienna — vibrant, social and made for modern travelers. Scroll: the pictures drift at their own speed. Click one and it fills the screen.</p>
+    </div>
+    <div class="px__grid" id="galgrid"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ HOUSE RULES ═══════════ -->
+<section class="band" id="rules" style="--bg:var(--violet)">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow" data-i18n="rul.eyebrow">Good to know</span>
+      <h2 class="t-dsp" data-i18n="rul.h">The honest bits</h2>
+      <p class="lede" data-i18n="rul.lede">Better to read it here than to discover it at two in the morning. This is a real hostel in a real old building — here is what that means.</p>
+    </div>
+    <div class="grid g3">
+      <div class="card" data-reveal><span class="card__tag" data-i18n="rul.c1k">Quiet hours</span>
+        <h3 data-i18n="rul.c1t">It is an old building</h3>
+        <p class="small dim" data-i18n="rul.c1d">Sound carries in the stairwell and the kitchen echoes. Quiet hours are respected, and if you are a light sleeper, take a capsule bed — it is the calmest option in the house.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="rul.c2k">Bathrooms</span>
+        <h3 data-i18n="rul.c2t">Showers and toilets are shared</h3>
+        <p class="small dim" data-i18n="rul.c2d">On every floor, cleaned daily. No private bathrooms anywhere in the house — that is part of how the price stays where it is.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="rul.c3k">Kitchen</span>
+        <h3 data-i18n="rul.c3t">Cook whenever you want</h3>
+        <p class="small dim" data-i18n="rul.c3d">The guest kitchen on the ground floor is open around the clock. Wash up after yourself and label what you leave in the fridge.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="rul.c4k">Times</span>
+        <h3 data-i18n="rul.c4t">Check-in from 15:00</h3>
+        <p class="small dim" data-i18n="rul.c4d">Arrive any time after that, day or night. Ask us about leaving your bag if you land early or leave late.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="rul.c5k">Self-service</span>
+        <h3 data-i18n="rul.c5t">There is no front desk</h3>
+        <p class="small dim" data-i18n="rul.c5d">Nobody sits in a lobby waiting for you. That is the point of the place — but the phone is always answered, so you are never on your own.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="rul.c6k">Groups</span>
+        <h3 data-i18n="rul.c6t">School trips and teams welcome</h3>
+        <p class="small dim" data-i18n="rul.c6d">Write to us with your dates and headcount and we will put a quote together for the whole group.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ GROUPS ════════════════ -->
+<section class="band" id="groups" style="--bg:var(--leaf)">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow" data-i18n="grp.eyebrow">Groups</span>
+      <h2 class="t-dsp" data-i18n-html="grp.h">Group bookings —<br />one quote, one invoice.</h2>
+      <p class="lede" data-i18n="grp.lede">School trips, teams, choirs, clubs. Tell us your dates and how many you are, and we put together one quote for the whole group. Breakfast is not part of the room rate — we can book it for you around the corner.</p>
+    </div>
+
+    <div class="grid g3">
+      <div class="card" data-reveal><span class="card__tag" data-i18n="grp.c1k">Breakfast</span>
+        <h3 data-i18n="grp.c1t">Bookable at Felberstraße 20</h3>
+        <p class="small dim" data-i18n="grp.c1d">Breakfast is not included in the price. Groups can add it at our sister house, Do Step Inn Home — a three-minute walk from the front door. Ask for it with your enquiry and it goes on the same quote.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="grp.c2k">One contact</span>
+        <h3 data-i18n="grp.c2t">One quote, one invoice</h3>
+        <p class="small dim" data-i18n="grp.c2d">Beds and any extras you book — breakfast included if you want it — arrive on a single offer, so nobody has to chase separate bookings.</p></div>
+      <div class="card" data-reveal><span class="card__tag" data-i18n="grp.c3k">Tell us</span>
+        <h3 data-i18n="grp.c3t">What we need to know</h3>
+        <p class="small dim" data-i18n="grp.c3d">Dates, how many people, how you would like the rooms split, and whether you want breakfast added. That is enough to price it.</p></div>
+    </div>
+
+    <div class="stix" style="margin-top:24px">
+      <i style="--sc:#FFFFFF" data-i18n="grp.s1">Breakfast bookable, not included</i>
+      <i style="--sc:var(--gold)" data-i18n="grp.s2">3 minutes on foot</i>
+      <i style="--sc:var(--pink)" data-i18n="grp.s3">One quote for everyone</i>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">
+      <a class="pill" href="mailto:befree-hostel@dostepinn.at?subject=Gruppenanfrage%20Be%20Free%20Hostel" style="--pc:#FFFFFF"><span data-i18n="grp.cta">Send a group request</span><span class="pill__a" aria-hidden="true">→</span></a>
+      <a class="pill pill--ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Felberstra%C3%9Fe%2020%2C%201150%20Wien" target="_blank" rel="noopener noreferrer" data-i18n="grp.route">Route to Felberstraße 20</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ BOOK ══════════════════ -->
+<section class="band" id="book" style="--bg:var(--pink)">
+  <div class="wrap" style="display:flex;flex-direction:column;gap:18px;align-items:flex-start">
+    <span class="eyebrow" data-i18n="bk.eyebrow">Book your stay</span>
+    <h2 class="t-dsp" data-i18n-html="bk.h">Be Free. Be You.<br />Be Here.</h2>
+    <p class="lede" data-i18n="bk.lede">Pick your dates, pay online, and your key arrives on your phone. That is the whole process.</p>
+    <!-- The search mask itself lives once, in the gold bar under the hero:
+         the booking engine fills one element per page, so a second one here
+         would stay empty. This band sends guests up to it. -->
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+      <a class="pill" href="#bookbar" style="--pc:#FFFFFF"><span data-i18n="cta.dates">Pick your dates</span><span class="pill__a" aria-hidden="true">↑</span></a>
+      <a class="pill pill--ghost" href="#contact" data-i18n="cta.ask">Ask a question</a>
+      <a class="pill pill--ghost" href="tel:+4369919232769">+43 699 19232769</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ CONTACT ═══════════════ -->
+<section class="sec" id="contact">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow" style="--dot:var(--turq)" data-i18n="ct.eyebrow">Contact us</span>
+      <h2 class="t-dsp" data-i18n="ct.h">Reach out to Be Free.</h2>
+      <p class="lede" data-i18n="ct.lede">Questions, bookings or anything else? Get in touch directly and we will help you quickly and easily.</p>
+    </div>
+    <div class="contact">
+      <div class="ccard" data-reveal>
+        <span class="ccard__n">01</span>
+        <h3 data-i18n="ct.c1t">Email us</h3>
+        <a class="big" href="mailto:befree-hostel@dostepinn.at">befree-hostel@dostepinn.at</a>
+        <p><a class="pill" href="mailto:befree-hostel@dostepinn.at" style="--pc:var(--turq)"><span data-i18n="ct.c1b">Open email</span><span class="pill__a" aria-hidden="true">→</span></a></p>
+      </div>
+      <div class="ccard" data-reveal>
+        <span class="ccard__n">02</span>
+        <h3 data-i18n="ct.c2t">Call us</h3>
+        <a class="big" href="tel:+4369919232769">+43 699 19232769</a>
+        <p><a class="pill" href="tel:+4369919232769" style="--pc:var(--gold)"><span data-i18n="ct.c2b">Call now</span><span class="pill__a" aria-hidden="true">→</span></a></p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ══════════════════════════════════════ FOOTER ════════════════ -->
+
+<a class="bookfab" id="bookfab" href="#bookbar">
+  <span data-i18n="cta.book">Book now</span><span class="pill__a" aria-hidden="true">→</span>
+</a>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo">
+  <figure class="lb__fig"><img id="lb-img" alt="" /></figure>
+  <div class="lb__bar">
+    <button class="lb__btn" id="lb-prev" data-i18n="lb.prev">← Back</button>
+    <span class="lb__cap" id="lb-cap"></span>
+    <button class="lb__btn" id="lb-next" data-i18n="lb.next">Next →</button>
+    <button class="lb__btn lb__btn--x" id="lb-x" data-i18n="lb.close">Close</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   Be Free Hostel — language switch, hero flowers, gallery, lightbox.
+   No dependencies. The 3D flower lives in flower.js and is optional.
+   ═══════════════════════════════════════════════════════════════════ */
+(function () {
+  "use strict";
+
+  var RM = window.matchMedia &&
+           window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ═══ 1. LANGUAGE ═════════════════════════════════════════════════
+     English is the source of truth: every English string lives in the
+     HTML, so the page reads correctly even if this script never runs.
+     Only the German strings are carried here.                        */
+
+  var DE = {
+    "skip": "Zum Inhalt springen",
+
+    "nav.rooms": "Zimmer", "nav.location": "Lage", "nav.checkin": "Check-in",
+    "nav.gallery": "Galerie", "nav.groups": "Gruppen",
+    "nav.rules": "Gut zu wissen", "nav.contact": "Kontakt",
+    "nav.menu": "Menü",
+
+    "cta.book": "Jetzt buchen", "cta.rooms": "Zimmer ansehen", "cta.ask": "Frage stellen",
+    "cta.dates": "Termin wählen",
+
+    "hero.l1": "Be Free.", "hero.l2": "Be You.", "hero.l3": "Be Here.",
+    "hero.sub": "Das Be Free Hostel Wien ist eine bunte, leistbare Bleibe nahe dem Westbahnhof — entspannt, flexibel und mitten in der Stadt. Mit unkompliziertem Self-Check-in, zentraler Lage und lebendiger Atmosphäre ist es die perfekte Basis, um Wien auf deine Art zu entdecken und dabei Leute aus aller Welt zu treffen.",
+
+    "tag.selfcheckin": "Self-Check-in", "tag.noreception": "Keine Rezeption",
+    "tag.from15": "Ab 15:00", "tag.wifi": "WLAN gratis",
+
+    "loc.eyebrow": "Top-Lage",
+    "loc.h": "Wien beginnt<br />vor der Tür",
+    "loc.p1": "In der Beingasse 13 liegt das Be Free Hostel in einem der bestangebundenen Grätzl der Stadt. Von hier kommst du mühelos zu Kultur, Einkaufsstraßen, Lokalen, Nachtleben und dem ganz normalen Wiener Alltag — flexibel und unabhängig.",
+    "loc.p2": "Ob Städtetrip, Rucksackreise oder längerer Aufenthalt: Von hier aus erlebst du Wien mit Energie, kurzen Wegen und Freiheit. Ein kluger Ausgangspunkt für alle, die nah am Geschehen bleiben und die Stadt auf eigene Faust erkunden wollen.",
+    "loc.m1t": "Beingasse 13",
+    "loc.m1d": "Ecke Goldschlagstraße, 1150 Wien — der 15. Bezirk, Rudolfsheim-Fünfhaus.",
+    "loc.m2t": "Zentral in Wien",
+    "loc.m2d": "Westbahnhof und die Mariahilfer Straße, die lange Einkaufsstraße der Stadt, sind zu Fuß erreichbar.",
+    "loc.m3t": "Gute Verbindungen",
+    "loc.m3d": "300 m zur U3 Schweglerstraße, 200 m zur Bushaltestelle Beingasse, Straßenbahn direkt zum Hauptbahnhof.",
+    "loc.m4t": "Wiener Stadthalle",
+    "loc.m4d": "Wiens größte Konzert- und Veranstaltungshalle liegt sechs Gehminuten entfernt.",
+    "loc.s1": "300 m zur U3", "loc.s2": "200 m zum Bus",
+    "loc.s3": "6 Min zur Stadthalle", "loc.s4": "Westbahnhof zu Fuß",
+
+    "bk.frame": "Buchung",
+    "bk.down": "Unsere Buchungsmaschine antwortet gerade nicht. Ruf uns an unter <a href=\"tel:+4369919232769\">+43 699 19232769</a> oder schreib an <a href=\"mailto:befree-hostel@dostepinn.at\">befree-hostel@dostepinn.at</a>, wir buchen für dich.",
+
+    "bar.k": "Heute Nacht frei?",
+    "bar.h": "Finde dein Bett.",
+    "bar.p": "Termin wählen und sehen, was frei ist — Zahlung online, Schlüssel aufs Handy.",
+    "bar.rooms": "Ein Zimmer gefunden? Dann wähl deinen Termin.",
+
+    "chk.eyebrow": "So kommst du rein",
+    "chk.h": "Ein Self-Service-Haus.<br />Es gibt keine Rezeption.",
+    "chk.lede": "Alles passiert vor deiner Ankunft, damit bei der Ankunft nichts mehr passieren muss. Um Mitternacht da sein und einfach reingehen — niemand wartet an einem Tresen, und niemand muss es.",
+    "chk.s1t": "Online buchen",
+    "chk.s1d": "Zahlung und Meldung laufen digital. Nichts zum Ausdrucken, nichts an einem Tresen zu unterschreiben.",
+    "chk.s2t": "Dein Check-in-Link kommt",
+    "chk.s2d": "Per E-Mail, wenn du direkt bei uns gebucht hast. Über Booking.com oder ein anderes Portal gebucht? Dann kommt er im Nachrichten-Chat des Portals — schau dort nach, nicht im Posteingang.",
+    "chk.s3t": "Dein QR-Code öffnet die Tür",
+    "chk.s3d": "Check-in abschließen, und der Code landet auf deinem Handy. Er öffnet Haustür und Zimmer — ab 15:00, zu jeder Uhrzeit. Keine Rezeption, keine Wartezeit, keine Sperrstunde.",
+    "chk.helpt": "Probleme mit dem QR-Code oder dem Check-in?",
+    "chk.helph": "Ruf an. Es hebt immer jemand ab.",
+    "chk.helpd": "Eine Tür, die nicht aufgeht, ist das Schlimmste auf jeder Reise. Deshalb sagen wir es deutlich: Wenn dein Code streikt oder der Check-in nicht durchgeht, ruf diese Nummer an, und wir bringen das in Ordnung.",
+    "chk.facet": "Lieber ein echtes Gesicht?",
+    "chk.faceh": "Unsere Rezeption ist drei Minuten entfernt.",
+    "chk.faced": "Wir können leider nicht immer in die Beingasse rüberkommen — aber die Rezeption in unserem Schwesterhaus ist drei Gehminuten entfernt. Komm vorbei, wann immer dir ein Mensch lieber ist als ein Bildschirm.",
+    "chk.faceb": "Route anzeigen",
+
+    "room.eyebrow": "Zimmer",
+    "room.h": "Schlaf, wie es dir passt",
+    "room.lede": "Drei Arten zu schlafen: hinter der eigenen Tür, hinter dem eigenen Schloss oder ganz offen mit allen anderen. Alles frisch renoviert, die Bäder werden im ganzen Haus geteilt, Bettwäsche ist inklusive.",
+    "room.c1t": "Privatzimmer",
+    "room.c1d": "Doppel, Twin, Dreibett oder Vierbett. Ein breites Bett auf massivem Holzpodest, ein Fenster zur Straße, ein Graffiti-Mural an der Wand — und eine Tür, die hinter dir zugeht.",
+    "room.c1m": "2 bis 4 Personen · Eigene Tür",
+    "room.c2t": "Capsule-Bett",
+    "room.c2d": "Ein Bett im geteilten Zimmer, das sich absperren lässt. Eigenes Licht, eigene Steckdose, eine Tür, die du zuziehst. Die ruhige, private Art, zum Dorm-Preis zu schlafen.",
+    "room.c2m": "Absperrbar · Eigenes Licht · Eigene Steckdose",
+    "room.c3t": "Klassisches Dorm",
+    "room.c3d": "Offene Stockbetten im geteilten Zimmer, Spinde für deine Sachen und der günstigste Preis im Haus. Der einfachste Weg, die Leute zu treffen, mit denen du am Ende durch die Stadt ziehst.",
+    "room.c3m": "Stockbetten · Spinde · Bester Preis",
+
+    "why.eyebrow": "Warum Be Free",
+    "why.h": "Unkompliziert, gesellig, bunt.",
+    "why.lede": "Be Free ist für Reisende gemacht, die Freiheit wollen, eine starke Lage und einen Aufenthalt, der sich vom ersten Moment an modern, offen und mühelos anfühlt.",
+    "why.c1k": "Freiheit", "why.c1t": "Niemand fragt, wann du kommst",
+    "why.c1d": "Keine Rezeptionszeiten, keine Sperrstunde, kein Schlüssel zum Abgeben. Das Haus richtet sich nach deinem Zeitplan, nicht nach unserem.",
+    "why.c2k": "Gemeinsam", "why.c2t": "Eine Küche, die nachts offen ist",
+    "why.c2d": "Das Erdgeschoss gehört allen, rund um die Uhr — Gästeküche und Aufenthaltsraum, wo Ausflüge geplant werden und Leute sich treffen.",
+    "why.c3k": "Sauber", "why.c3t": "Frisch renoviert, ehrlich geführt",
+    "why.c3d": "Was Gäste in Bewertungen am häufigsten erwähnen, ist die Sauberkeit. Das wollen wir uns lieber weiter verdienen, als etwas Feineres zu versprechen.",
+    "why.c4k": "Farbe", "why.c4t": "Keine beige Schachtel",
+    "why.c4d": "Gelbe Wände, Graffiti-Murals direkt auf den Putz gemalt, Ziegel und warmes Holz. Hier drin ist nichts beige, und keine zwei Zimmer sehen gleich aus.",
+
+    "gal.eyebrow": "Drinnen bei Be Free",
+    "gal.h": "Die Farben von Be Free",
+    "gal.lede": "Ein Blick auf Atmosphäre, Zimmer und Lebensgefühl im Be Free Hostel Wien — bunt, gesellig und für moderne Reisende gemacht. Beim Scrollen wandern die Bilder in eigenem Tempo. Ein Klick, und das Bild füllt den Schirm.",
+
+    "rul.eyebrow": "Gut zu wissen",
+    "rul.h": "Das Ehrliche",
+    "rul.lede": "Besser hier gelesen als um zwei Uhr nachts entdeckt. Das ist ein echtes Hostel in einem echten Altbau — und das heißt Folgendes.",
+    "rul.c1k": "Ruhezeiten", "rul.c1t": "Es ist ein Altbau",
+    "rul.c1d": "Im Stiegenhaus trägt der Schall, die Küche hallt. Ruhezeiten werden eingehalten — und wer leicht aufwacht, nimmt ein Capsule-Bett, die ruhigste Variante im Haus.",
+    "rul.c2k": "Bäder", "rul.c2t": "Duschen und WCs werden geteilt",
+    "rul.c2d": "Auf jedem Stock, täglich gereinigt. Es gibt im ganzen Haus keine eigenen Bäder — auch deshalb bleibt der Preis, wo er ist.",
+    "rul.c3k": "Küche", "rul.c3t": "Koch, wann du willst",
+    "rul.c3d": "Die Gästeküche im Erdgeschoss ist rund um die Uhr offen. Bitte selbst abwaschen und beschriften, was im Kühlschrank bleibt.",
+    "rul.c4k": "Zeiten", "rul.c4t": "Check-in ab 15:00",
+    "rul.c4d": "Danach kannst du jederzeit ankommen, Tag oder Nacht. Sprich uns wegen des Gepäcks an, wenn du früher da bist oder später abreist.",
+    "rul.c5k": "Self-Service", "rul.c5t": "Es gibt keine Rezeption",
+    "rul.c5d": "Niemand sitzt in einer Lobby und wartet auf dich. Genau das ist der Sinn des Hauses — aber ans Telefon geht immer jemand, du bist nie allein.",
+    "rul.c6k": "Gruppen", "rul.c6t": "Schulklassen und Teams willkommen",
+    "rul.c6d": "Schreib uns Termin und Personenzahl, dann stellen wir ein Angebot für die ganze Gruppe zusammen.",
+
+    "grp.eyebrow": "Gruppen",
+    "grp.h": "Gruppenreservierung —<br />ein Angebot, eine Rechnung.",
+    "grp.lede": "Schulklassen, Teams, Chöre, Vereine. Sag uns Termin und Personenzahl, und wir stellen ein Angebot für die ganze Gruppe zusammen. Frühstück ist nicht im Zimmerpreis enthalten — wir buchen es euch aber gern ums Eck dazu.",
+    "grp.c1k": "Frühstück", "grp.c1t": "Zubuchbar in der Felberstraße 20",
+    "grp.c1d": "Frühstück ist nicht inkludiert. Gruppen können es in unserem Schwesterhaus Do Step Inn Home dazubuchen — drei Gehminuten von der Haustür. Einfach bei der Anfrage dazuschreiben, dann steht es auf demselben Angebot.",
+    "grp.c2k": "Ein Ansprechpartner", "grp.c2t": "Ein Angebot, eine Rechnung",
+    "grp.c2d": "Betten und alles, was ihr dazubucht — auf Wunsch auch das Frühstück — kommen auf einem Angebot, damit niemand einzelnen Buchungen hinterherlaufen muss.",
+    "grp.c3k": "Sag uns", "grp.c3t": "Was wir wissen müssen",
+    "grp.c3d": "Termin, Personenzahl, gewünschte Zimmeraufteilung und ob Frühstück dazukommen soll. Mehr brauchen wir für den Preis nicht.",
+    "grp.s1": "Frühstück zubuchbar, nicht inkludiert", "grp.s2": "3 Gehminuten", "grp.s3": "Ein Angebot für alle",
+    "grp.cta": "Gruppenanfrage senden", "grp.route": "Route zur Felberstraße 20",
+
+    "bk.eyebrow": "Aufenthalt buchen",
+    "bk.h": "Be Free. Be You.<br />Be Here.",
+    "bk.lede": "Termin wählen, online zahlen, und dein Schlüssel kommt aufs Handy. Mehr ist es nicht.",
+
+    "ct.eyebrow": "Kontakt",
+    "ct.h": "Schreib uns.",
+    "ct.lede": "Fragen, Buchungen oder sonst etwas? Melde dich direkt, wir helfen schnell und unkompliziert.",
+    "ct.c1t": "E-Mail schreiben", "ct.c1b": "E-Mail öffnen",
+    "ct.c2t": "Anrufen", "ct.c2b": "Jetzt anrufen",
+
+    "ft.claim": "Bleib frei. Triff Leute. Sammle Erinnerungen.",
+    "ft.claimshort": "Be Free. Be You. Be Here.",
+    "ft.house": "Das Haus", "ft.reach": "Kontakt",
+    "ft.visit": "Auf der Seite", "ft.legal": "Rechtliches", "ft.country": "Österreich",
+
+    "lb.prev": "← Zurück", "lb.next": "Weiter →", "lb.close": "Schließen",
+    "gal.enlarge": "größer ansehen"
+  };
+
+  var EN_FALLBACK = { "gal.enlarge": "enlarge", "bk.frame": "Booking" };
+  var EN = {};            /* English, learned from the page as it arrives */
+  var lang = "en";
+
+  /* English is read off the page. A separate header or footer file may have
+     translated itself before this runs — it stashes the English it replaced
+     in data-en / data-en-html, and that copy wins over what is on screen. */
+  /* Learning is one-way: a key is read once, the first time its element is
+     seen, and never again — by the second reading the page may already be
+     showing German, and re-reading would teach German as the English. */
+  function harvestEnglish() {
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n");
+      if (k in EN) return;
+      EN[k] = el.hasAttribute("data-en") ? el.getAttribute("data-en") : el.textContent;
+    });
+    document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n-html");
+      if (k in EN) return;
+      EN[k] = el.hasAttribute("data-en-html") ? el.getAttribute("data-en-html") : el.innerHTML;
+    });
+    Object.keys(EN_FALLBACK).forEach(function (k) { EN[k] = EN_FALLBACK[k]; });
+  }
+
+  function t(key) {
+    if (lang === "de" && DE[key] != null) return DE[key];
+    return EN && EN[key] != null ? EN[key] : "";
+  }
+
+  function setLang(next, remember) {
+    lang = next === "de" ? "de" : "en";
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      var v = t(el.getAttribute("data-i18n"));
+      if (v) el.textContent = v;
+    });
+    document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+      var v = t(el.getAttribute("data-i18n-html"));
+      if (v) el.innerHTML = v;
+    });
+
+    var en = document.getElementById("lang-en"), de = document.getElementById("lang-de");
+    if (en) en.setAttribute("aria-pressed", String(lang === "en"));
+    if (de) de.setAttribute("aria-pressed", String(lang === "de"));
+
+    relabelGallery();
+    syncWidgetLanguage();
+    if (lightbox.isOpen()) lightbox.refresh();
+
+    if (remember) { try { localStorage.setItem("befree-lang", lang); } catch (e) {} }
+  }
+
+  /* ═══ 2. GALLERY DATA ═════════════════════════════════════════════ */
+
+  var PHOTOS = [
+    { f: "gallery-01-room",     en: "A room with a mural",   de: "Zimmer mit Mural",        tEn: "Sleep",   tDe: "Schlafen" },
+    { f: "gallery-02-capsule",  en: "Capsule beds",          de: "Kapsel-Betten",           tEn: "Capsule", tDe: "Kapsel" },
+    { f: "gallery-03-foosball", en: "Foosball in the lounge",de: "Wuzzeln im Aufenthalt",   tEn: "Play",    tDe: "Spielen" },
+    { f: "gallery-04-arrival",  en: "Finding your room",     de: "Das Zimmer finden",       tEn: "Check-in",tDe: "Check-in" },
+    { f: "gallery-05-hangout",  en: "An evening in",         de: "Abend im Zimmer",         tEn: "Hang out",tDe: "Chillen" },
+    { f: "gallery-06-bathroom", en: "Shared bathrooms",      de: "Gemeinschaftsbäder",      tEn: "Wash",    tDe: "Waschen" },
+    { f: "gallery-07-lounge",   en: "The common room",       de: "Der Aufenthaltsraum",     tEn: "Lounge",  tDe: "Lounge" },
+    { f: "gallery-08-morning",  en: "Morning at the mirrors",de: "Morgens am Spiegel",      tEn: "Morning", tDe: "Morgens" },
+    { f: "gallery-09-corridor", en: "The corridor",          de: "Der Gang",                tEn: "Inside",  tDe: "Drinnen" },
+    { f: "gallery-10-mood",     en: "A good day",            de: "Ein guter Tag",           tEn: "Mood",    tDe: "Stimmung" },
+    { f: "gallery-11-mirror",   en: "Getting ready",         de: "Fertigmachen",            tEn: "Morning", tDe: "Morgens" },
+    { f: "gallery-12-evening",  en: "Snacks and stories",    de: "Snacks und Geschichten",  tEn: "Evening", tDe: "Abends" }
+  ];
+
+  function label(p) { return lang === "de" ? p.de : p.en; }
+  function tagOf(p) { return lang === "de" ? p.tDe : p.tEn; }
+  function srcOf(p) { return window.BEFREE_IMG_BASE + p.f + ".jpg"; }
+
+  /* Speed per card. The two columns pull apart as you scroll, which is
+     where the depth comes from — the photograph is never rotated, never
+     masked, never cropped by more than a few percent. */
+  var SPEED = [1, 1.75, 1.5, 1, 1.85, 1.25, 1.1, 1.7, 1.55, 1, 1.8, 1.35];
+
+  function buildGallery() {
+    var grid = document.getElementById("galgrid");
+    if (!grid) return;
+    PHOTOS.forEach(function (p, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "px__item";
+      b.dataset.i = i;
+      b.dataset.sp = String(SPEED[i] || 1);
+
+      var fr = document.createElement("span");
+      fr.className = "px__frame";
+
+      var im = document.createElement("img");
+      im.src = srcOf(p); im.alt = label(p);
+      im.loading = i < 2 ? "eager" : "lazy";
+      im.decoding = "async";
+      im.width = 1400; im.height = 1000;
+
+      var tg = document.createElement("span");
+      tg.className = "px__tag"; tg.textContent = tagOf(p);
+      fr.append(im, tg);
+
+      var cap = document.createElement("span");
+      cap.className = "px__cap";
+      var n = document.createElement("i");
+      n.textContent = (i < 9 ? "0" : "") + (i + 1);
+      var tx = document.createElement("b");
+      tx.textContent = label(p);
+      cap.append(n, tx);
+
+      b.append(fr, cap);
+      b.addEventListener("click", function () { lightbox.open(i); });
+      grid.appendChild(b);
+    });
+    relabelGallery();
+  }
+
+  function relabelGallery() {
+    var items = document.querySelectorAll(".px__item");
+    items.forEach(function (b) {
+      var p = PHOTOS[+b.dataset.i];
+      if (!p) return;
+      b.querySelector("img").alt = label(p);
+      b.querySelector(".px__tag").textContent = tagOf(p);
+      b.querySelector(".px__cap b").textContent = label(p);
+      b.setAttribute("aria-label", label(p) + " — " + t("gal.enlarge"));
+    });
+  }
+
+  /* Scroll parallax. Only cards the viewport can actually see are moved,
+     and everything runs inside one rAF, so the page stays cheap. Under
+     prefers-reduced-motion nothing moves at all — the gallery is then a
+     plain grid of big photographs, which loses no information. */
+  function parallaxGallery() {
+    var items = [].slice.call(document.querySelectorAll(".px__item"));
+    if (!items.length || RM) return;
+
+    var live = [], queued = false;
+
+    function place() {
+      var vh = window.innerHeight || 1;
+      var k = window.innerWidth < 860 ? 0.55 : 1;   /* gentler on a phone */
+      for (var i = 0; i < live.length; i++) {
+        var el = live[i];
+        var r = el.getBoundingClientRect();
+        var p = ((r.top + r.height / 2) - vh / 2) / vh;    /* -1 above … +1 below */
+        if (p > 1.5) p = 1.5; else if (p < -1.5) p = -1.5;
+        var sp = parseFloat(el.dataset.sp) || 1;
+        el.style.transform = "translate3d(0," + (p * -30 * sp * k).toFixed(2) + "px,0)";
+        var im = el.querySelector("img");
+        im.style.transform = "translate3d(0," + (p * 3.4 * k).toFixed(2) + "%,0)";
+      }
+    }
+
+    function onScroll() {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; place(); });
+    }
+
+    if (window.IntersectionObserver) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          var at = live.indexOf(e.target);
+          if (e.isIntersecting && at < 0) live.push(e.target);
+          else if (!e.isIntersecting && at >= 0) live.splice(at, 1);
+        });
+        place();
+      }, { rootMargin: "140px 0px" });
+      items.forEach(function (el) { io.observe(el); });
+    } else {
+      live = items;
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    place();
+  }
+
+  /* ═══ 3. LIGHTBOX ═════════════════════════════════════════════════ */
+
+  var lightbox = (function () {
+    var box, img, cap, at = 0, opener = null;
+
+    function show(i) {
+      at = (i + PHOTOS.length) % PHOTOS.length;
+      var p = PHOTOS[at];
+      img.src = srcOf(p);
+      img.alt = label(p);
+      cap.textContent = label(p) + "  ·  " + (at + 1) + "/" + PHOTOS.length;
+    }
+    return {
+      init: function () {
+        box = document.getElementById("lb");
+        if (!box) return;
+        img = document.getElementById("lb-img");
+        cap = document.getElementById("lb-cap");
+
+        document.getElementById("lb-x").addEventListener("click", this.close);
+        document.getElementById("lb-prev").addEventListener("click", function () { show(at - 1); });
+        document.getElementById("lb-next").addEventListener("click", function () { show(at + 1); });
+        box.addEventListener("click", function (e) { if (e.target === box) lightbox.close(); });
+
+        window.addEventListener("keydown", function (e) {
+          if (!box.hasAttribute("open")) return;
+          if (e.key === "Escape") lightbox.close();
+          else if (e.key === "ArrowLeft") show(at - 1);
+          else if (e.key === "ArrowRight") show(at + 1);
+        });
+      },
+      open: function (i) {
+        opener = document.activeElement;
+        show(i);
+        box.setAttribute("open", "");
+        document.body.style.overflow = "hidden";
+        document.getElementById("lb-x").focus();
+      },
+      close: function () {
+        box.removeAttribute("open");
+        document.body.style.overflow = "";
+        if (opener && opener.focus) opener.focus();
+      },
+      isOpen: function () { return box && box.hasAttribute("open"); },
+      refresh: function () { show(at); }
+    };
+  })();
+
+  /* ═══ 4. HERO FLOWER FIELD — 2D, the same drawing as the logo ═════ */
+
+  var PAL = ["#FF3D9A", "#4FC3CE", "#E4B430", "#E8871F", "#B444E0", "#57D96B", "#E8404C"];
+  var RGB = PAL.map(function (h) {
+    return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  });
+  function mix(x) {
+    var n = RGB.length, s = ((x % n) + n) % n, i = Math.floor(s), f = s - i;
+    var a = RGB[i], b = RGB[(i + 1) % n];
+    return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * f) + "," +
+                    Math.round(a[1] + (b[1] - a[1]) * f) + "," +
+                    Math.round(a[2] + (b[2] - a[2]) * f) + ")";
+  }
+
+  function drawFlower(ctx, x, y, r, petals, rot, open, fill, core) {
+    ctx.save();
+    ctx.translate(x, y); ctx.rotate(rot);
+    ctx.lineJoin = "round"; ctx.lineCap = "round";
+    ctx.strokeStyle = "#0B0B0C"; ctx.lineWidth = Math.max(1.5, r * 0.13);
+
+    var pr = r * 0.62 * open, pw = r * 0.40 * (0.75 + open * 0.35);
+    for (var i = 0; i < petals; i++) {
+      ctx.save();
+      ctx.rotate((i / petals) * Math.PI * 2);
+      ctx.translate(0, -r * 0.52);
+      ctx.beginPath(); ctx.ellipse(0, 0, pw, pr, 0, 0, Math.PI * 2);
+      ctx.fillStyle = fill; ctx.fill(); ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(-pw * 0.30, -pr * 0.34, pw * 0.26, pr * 0.26, -0.5, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,255,255,.5)"; ctx.fill();
+      ctx.restore();
+    }
+    ctx.beginPath(); ctx.arc(0, 0, r * 0.30, 0, Math.PI * 2);
+    ctx.fillStyle = core; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(-r * 0.10, -r * 0.11, r * 0.09, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.fill();
+    ctx.restore();
+  }
+
+  function heroField() {
+    var cvs = document.getElementById("petals");
+    if (!cvs) return;
+    var ctx = cvs.getContext("2d");
+    if (!ctx) return;
+
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, buds = [], raf = 0, t0 = 0;
+
+    function seed() {
+      var n = window.innerWidth < 700 ? 11 : 20;
+      buds = [];
+      for (var i = 0; i < n; i++) {
+        buds.push({
+          x: Math.random(), y: Math.random(),
+          r: 16 + Math.random() * 46,
+          p: [5, 6, 7, 8][Math.floor(Math.random() * 4)],
+          rot: Math.random() * Math.PI * 2,
+          spin: (Math.random() - 0.5) * 0.32,
+          hue: Math.random() * RGB.length,
+          hs: 0.12 + Math.random() * 0.28,
+          ph: Math.random() * Math.PI * 2,
+          drift: 0.10 + Math.random() * 0.24
+        });
+      }
+    }
+    function size() {
+      var b = cvs.getBoundingClientRect();
+      W = Math.max(1, b.width); H = Math.max(1, b.height);
+      cvs.width = Math.round(W * dpr); cvs.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function paint(t) {
+      ctx.clearRect(0, 0, W, H);
+      buds.forEach(function (f) {
+        var px = f.x * W + Math.sin(t * f.drift + f.ph) * W * 0.022;
+        var py = f.y * H + Math.cos(t * f.drift * 0.8 + f.ph) * H * 0.028;
+        var br = 1 + Math.sin(t * 0.85 + f.ph) * 0.09;
+        var hue = f.hue + t * f.hs;
+        drawFlower(ctx, px, py, f.r * br, f.p, f.rot + t * f.spin, 0.9,
+                   mix(hue), mix(hue + 2.2));
+      });
+    }
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      paint((ts - t0) / 1000);
+      raf = requestAnimationFrame(frame);
+    }
+    function start() { if (!raf && !RM) raf = requestAnimationFrame(frame); }
+    function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; t0 = 0; } }
+
+    seed(); size();
+    if (RM) paint(0); else start();
+
+    window.addEventListener("resize", function () {
+      size(); seed(); if (RM) paint(0);
+    }, { passive: true });
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stop(); else start();
+    });
+    if ("IntersectionObserver" in window && !RM) {
+      new IntersectionObserver(function (es) {
+        es[0].isIntersecting ? start() : stop();
+      }, { threshold: 0 }).observe(cvs);
+    }
+  }
+
+  /* ═══ 5. SMALL PARTS ══════════════════════════════════════════════ */
+
+  function ticker() {
+    var row = document.getElementById("ticker");
+    if (!row) return;
+    var words = ["TOP DESTINATION", "VIENNA", "BEINGASSE 13", "BE FREE HOSTEL",
+                 "NO RECEPTION", "NO CURFEW"];
+    var html = "";
+    for (var k = 0; k < 2; k++)
+      for (var i = 0; i < words.length; i++) html += "<span>" + words[i] + "</span>";
+    row.innerHTML = html;
+  }
+
+  function reveals() {
+    var els = [].slice.call(document.querySelectorAll("[data-reveal]"));
+    if (!els.length) return;
+    if (RM || !("IntersectionObserver" in window)) {
+      els.forEach(function (e) { e.classList.add("in"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var sibs = [].slice.call(e.target.parentNode.children);
+        setTimeout(function () { e.target.classList.add("in"); },
+                   Math.min(sibs.indexOf(e.target), 5) * 110);
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.2, rootMargin: "0px 0px -8% 0px" });
+    els.forEach(function (e) { io.observe(e); });
+  }
+
+  /* Booking. The form shows immediately — it is useful on its own and
+     leaves no empty frame — and the UP Hotel widget takes over only once
+     the browser confirms <ibe-up> is really defined. That covers a missing
+     key, a blocked script, an ad-blocker and a dead network with one path
+     instead of four guesses. */
+  /* ─────────────────────────────────────────────────────────────────
+     The booking engine, three times on one page.
+
+     UP Hotel's embed initialises the element it finds when it loads, and
+     a page with three <ibe-up> tags is not what such a script expects —
+     in practice only the first one fills. So a spot that stays empty is
+     given its own DOCUMENT: an iframe carrying UP Hotel's own snippet,
+     nothing else, which makes it the first and only element in there.
+     The frame is written with srcdoc, so it stays on this domain — the
+     engine sees the same origin as the page, and its height can be read
+     back and followed. `<base target="_top">` keeps the booking flow in
+     the real window instead of trapping it in the frame.
+
+     Order per spot: the plain element, then its own frame, and only if
+     even that draws nothing, the line with the phone number.
+     ───────────────────────────────────────────────────────────────── */
+  function bookingWidget() {
+    var hosts = [].slice.call(document.querySelectorAll("[data-ibe-host]"));
+    if (!hosts.length) return;
+
+    function show(host, what) {         /* "widget" | "down" */
+      var w = host.querySelector(".ibe"), d = host.querySelector("[data-ibe-down]");
+      if (w) w.hidden = what !== "widget";
+      if (d) d.hidden = what !== "down";
+      host.classList.toggle("is-engine", what === "widget");
+    }
+
+    var first = document.querySelector("[data-ibe-host] ibe-up");
+    var key = first && first.getAttribute("ibe-key");
+    if (!key || !key.trim()) {
+      hosts.forEach(function (h) { show(h, "down"); });
+      return;
+    }
+    key = key.trim();
+
+    /* the engine reads `language` when it initialises, so it is set before
+       the engine ever loads — a German visitor gets a German mask */
+    [].forEach.call(document.querySelectorAll("[data-ibe-host] ibe-up"), function (el) {
+      el.setAttribute("language", lang);
+    });
+
+    hosts.forEach(function (h) { show(h, "widget"); });
+
+    function drawn(el) {
+      if (!el) return false;
+      if (el.shadowRoot) return true;
+      if (el.children.length) return true;
+      if (el.textContent.trim()) return true;
+      return el.getBoundingClientRect().height > 24;
+    }
+
+    /* one document per frame: UP Hotel's snippet and nothing else.
+       "</scr" + "ipt>" because this file is inlined into the page. */
+    function frameDoc(language) {
+      return '<!doctype html><html lang="' + language + '"><head>' +
+        '<meta charset="utf-8">' +
+        '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+        '<base target="_top">' +
+        '<link href="data:text/css," rel="stylesheet">' +
+        '<style>html,body{margin:0;padding:0;background:transparent;' +
+        'font-family:Karla,system-ui,-apple-system,sans-serif}</style></head><body>' +
+        '<ibe-up ibe-key="' + key + '" language="' + language + '"></ibe-up>' +
+        '<scr' + 'ipt src="data:text/javascript,"></scr' + 'ipt>' +
+        '</body></html>';
+    }
+
+    function follow(frame) {            /* let the frame set its own height */
+      var stop = null;
+      function fit() {
+        try {
+          var d = frame.contentDocument;
+          if (!d || !d.body) return;
+          var h = Math.max(d.body.scrollHeight, d.documentElement.scrollHeight);
+          if (h > 80) frame.style.height = (h + 8) + "px";
+        } catch (e) { if (stop) clearInterval(stop); }
+      }
+      stop = setInterval(fit, 400);
+      setTimeout(function () { clearInterval(stop); }, 40000);
+      frame.addEventListener("load", fit);
+    }
+
+    function frameIn(host) {
+      var box = host.querySelector(".ibe");
+      if (!box) return null;
+      var frame = document.createElement("iframe");
+      frame.className = "ibe__frame";
+      frame.title = t("bk.frame") || "Booking";
+      frame.setAttribute("scrolling", "no");
+      frame.srcdoc = frameDoc(lang);
+      box.innerHTML = "";
+      box.appendChild(frame);
+      follow(frame);
+      return frame;
+    }
+
+    function frameDrew(frame) {
+      try {
+        var d = frame.contentDocument;
+        if (!d || !d.body) return false;
+        var el = d.querySelector("ibe-up");
+        return drawn(el) || d.body.scrollHeight > 120;
+      } catch (e) { return true; }   /* unreadable means it is not ours: leave it */
+    }
+
+    hosts.forEach(function (host) {
+      var settled = false, frame = null;
+
+      function keep() { settled = true; }
+
+      function step1() {               /* did the plain element fill? */
+        if (settled) return;
+        if (drawn(host.querySelector("ibe-up"))) { keep(); return; }
+        frame = frameIn(host);         /* no: give this spot its own document */
+        setTimeout(step2, 5000);
+      }
+
+      function step2() {               /* did the frame fill? */
+        if (settled || !frame) return;
+        if (frameDrew(frame)) { keep(); return; }
+        settled = true;
+        show(host, "down");            /* the engine is unreachable, not busy */
+      }
+
+      if (window.MutationObserver) {
+        var box = host.querySelector(".ibe");
+        if (box) {
+          var mo = new MutationObserver(function () {
+            if (drawn(box.querySelector("ibe-up"))) { keep(); mo.disconnect(); }
+          });
+          mo.observe(box, { childList: true, subtree: true });
+        }
+      }
+
+      setTimeout(step1, 3500);
+      host.addEventListener("befree:relang", function () {
+        if (frame) { frame.srcdoc = frameDoc(lang); follow(frame); }
+      });
+    });
+  }
+
+
+
+
+  /* The IBE reads its language attribute once, when it initialises, so a
+     language switch needs a fresh element rather than a changed attribute. */
+  function syncWidgetLanguage() {
+    [].forEach.call(document.querySelectorAll("[data-ibe-host]"), function (host) {
+      var box = host.querySelector(".ibe");
+      if (!box || box.hidden) return;
+
+      /* a spot running in its own frame reloads that frame */
+      if (box.querySelector("iframe")) {
+        host.dispatchEvent(new CustomEvent("befree:relang"));
+        return;
+      }
+      /* a plain element can only be re-read by an engine that really is a
+         custom element; one that scanned the page once would be handed an
+         empty replacement, so that box is left as it stands */
+      if (!(window.customElements && customElements.get("ibe-up"))) return;
+      var el = box.querySelector("ibe-up");
+      if (!el || el.getAttribute("language") === lang) return;
+      var fresh = document.createElement("ibe-up");
+      fresh.setAttribute("ibe-key", el.getAttribute("ibe-key"));
+      fresh.setAttribute("language", lang);
+      el.parentNode.replaceChild(fresh, el);
+    });
+  }
+
+  /* Dates cannot be in the past, check-out cannot precede check-in, and a
+     submitted form becomes a mail we can answer by hand. */
+
+
+  /* The nav's booking pill is hidden on narrow screens, so a floating one
+     takes over — but only between the hero and the booking section, so it
+     never covers the thing it points at. One shared state, because two
+     observers toggling the same class fight each other. */
+  function bookingFab() {
+    var fab  = document.getElementById("bookfab"),
+        hero = document.getElementById("top"),
+        book = document.getElementById("bookbar");   /* where the mask is */
+    if (!fab || !hero || !("IntersectionObserver" in window)) return;
+
+    var heroVisible = true, bookVisible = false;
+    function update() { fab.classList.toggle("in", !heroVisible && !bookVisible); }
+
+    function watch(el, set) {
+      new IntersectionObserver(function (es) {
+        set(es[0].isIntersecting);
+        update();
+      }, { threshold: 0 }).observe(el);
+    }
+    watch(hero, function (v) { heroVisible = v; });
+    if (book) watch(book, function (v) { bookVisible = v; });
+  }
+
+  function menu() {
+    var b = document.getElementById("burger"), l = document.getElementById("navlinks");
+    if (!b || !l) return;
+    /* the separate header.html brings its own handler — binding a second one
+       would toggle the menu twice and leave it shut */
+    if (b.dataset.bound) return;
+    b.dataset.bound = "1";
+    b.addEventListener("click", function () {
+      var open = l.classList.toggle("open");
+      b.setAttribute("aria-expanded", String(open));
+    });
+    l.addEventListener("click", function (e) {
+      if (e.target.tagName === "A") {
+        l.classList.remove("open");
+        b.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  /* Impressum, Datenschutz and AGB live wherever WordPress put them. The
+     addresses are declared once at the top of the file; here they land on
+     every link that carries the matching data-legal. Without the switch the
+     built-in ones stay, so the plain static site keeps working. */
+  function legalLinks() {
+    var L = window.BEFREE_LEGAL;
+    if (!L) return;
+    [].forEach.call(document.querySelectorAll("a[data-legal]"), function (a) {
+      var to = L[a.getAttribute("data-legal")];
+      if (to) a.setAttribute("href", to);
+    });
+  }
+
+  /* ═══ 6. GO ═══════════════════════════════════════════════════════ */
+
+  harvestEnglish();
+  legalLinks();
+  buildGallery();
+  parallaxGallery();
+  lightbox.init();
+  ticker();
+  heroField();
+  reveals();
+  menu();
+
+  var y = document.getElementById("year");
+  if (y) y.textContent = String(new Date().getFullYear());
+
+  /* the switch lives in the navigation, which a themed page may not have */
+  var bEn = document.getElementById("lang-en"), bDe = document.getElementById("lang-de");
+  if (bEn) bEn.addEventListener("click", function () { setLang("en", true); });
+  if (bDe) bDe.addEventListener("click", function () { setLang("de", true); });
+
+  /* ?lang=de wins, then a remembered choice, then the browser's own */
+  var q = new URLSearchParams(location.search).get("lang");
+  var saved = null;
+  try { saved = localStorage.getItem("befree-lang"); } catch (e) {}
+  var auto = (navigator.language || "en").toLowerCase().indexOf("de") === 0 ? "de" : "en";
+  setLang(q || saved || auto, false);
+
+  /* In a theme this script sits in the CONTENT, and the footer is parsed
+     after it — its text simply did not exist a moment ago. Once the document
+     is complete, read it again and apply the language to what has arrived
+     since. (The footer keeps the English it overwrote in data-en, so the
+     second reading learns English, not German.) */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      harvestEnglish();
+      setLang(lang, false);
+      legalLinks();
+    });
+  }
+
+  bookingWidget();
+  bookingFab();
+
+  window.BeFree = { reducedMotion: RM, photos: PHOTOS, palette: PAL };
+})();
+
+</script>
+
+<!-- Booking engine (UP Hotel IBE) — their snippet, last before </body> -->
+<script type="text/javascript" src="data:text/javascript,"></script>
+<link href="data:text/css," rel="stylesheet" />
+</div>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Hostel",
+  "name":"Be Free Hostel Vienna",
+  "url":"https://befree-hostel.com/",
+  "image":"https://befree-hostel.com/assets/img/gallery-01-room.jpg",
+  "email":"befree-hostel@dostepinn.at",
+  "telephone":"+43 699 19232769",
+  "address":{
+    "@type":"PostalAddress",
+    "streetAddress":"Beingasse 13",
+    "postalCode":"1150",
+    "addressLocality":"Wien",
+    "addressRegion":"Wien",
+    "addressCountry":"AT"
+  },
+  "checkinTime":"15:00",
+  "amenityFeature":[
+    {"@type":"LocationFeatureSpecification","name":"Self check-in","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Free WiFi","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Shared kitchen","value":true},
+    {"@type":"LocationFeatureSpecification","name":"Common room","value":true}
+  ]
+}
+</script>
+</body>
+</html>
