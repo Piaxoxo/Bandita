@@ -62,7 +62,12 @@ export default function SplitText({
               {ch}
             </span>
           ))}
-          {wi < arr.length - 1 && <span className="split-char inline-block w-[0.26em]" />}
+          {/* A REAL space, not an empty box of the right width. The old spacer
+              had no text in it, so a crawler read this heading as one run-on
+              token — "Alles,wasdeineMarkebraucht." */}
+          {wi < arr.length - 1 && (
+            <span className="split-char inline-block">{" "}</span>
+          )}
         </span>
       ))}
     </Tag>
