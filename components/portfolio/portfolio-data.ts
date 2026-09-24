@@ -15,14 +15,28 @@ export type Station = {
   orientation: "landscape" | "portrait" | "square";
   color: string; // mood accent (rim, glow, fog tint)
   /*
-    "web" projects carry a real, clickable page. `src` is a self-hosted copy
-    under /portfolio/sites/<id>/ — hosting it ourselves means no foreign server
-    can refuse to be framed, and the copy is noindexed so it never competes
-    with the client's live site in search.
+    "web" projects carry a real, clickable page.
+
+    `chrome` decides what the frame claims the work IS, and that matters:
+    - "browser" for an actual website we built — dots and an address bar.
+    - "document" for a deliverable that merely happens to be an HTML page, like
+      a brand kit. Dressing one up as a browser window would claim we shipped a
+      site we never built.
+
+    A `src` under /portfolio/sites/<id>/ is a self-hosted copy: no foreign
+    server can refuse to be framed, and the copy is noindexed so it never
+    competes with the client's live site in search.
+
+    `poster` is optional. Without one the stage is a neutral surface in the
+    project's accent colour — better than a photograph that implies it is a
+    screenshot of the thing behind it.
   */
   site?: {
     src: string;
-    domain: string; // what the fake address bar shows
+    chrome?: "browser" | "document";
+    domain?: string; // browser chrome: what the address bar shows
+    label?: Bi; // document chrome: what the caption says
+    poster?: string;
     live?: string; // the real site, if it is online
   };
 };
@@ -45,9 +59,37 @@ export const STATIONS: Station[] = [
       "/portfolio/antislop/05.jpg",
       "/portfolio/antislop/06.jpg",
     ],
-    site: { src: "/portfolio/sites/antislop/index.html", domain: "antislop.ai" },
+    site: {
+      // A brand kit, not a website — no browser costume, no address bar.
+      src: "/portfolio/sites/antislop/index.html",
+      chrome: "document",
+      label: { en: "Brand kit · 9 chapters", de: "Brand Kit · 9 Kapitel" },
+      poster: "/portfolio/antislop/01.jpg",
+    },
     orientation: "landscape",
     color: "#00FF00",
+  },
+  {
+    id: "befree",
+    kind: "web",
+    name: { en: "Be Free", de: "Be Free" },
+    tag: { en: "Hostel Website · Vienna", de: "Hostel-Website · Wien" },
+    note: {
+      en: "Flower power meets street art — a hostel that looks like the trip, not the paperwork.",
+      de: "Flower Power trifft Street Art — ein Hostel, das nach Reise aussieht, nicht nach Formular.",
+    },
+    images: [
+      "/portfolio/befree/01.jpg",
+      "/portfolio/befree/02.jpg",
+      "/portfolio/befree/03.jpg",
+      "/portfolio/befree/04.jpg",
+      "/portfolio/befree/05.jpg",
+      "/portfolio/befree/06.jpg",
+    ],
+    // Domain taken from the page's own structured data, not guessed.
+    site: { src: "/portfolio/sites/befree/index.html", domain: "befree-hostel.com" },
+    orientation: "landscape",
+    color: "#FF3D9A",
   },
   {
     id: "plein",
@@ -103,6 +145,9 @@ export const STATIONS: Station[] = [
       src: "https://inn-sider.vercel.app/",
       domain: "innsider-restaurant.at",
       live: "https://inn-sider.vercel.app/",
+      // No poster: all three InnSider stills are plated-food close-ups, and one
+      // of those sitting behind the frame would read as a screenshot of the
+      // website. The neutral surface is the honest stand-in.
     },
     orientation: "landscape",
     color: "#FF7A4D",
