@@ -79,6 +79,16 @@ export default function ScrollFlight() {
       const mid = vh / 2;
       const guard = vh * 1.5;
 
+      /*
+        The drift is tuned for a wide screen. On a phone the same ±78px is a
+        far larger share of what you can see, so blocks slide away from each
+        other and open gaps that read as the page being broken rather than as
+        depth. Same effect, gentler amplitude.
+      */
+      const narrow = (window.innerWidth || 1) < 700;
+      const driftY = narrow ? 30 : 78;
+      const tilt = narrow ? 5 : 10;
+
       // ── read pass ──────────────────────────────────────────────────────
       const flyR: (number | null)[] = new Array(flyEls.length);
       for (let i = 0; i < flyEls.length; i++) {
@@ -104,8 +114,8 @@ export default function ScrollFlight() {
         const el = flyEls[i];
         let r = (centre - mid) / vh; // ~ -1 (above) .. +1 (below)
         r = Math.max(-1.2, Math.min(1.2, r));
-        const rot = (-r * 10).toFixed(2); // tilt toward the camera
-        const ty = (-r * 78).toFixed(1); // strong counter-drift
+        const rot = (-r * tilt).toFixed(2); // tilt toward the camera
+        const ty = (-r * driftY).toFixed(1); // counter-drift
         const sc = (1 - Math.abs(r) * 0.05).toFixed(4);
         const op = Math.max(0, 1 - Math.abs(r) * 0.3).toFixed(3);
         const t = `perspective(1400px) translateY(${ty}px) rotateX(${rot}deg) scale(${sc})`;
