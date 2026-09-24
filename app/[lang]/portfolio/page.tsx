@@ -31,9 +31,9 @@ export async function generateMetadata({
       description,
       url: `${SITE_URL}/${lang}/portfolio`,
       locale: lang === "de" ? "de_AT" : "en_US",
-      images: [{ url: "/og/bandita-og.svg", width: 1200, height: 630, alt: dict.meta.ogAlt }],
+      images: [{ url: "/og/bandita-og.png", width: 1200, height: 630, alt: dict.meta.ogAlt }],
     },
-    twitter: { card: "summary_large_image", title, description, images: ["/og/bandita-og.svg"] },
+    twitter: { card: "summary_large_image", title, description, images: ["/og/bandita-og.png"] },
   };
 }
 

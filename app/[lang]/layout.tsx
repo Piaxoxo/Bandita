@@ -70,7 +70,7 @@ export async function generateMetadata({
       locale: lang === "de" ? "de_AT" : "en_US",
       images: [
         {
-          url: "/og/bandita-og.svg",
+          url: "/og/bandita-og.png",
           width: 1200,
           height: 630,
           alt: dict.meta.ogAlt,
@@ -81,7 +81,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: dict.meta.title,
       description: dict.meta.description,
-      images: ["/og/bandita-og.svg"],
+      images: ["/og/bandita-og.png"],
     },
     robots: { index: true, follow: true },
   };
@@ -109,8 +109,8 @@ export default function RootLayout({
     legalName: "Bandita — Pia-Alice Stelzl",
     alternateName: ["Bandita Agency", "Bandita Marketing Agency", "Bandita Creative Studio"],
     url: `${SITE_URL}/${lang}`,
-    logo: `${SITE_URL}/og/bandita-og.svg`,
-    image: `${SITE_URL}/og/bandita-og.svg`,
+    logo: `${SITE_URL}/og/bandita-og.png`,
+    image: `${SITE_URL}/og/bandita-og.png`,
     slogan: "Verrückt. Hip. Aus Wien.",
     description: dict.meta.description,
     email: "office@bandita.agency",

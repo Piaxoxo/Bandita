@@ -249,6 +249,8 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
             <span className="ah-line block overflow-hidden [perspective:600px]">
               <span className="block origin-bottom text-[10.5vw] md:text-[8vw] lg:text-[7vw]">{a.hero.line1}</span>
             </span>
+            {/* separates the two lines for text extraction; renders as nothing
+                between block elements — see Hero.tsx */}{" "}
             <span className="ah-line block overflow-hidden [perspective:600px]">
               <span className="block origin-bottom text-[10.5vw] italic text-pink md:text-[8vw] lg:text-[7vw]">
                 {a.hero.line2}

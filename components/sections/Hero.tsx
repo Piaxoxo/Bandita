@@ -21,7 +21,12 @@ function Chars({ text }: { text: string }) {
               {ch}
             </span>
           ))}
-          {wi < arr.length - 1 && <span className="hero-char inline-block w-[0.28em]" />}
+          {/* A REAL space, not an empty box of the right width. The old spacer
+              had no text in it, so the most important heading on the site read
+              as "Bravwargestern." to a crawler. */}
+          {wi < arr.length - 1 && (
+            <span className="hero-char inline-block">{" "}</span>
+          )}
         </span>
       ))}
     </>
@@ -120,6 +125,9 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
               <Chars text={dict.hero.line1} />
             </span>
           </span>
+          {/* Whitespace between two block elements does not render, but it
+              does separate the two lines for anything reading the heading as
+              text — otherwise this H1 is "Brav wargestern." */}{" "}
           <span className="hero-line block overflow-hidden">
             <span className="block text-[16vw] italic text-pink md:text-[12vw] lg:text-[10.5vw]">
               <Chars text={dict.hero.line2} />

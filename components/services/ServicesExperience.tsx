@@ -172,6 +172,8 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
             <Reveal><p className="mb-6 font-sans text-[11px] uppercase tracking-[0.35em] text-pink">{HERO.eyebrow[lang]}</p></Reveal>
             <h1 className="font-display text-[12vw] font-medium leading-[0.9] tracking-[-0.02em] sm:text-6xl md:text-7xl lg:text-[5.4vw]">
               <SplitText as="span" text={HERO.line1[lang]} className="block" />
+              {/* separates the two lines for text extraction; between block
+                  elements it renders as nothing — see Hero.tsx */}{" "}
               <SplitText as="span" text={HERO.line2[lang]} className="block italic text-pink" />
             </h1>
             <Reveal><p className="mt-7 max-w-xl font-sans text-base leading-relaxed text-ink/70 md:text-lg">{HERO.sub[lang]}</p></Reveal>
