@@ -11,6 +11,7 @@ import MagneticButton from "@/components/MagneticButton";
 import LazyVideo from "@/components/LazyVideo";
 import SitePreview from "./SitePreview";
 import { useQuote } from "@/components/quote/QuoteProvider";
+import { unmaskLines } from "@/lib/unmask";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -43,7 +44,12 @@ export default function PortfolioProject({
 
   // scroll reveals + parallax + velocity skew + kinetic name + pointer tilt
   useEffect(() => {
-    if (reduced || !root.current) return;
+    if (reduced || !root.current) {
+      // No reveal runs, so the title mask never gets lifted by the timeline —
+      // and an unlifted mask clips descenders off names like "Philipp Plein".
+      if (reduced) unmaskLines(root.current, ".pf-title-mask");
+      return;
+    }
     const ctx = gsap.context(() => {
       // cinematic per-frame reveal — alternating side, clip-wipe, rotateY
       gsap.utils.toArray<HTMLElement>(".pf-media").forEach((el, i) => {
@@ -116,7 +122,18 @@ export default function PortfolioProject({
       gsap.fromTo(
         ".pf-title-line",
         { opacity: 0, yPercent: 120, rotateX: -50 },
-        { opacity: 1, yPercent: 0, rotateX: 0, duration: 1, ease: "expo.out", stagger: 0.12, delay: 0.1 },
+        {
+          opacity: 1,
+          yPercent: 0,
+          rotateX: 0,
+          duration: 1,
+          ease: "expo.out",
+          stagger: 0.12,
+          delay: 0.1,
+          // The h1's mask guards the rise; left on afterwards it slices the
+          // descenders off names like "Philipp Plein". See lib/unmask.
+          onComplete: () => unmaskLines(root.current, ".pf-title-mask"),
+        },
       );
     }, root);
     return () => ctx.revert();
@@ -194,7 +211,7 @@ export default function PortfolioProject({
           </span>
           <span className="h-px flex-1 bg-creme/15" />
         </div>
-        <h1 className="mt-6 overflow-hidden">
+        <h1 className="pf-title-mask mt-6 overflow-hidden">
           <span className="pf-title-line block font-display text-5xl font-medium leading-[0.98] tracking-[-0.02em] sm:text-7xl md:text-8xl">
             {st.name[lang]}
           </span>
