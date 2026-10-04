@@ -21,8 +21,14 @@ export type Chapter = {
 
 export const HERO = {
   eyebrow: { en: "One team · Every discipline · Vienna, worldwide", de: "Ein Team · Alle Disziplinen · Wien, weltweit" } as Bi,
-  line1: { en: "Everything your brand", de: "Alles, was deine Marke" } as Bi,
-  line2: { en: "needs. Under one roof.", de: "braucht. Aus einer Hand." } as Bi,
+  /*
+    The split between these two lines is also the split between black roman and
+    pink italic — so it has to fall on the sentence boundary. Breaking it at
+    "Marke | braucht." put the accent colour mid-sentence and left "Marke"
+    dangling alone on its own line.
+  */
+  line1: { en: "Everything your brand needs.", de: "Alles, was deine Marke braucht." } as Bi,
+  line2: { en: "Under one roof.", de: "Aus einer Hand." } as Bi,
   sub: {
     en: "Strategy that sells. Creative you don't scroll past. From brand and film to AI-generated campaigns — one team, from the first idea to the last frame.",
     de: "Strategie, die verkauft. Kreation, an der man nicht vorbeiscrollt. Von Brand und Film bis zu KI-generierten Kampagnen — ein Team, von der ersten Idee bis zum letzten Frame.",

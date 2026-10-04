@@ -30,7 +30,10 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
         </Reveal>
         <Reveal as="h2" data-hl className="max-w-4xl font-display text-4xl font-medium leading-[1.05] md:text-6xl lg:text-7xl">
           {dict.capabilities.heading}{" "}
-          <span className="italic text-pink">
+          {/* The accent is a whole sentence and must wrap as one. Left to flow
+              freely it orphaned "Aus" at the end of a line on phones, with
+              "einer Hand." stranded below it. */}
+          <span className="inline-block whitespace-nowrap italic text-pink">
             {dict.capabilities.headingAccent}
           </span>
         </Reveal>
