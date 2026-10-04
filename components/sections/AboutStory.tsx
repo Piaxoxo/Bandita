@@ -8,6 +8,7 @@ import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { aboutScene } from "@/lib/about-scene";
+import { unmaskLines } from "@/lib/unmask";
 import Reveal from "@/components/anim/Reveal";
 import MagneticButton from "@/components/MagneticButton";
 import AboutSceneLayer from "@/components/webgl/AboutSceneLayer";
@@ -90,6 +91,7 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       if (r) {
         gsap.set([eyebrow, lines, cue], { opacity: 1, y: 0, yPercent: 0, rotateX: 0 });
         revealed = true;
+        unmaskLines(root.current, ".ah-line");
         return;
       }
       gsap.set(eyebrow, { opacity: 0, y: 18 });
@@ -101,7 +103,12 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
       if (revealed) return;
       revealed = true;
       gsap
-        .timeline({ defaults: { ease: "expo.out" } })
+        .timeline({
+          defaults: { ease: "expo.out" },
+          // same reasoning as the hero: the mask only guards the travel, and
+          // left in place it clips descenders off the resting headline
+          onComplete: () => unmaskLines(root.current, ".ah-line"),
+        })
         .to(eyebrow, { opacity: 1, y: 0, duration: 0.8 })
         .to(lines, { opacity: 1, yPercent: 0, rotateX: 0, duration: 1.2, stagger: 0.16 }, "-=0.4")
         .to(cue, { opacity: 1, duration: 0.8 }, "-=0.5");

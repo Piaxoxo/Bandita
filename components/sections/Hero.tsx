@@ -9,6 +9,7 @@ import { useSite } from "@/lib/site-context";
 import { scrollToId } from "@/lib/scroll";
 import MagneticButton from "@/components/MagneticButton";
 import { skipHeavyMedia } from "@/lib/defer";
+import { unmaskLines } from "@/lib/unmask";
 
 /* split a line into per-letter spans so each character can rise on its own */
 function Chars({ text }: { text: string }) {
@@ -66,15 +67,29 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
     if (reducedMotion) {
       gsap.set(el.querySelectorAll(".hero-anim"), { opacity: 1, y: 0 });
       gsap.set(el.querySelectorAll(".hero-char"), { yPercent: 0 });
+      unmaskLines(el, ".hero-line");
       return;
     }
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+      const tl = gsap.timeline({
+        defaults: { ease: "expo.out" },
+        // The line mask has done its job once every letter has landed; keeping
+        // it would clip the descender of "gestern." for good. See lib/unmask.
+        onComplete: () => unmaskLines(el, ".hero-line"),
+      });
       tl.from(".hero-eyebrow", { opacity: 0, y: 20, duration: 0.8 })
         .from(
           ".hero-char",
-          { yPercent: 115, duration: 1.0, stagger: 0.035 },
+          {
+            yPercent: 115,
+            duration: 1.0,
+            stagger: 0.035,
+            // The moment the last letter lands — not at the end of the whole
+            // sequence — so the descender arrives while the eye is still on
+            // the motion rather than popping in seconds later.
+            onComplete: () => unmaskLines(el, ".hero-line"),
+          },
           "-=0.4",
         )
         .from(".hero-sub", { opacity: 0, y: 24, duration: 0.9 }, "-=0.6")
