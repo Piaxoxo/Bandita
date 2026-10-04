@@ -108,11 +108,24 @@ export default function PortfolioWall({
           >
             {STATIONS.map((st, i) => {
               return (
-                <button
+                /*
+                  A real link that behaves like a button.
+
+                  The href is the project's own case-study page, so crawlers
+                  follow it and a middle-click or ⌘-click opens it properly.
+                  A plain left-click is intercepted and opens the cinematic
+                  inline chapter instead — the experience is unchanged, it just
+                  stopped being invisible to everything that reads hrefs.
+                */
+                <Link
                   key={st.id}
-                  type="button"
+                  href={`/${lang}/portfolio/${st.id}`}
                   data-cursor="link"
-                  onClick={() => onOpen(i)}
+                  onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                    e.preventDefault();
+                    onOpen(i);
+                  }}
                   onMouseEnter={() => setMood(st.color)}
                   onMouseLeave={() => setMood(null)}
                   className="portfolio-card group relative block overflow-hidden rounded-[1rem] text-left ring-1 ring-creme/10"
@@ -163,7 +176,7 @@ export default function PortfolioWall({
                       ↗
                     </span>
                   </div>
-                </button>
+                </Link>
               );
             })}
           </div>

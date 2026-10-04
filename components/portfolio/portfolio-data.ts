@@ -3,12 +3,31 @@
 
 export type Bi = { en: string; de: string };
 
+/*
+  The written half of a case study.
+
+  Every field here is OPTIONAL on purpose. Only the agency knows what a client
+  actually came with and what the work went on to achieve, and inventing either
+  would turn a portfolio into a liability. A section whose field is empty does
+  not render at all — so a case page is honest at every stage of being filled
+  in, and gains weight as real content arrives.
+*/
+export type Study = {
+  client?: string; // the client as they want to be named
+  year?: string;
+  brief?: Bi; // the situation they came with
+  approach?: Bi; // what we did about it
+  outcome?: Bi; // what it achieved — ONLY with real figures behind it
+  quote?: { text: Bi; author: string; role?: Bi };
+};
+
 export type Station = {
-  id: string;
+  id: string; // also the URL slug: /[lang]/portfolio/<id>
   kind: "photo" | "video" | "web";
   name: Bi; // big display name (shown on the wall + as the chapter title)
   tag: Bi; // small descriptor line
   note?: Bi; // optional cheeky one-liner shown in the chapter
+  study?: Study; // the case-study text, filled in over time
   images: string[]; // still frames (also posters for video)
   video?: string[]; // optional video sources (muted, plays in the chapter)
   cover?: string; // wall cover (defaults to images[0])
@@ -78,6 +97,15 @@ export const STATIONS: Station[] = [
       en: "Flower power meets street art — a hostel that looks like the trip, not the paperwork.",
       de: "Flower Power trifft Street Art — ein Hostel, das nach Reise aussieht, nicht nach Formular.",
     },
+    // Same rule as InnSider: `approach` describes the delivered site, nothing
+    // more. `brief` and `outcome` await real input.
+    study: {
+      client: "Be Free Hostel",
+      approach: {
+        de: "Eine Hostel-Seite, die nach Reise aussieht und nicht nach Meldezettel. Handgezeichnete Blüten über warmem Papier, Pink als Leitfarbe, eine Palette direkt aus dem Logo. Darunter die Dinge, die beim Buchen wirklich zählen: Self-Check-in ohne Rezeption, die Lage am Westbahnhof, Zimmer zum Durchklicken, Preise ohne Kleingedrucktes. Zweisprachig, Buchungsstrecke direkt eingebunden.",
+        en: "A hostel site that looks like the trip, not the registration form. Hand-drawn flowers over warm paper, pink in the lead, a palette lifted straight from the logo. Underneath it, the things that actually decide a booking: self check-in with no reception, the location by Westbahnhof, rooms you can click through, prices without small print. Bilingual, with the booking flow built in.",
+      },
+    },
     images: [
       "/portfolio/befree/01.jpg",
       "/portfolio/befree/02.jpg",
@@ -139,6 +167,19 @@ export const STATIONS: Station[] = [
     note: {
       en: "A restaurant you can walk into before you've booked a table.",
       de: "Ein Lokal, das man betreten kann, bevor man einen Tisch reserviert hat.",
+    },
+    /*
+      `approach` is written strictly from what the delivered site contains —
+      address, founder, cuisine, structure. `brief` and `outcome` stay empty
+      until the agency supplies them: nobody but them knows what the client
+      walked in with, and a made-up result would be worse than none.
+    */
+    study: {
+      client: "Inn|Sider",
+      approach: {
+        de: "Eine Restaurant-Seite, die den Raum verkauft und nicht die Speisekarte. Das von Alice Kern gestaltete Ambiente trägt die ganze Seite: großformatige Innenaufnahmen, ruhige Typografie, warme Dunkelheit. Dazu das, wonach Gäste wirklich suchen — Küche, Weine, Adresse in der Wurmbstraße, Anfahrt. Mehrsprachig angelegt.",
+        en: "A restaurant site that sells the room, not the menu. The interior Alice Kern designed carries the whole page: large-format shots, quiet typography, warm darkness. Plus what guests actually look for — the kitchen, the wines, the address on Wurmbstraße, how to get there. Built multilingual.",
+      },
     },
     images: ["/portfolio/innsider/01.jpg", "/portfolio/innsider/02.jpg", "/portfolio/innsider/03.jpg"],
     site: {
@@ -301,6 +342,41 @@ export function projectMedia(st: Station): Media[] {
 
 export const coverOf = (st: Station) => st.cover ?? st.images[0];
 export const mediaCount = (st: Station) => projectMedia(st).length;
+
+export const stationBySlug = (slug: string) => STATIONS.find((s) => s.id === slug);
+export const stationIndex = (slug: string) => STATIONS.findIndex((s) => s.id === slug);
+
+/*
+  What this project actually contains, counted from the material itself.
+
+  Deliberately derived rather than written: it is the one part of a case study
+  that can be stated without anyone telling us anything, and it stays true if
+  the media changes. Prose about strategy would be invention; "three stills and
+  a film" is a fact.
+*/
+export function deliverables(st: Station, lang: keyof Bi): string[] {
+  const out: string[] = [];
+  const photos = st.images.length;
+  const films = st.video?.length ?? 0;
+  const de = lang === "de";
+
+  if (st.site) {
+    out.push(
+      st.site.chrome === "document"
+        ? de ? "Brand Kit" : "Brand kit"
+        : de ? "Website" : "Website",
+    );
+  }
+  if (films) {
+    out.push(de ? (films === 1 ? "1 Film" : `${films} Filme`) : films === 1 ? "1 film" : `${films} films`);
+  }
+  // A video project's stills are its posters, not separate photography.
+  const stills = st.kind === "video" ? 0 : photos;
+  if (stills) {
+    out.push(de ? (stills === 1 ? "1 Motiv" : `${stills} Motive`) : stills === 1 ? "1 still" : `${stills} stills`);
+  }
+  return out;
+}
 
 // Provocative advertising quotes — Bandita voice, used as ambient interludes.
 export const QUOTES: Bi[] = [

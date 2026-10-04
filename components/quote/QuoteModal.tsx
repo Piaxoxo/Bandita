@@ -1,9 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/config";
 import { OFFICE_EMAIL, sendLead } from "@/lib/contact";
 import { QUOTE } from "@/components/services/services-data";
+import { estimate, money } from "@/lib/estimate";
+
+const EST = {
+  de: {
+    head: "Grobe Orientierung",
+    from: "ab",
+    perMonth: " / Monat",
+    plus: "Dazu:",
+    onRequest: "Preis auf Anfrage",
+    allOnRequest: "Preis auf Anfrage",
+    note: "Startpreise aus unserer Preisliste, unverbindlich. Dein echtes Angebot kommt individuell kalkuliert innerhalb von 48 Stunden.",
+  },
+  en: {
+    head: "Rough orientation",
+    from: "from",
+    perMonth: " / month",
+    plus: "Plus:",
+    onRequest: "price on request",
+    allOnRequest: "Price on request",
+    note: "Starting prices from our list, non-binding. Your real offer is calculated individually and arrives within 48 hours.",
+  },
+};
 
 export default function QuoteModal({
   open, onClose, lang, prefill,
@@ -44,16 +66,21 @@ export default function QuoteModal({
     };
   }, [open, onClose]);
 
+  // Above the `if (!open) return null` below: a hook after an early return
+  // runs a different number of times between renders, which React refuses.
+  const est = useMemo(() => (services.length ? estimate(services) : null), [services]);
+
   if (!open) return null;
 
   const toggleService = (key: string) =>
     setServices((s) => (s.includes(key) ? s.filter((k) => k !== key) : [...s, key]));
 
+  const labelFor = (key: string) => QUOTE.services.find((s) => s.key === key)?.label[lang] ?? key;
+
   const submit = async () => {
     if (!email.trim() && !phone.trim()) { setError(true); return; }
     setError(false);
     setSendErr(false);
-    const labelFor = (key: string) => QUOTE.services.find((s) => s.key === key)?.label[lang] ?? key;
     const body = [
       `${QUOTE.qCompany[lang]}: ${company || "—"}`,
       `${QUOTE.qBusiness[lang]}: ${business || "—"}`,
@@ -61,6 +88,15 @@ export default function QuoteModal({
       "",
       `${QUOTE.qServices[lang]}: ${services.map(labelFor).join(", ") || "—"}`,
       `${QUOTE.qGoal[lang]}: ${goal || "—"}`,
+      // What the configurator showed them. Worth knowing before the callback:
+      // it is the number they already have in their head.
+      est && (est.oneOff > 0 || est.monthly > 0)
+        ? `Angezeigte Orientierung: ${est.oneOff > 0 ? `ab ${money(est.oneOff, lang)}` : ""}${
+            est.oneOff > 0 && est.monthly > 0 ? " + " : ""
+          }${est.monthly > 0 ? `${money(est.monthly, lang)}/Monat` : ""}${
+            est.onRequest.length ? ` (+ ${est.onRequest.map(labelFor).join(", ")} auf Anfrage)` : ""
+          }`
+        : "",
       "",
       `${QUOTE.qName[lang]}: ${name || "—"}`,
       `${QUOTE.qEmail[lang]}: ${email || "—"}`,
@@ -130,6 +166,56 @@ export default function QuoteModal({
                 ))}
               </div>
             </fieldset>
+
+            {/*
+              Live orientation, assembled from the real price list the moment
+              something is picked. It is a floor, never a quote — every
+              individual offer stays price-on-request, which is what the line
+              underneath says too.
+            */}
+            {est && (est.oneOff > 0 || est.monthly > 0 || est.onRequest.length > 0) && (
+              <div
+                aria-live="polite"
+                className="mt-5 rounded-xl border border-pink/25 bg-pink/[0.04] px-4 py-4"
+              >
+                <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-ink/45">
+                  {EST[lang].head}
+                </p>
+
+                <p className="mt-2 font-display text-2xl leading-tight text-ink md:text-3xl">
+                  {est.oneOff > 0 && (
+                    <span>
+                      {EST[lang].from}{" "}
+                      <strong className="font-medium">{money(est.oneOff, lang)}</strong>
+                    </span>
+                  )}
+                  {est.oneOff > 0 && est.monthly > 0 && <span className="text-ink/40"> + </span>}
+                  {est.monthly > 0 && (
+                    <span>
+                      {money(est.monthly, lang)}
+                      <span className="text-ink/50">{EST[lang].perMonth}</span>
+                    </span>
+                  )}
+                  {est.oneOff === 0 && est.monthly === 0 && (
+                    <span className="text-ink/70">{EST[lang].allOnRequest}</span>
+                  )}
+                </p>
+
+                {est.covered.length > 0 && (
+                  <p className="mt-2 font-sans text-xs leading-relaxed text-ink/55">
+                    {est.covered.map((c) => c.tier).join(" · ")}
+                  </p>
+                )}
+                {est.onRequest.length > 0 && (est.oneOff > 0 || est.monthly > 0) && (
+                  <p className="mt-1 font-sans text-xs leading-relaxed text-ink/55">
+                    {EST[lang].plus} {est.onRequest.map(labelFor).join(", ")} — {EST[lang].onRequest}
+                  </p>
+                )}
+                <p className="mt-3 font-sans text-[11px] leading-relaxed text-ink/45">
+                  {EST[lang].note}
+                </p>
+              </div>
+            )}
 
             <fieldset className="mt-6">
               <legend className={legend}>{QUOTE.qGoal[lang]}</legend>

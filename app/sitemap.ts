@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { i18n } from "@/i18n/config";
+import { STATIONS } from "@/components/portfolio/portfolio-data";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.agency";
 
@@ -12,6 +13,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/services", priority: 0.9 },
     { path: "/studio", priority: 0.8 },
     { path: "/portfolio", priority: 0.8 },
+    // One entry per project. These carry the written work and are the reason
+    // the site has more than a dozen addresses to be found under.
+    ...STATIONS.map((s) => ({ path: `/portfolio/${s.id}`, priority: 0.7 })),
   ];
 
   return i18n.locales.flatMap((lang) =>
