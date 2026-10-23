@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Locale } from "@/i18n/config";
@@ -299,11 +300,13 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
               only when there is no canvas (reduced-motion / low-tier). */}
           <div className="relative flex min-h-[40vh] items-center justify-center">
             {staticIllo ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src="/about/illustration.webp"
                 alt={a.name.illoAlt}
-                className="max-h-[70vh] w-auto opacity-90 mix-blend-screen"
+                width={1254}
+                height={1634}
+                sizes="(min-width: 768px) 40vw, 90vw"
+                className="h-auto max-h-[70vh] w-auto opacity-90 mix-blend-screen"
               />
             ) : (
               <span className="pointer-events-none select-none font-sans text-[10px] uppercase tracking-[0.3em] text-ink/25">
@@ -378,11 +381,11 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
                 <Reveal key={m.name} delay={i * 0.06}>
                   <TiltCard disabled={r} className="group">
                     <div className="relative aspect-[4/5] overflow-hidden rounded-[1.1rem] ring-1 ring-ink/15">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={`/about/team/${slug}.jpg`}
                         alt={`${m.name} — ${m.role}`}
-                        loading="lazy"
+                        fill
+                        sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"
                         className="h-full w-full object-cover grayscale transition-all duration-700 [transform:translateZ(0)] group-hover:grayscale-0 group-hover:scale-[1.04]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a0c]/70 via-transparent to-transparent" />
@@ -470,8 +473,14 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
             <div className="grid gap-8 md:grid-cols-2">
               {a.work.items.map((it, i) => (
                 <figure key={i} className="overflow-hidden rounded-[1.1rem] ring-1 ring-ink/12">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`/about/work/campaign-0${i + 1}.jpg`} alt={it.alt} className="w-full" />
+                  <Image
+                    src={`/about/work/campaign-0${i + 1}.jpg`}
+                    alt={it.alt}
+                    width={1536}
+                    height={1024}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="h-auto w-full"
+                  />
                   <figcaption className="px-1 pt-3 font-sans text-[11px] uppercase tracking-[0.2em] text-ink/55">
                     {it.caption}
                   </figcaption>
@@ -484,10 +493,11 @@ export default function AboutStory({ dict, lang }: { dict: Dictionary; lang: Loc
 
       {/* ════════ ⑦ VIENNA — full-bleed atmosphere ════════ */}
       <section className="relative flex min-h-[80svh] items-end overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/about/pia-vineyard.jpg"
           alt={a.vienna.imageAlt}
+          fill
+          sizes="100vw"
           className={`absolute inset-0 h-full w-full object-cover ${r ? "" : "kenburns"}`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-creme via-creme/55 to-creme/25" />

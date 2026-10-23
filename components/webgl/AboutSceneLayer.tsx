@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useSite } from "@/lib/site-context";
 import { detectTier } from "@/lib/scene-store";
 import { attachAboutInputs } from "@/lib/about-scene";
-import { afterLoad } from "@/lib/defer";
+import { useDeferredScene } from "@/lib/use-deferred-scene";
 
 const AboutScene = dynamic(() => import("./AboutScene"), { ssr: false });
 
@@ -34,18 +34,14 @@ function DarkGround() {
 
 export default function AboutSceneLayer() {
   const { reducedMotion } = useSite();
-  const [mounted, setMounted] = useState(false);
   const [tier, setTier] = useState<"high" | "mid" | "low">("high");
+
+  // same gate as SceneLayer: after the intro, once the thread is idle
+  const mounted = useDeferredScene();
 
   useEffect(() => {
     setTier(detectTier());
-    const detach = attachAboutInputs();
-    // same reasoning as SceneLayer: pay for three.js after the page is up
-    const stop = afterLoad(() => setMounted(true));
-    return () => {
-      stop();
-      detach();
-    };
+    return attachAboutInputs();
   }, []);
 
   // Run the canvas on every device — only "reduce motion" disables it.

@@ -5,9 +5,18 @@ import { gsap } from "gsap";
 import { useSite } from "@/lib/site-context";
 import { scene as sceneStore, detectTier, TIER_CONFIG } from "@/lib/scene-store";
 import type { Dictionary } from "@/i18n/types";
-import dynamic from "next/dynamic";
 
-const IntroCanvas = dynamic(() => import("./webgl/IntroParticles"), { ssr: false });
+/*
+  Canvas 2D, not WebGL — deliberately a plain import.
+
+  The intro runs on every first page view, so whatever it depends on is on the
+  critical path by definition. The old react-three-fiber version therefore put
+  three.js there too: 675 KB and roughly a second of parse time on a mid-range
+  phone, spent before the visitor can touch anything. The 2D version draws the
+  same animation from the same maths and adds nothing to the bundle worth
+  code-splitting, so there is no dynamic() wrapper to pay for either.
+*/
+import IntroCanvas from "./IntroParticles2D";
 
 export default function Loader({ dict }: { dict: Dictionary }) {
   const { setIntroDone } = useSite();
@@ -51,10 +60,14 @@ export default function Loader({ dict }: { dict: Dictionary }) {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setReduced(isReduced);
 
-    // Absolute safety net so the intro can never trap the page. Kept tight:
-    // if the particle canvas is slow to arrive on a poor connection, the
-    // visitor lands on the site instead of watching a black screen.
-    const safety = window.setTimeout(done, isReduced ? 900 : 4200);
+    // Absolute safety net so the intro can never trap the page.
+    //
+    // It must sit just past the animation's natural end, or it truncates it:
+    // up to 0.5s waiting for Bodoni, then 2.0s forming + 1.1s holding + 1.3s
+    // scattering = 4.9s. At the old 4.2s the exit was being cut mid-scatter —
+    // invisible while the WebGL canvas took a moment to come up, obvious now
+    // that the 2D one starts immediately.
+    const safety = window.setTimeout(done, isReduced ? 900 : 5200);
 
     if (isReduced) {
       setCount(100);

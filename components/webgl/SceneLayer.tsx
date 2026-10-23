@@ -1,11 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useSite } from "@/lib/site-context";
 import { initSceneInputs } from "@/lib/scene-store";
-import { afterLoad } from "@/lib/defer";
+import { useDeferredScene } from "@/lib/use-deferred-scene";
 
 const WorldScene = dynamic(() => import("./WorldScene"), { ssr: false });
 
@@ -37,24 +37,17 @@ function Ambient() {
 
 export default function SceneLayer() {
   const { reducedMotion } = useSite();
-  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   // About / Portfolio / Studio paint their own worlds.
   const isOther = /^\/(en|de)\/(about|portfolio|studio)(\/|$)/.test(pathname);
 
-  useEffect(() => {
-    const dispose = initSceneInputs();
-    // three.js is ~170 KB gzipped and costs real parse time. Loading it only
-    // once the page has finished and the main thread is idle keeps the first
-    // paint and the intro animation smooth — the ambient gradient below covers
-    // the gap, so nothing pops.
-    const stop = afterLoad(() => setMounted(true));
-    return () => {
-      stop();
-      dispose();
-    };
-  }, []);
+  // three.js waits for the intro to finish and the thread to go idle.
+  const mounted = useDeferredScene(!isOther);
+
+  // Scroll and pointer feed the scene, but they are plain listeners writing to
+  // a mutable store — cheap, and the page needs them from the first frame.
+  useEffect(() => initSceneInputs(), []);
 
   if (isOther) return null;
 

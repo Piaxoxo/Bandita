@@ -7,6 +7,7 @@ import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
 import { detectTier } from "@/lib/scene-store";
 import { portfolio, attachPortfolioInputs, tickPortfolio } from "@/lib/portfolio-scene";
+import { useDeferredScene } from "@/lib/use-deferred-scene";
 import PortfolioWall from "./PortfolioWall";
 import PortfolioProject from "./PortfolioProject";
 
@@ -22,6 +23,10 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
   const [soundOn, setSoundOn] = useState(false);
   const glowRef = useRef<HTMLDivElement>(null);
   const t = dict.portfolio;
+
+  // The atmosphere may load only once the intro is over and the thread is
+  // idle — the mood glow underneath already carries the look until then.
+  const sceneReady = useDeferredScene();
 
   useEffect(() => {
     const tier = detectTier();
@@ -98,7 +103,7 @@ export default function PortfolioExperience({ lang, dict }: { lang: Locale; dict
       {/* continuous 3D world behind everything */}
       <div className="fixed inset-0 -z-10 bg-[#08070a]">
         <div ref={glowRef} className="absolute inset-0" />
-        {canvas && (
+        {canvas && sceneReady && (
           <div className="absolute inset-0">
             <PortfolioAtmosphere compact={compact} />
           </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Dictionary } from "@/i18n/types";
@@ -25,6 +26,10 @@ function ParallaxImage({
   className = "",
   imgClass = "",
   parallax = 14,
+  // Callers lay these out in different column counts, so the painted width
+  // has to come from the call site — a wrong `sizes` is how next/image ends
+  // up serving a 2000px file into a 300px box.
+  sizes = "(min-width: 768px) 50vw, 100vw",
   reduced,
 }: {
   src: string;
@@ -32,6 +37,7 @@ function ParallaxImage({
   className?: string;
   imgClass?: string;
   parallax?: number;
+  sizes?: string;
   reduced: boolean;
 }) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -74,11 +80,11 @@ function ParallaxImage({
   return (
     <div ref={wrap} className={`overflow-hidden rounded-[1.4rem] ${className}`}>
       <div ref={layer} className="relative h-[150%] w-full" style={{ marginTop: "-25%" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={src}
           alt={alt}
-          loading="lazy"
+          fill
+          sizes={sizes}
           className={`h-full w-full object-cover ${reduced ? "" : "kenburns"} ${imgClass}`}
         />
       </div>
@@ -133,6 +139,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
           alt={s.s1.alt}
           className="absolute inset-0 !rounded-none"
           parallax={16}
+          sizes="100vw"
           reduced={r}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-ink/40" />
@@ -173,6 +180,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
                 alt={s.s2.alt}
                 className="h-[52vh] lg:h-[78vh]"
                 parallax={16}
+                sizes="(min-width: 1024px) 55vw, 100vw"
                 reduced={r}
               />
               {/* partially overlapping smaller frame — only overlaps the big
@@ -183,6 +191,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
                   alt={s.s2.altSmall}
                   className="aspect-[4/5] shadow-2xl ring-1 ring-ink/10"
                   parallax={16}
+                  sizes="(min-width: 1024px) 30vw, 60vw"
                   reduced={r}
                 />
               </div>
@@ -198,6 +207,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
           alt={s.s3.alt}
           className="absolute inset-0 !rounded-none"
           parallax={16}
+          sizes="100vw"
           reduced={r}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-ink/30" />
@@ -224,6 +234,7 @@ export default function EditorialShowcase({ dict }: { dict: Dictionary }) {
           alt={s.s4.alt}
           className="absolute inset-0 !rounded-none"
           parallax={16}
+          sizes="100vw"
           reduced={r}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-ink/35" />

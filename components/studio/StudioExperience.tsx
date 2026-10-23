@@ -11,6 +11,7 @@ import { HERO, INTRO, ROOMS, CTA } from "./studio-data";
 import Reveal from "@/components/anim/Reveal";
 import MagneticButton from "@/components/MagneticButton";
 import { scrollToId } from "@/lib/scroll";
+import { useDeferredScene } from "@/lib/use-deferred-scene";
 
 const StudioScene = dynamic(() => import("@/components/webgl/studio/StudioScene"), { ssr: false });
 
@@ -21,6 +22,9 @@ export default function StudioExperience({ lang, dict }: { lang: Locale; dict: D
   const [canvas, setCanvas] = useState(false);
   const [compact, setCompact] = useState(false);
   const root = useRef<HTMLDivElement>(null);
+
+  // same gate as the other worlds: after the intro, once the thread is idle
+  const sceneReady = useDeferredScene();
 
   useEffect(() => {
     setCompact(detectTier() !== "high");
@@ -66,7 +70,14 @@ export default function StudioExperience({ lang, dict }: { lang: Locale; dict: D
 
   return (
     <div ref={root} className="studio-root relative">
-      {canvas && <div className="fixed inset-0 -z-10 bg-creme">{<StudioScene compact={compact} />}</div>}
+      {/* The creme ground is painted immediately; only the scene inside it
+          waits for the deferred mount, so there is no flash while three.js
+          is still on its way. */}
+      {canvas && (
+        <div className="fixed inset-0 -z-10 bg-creme">
+          {sceneReady && <StudioScene compact={compact} />}
+        </div>
+      )}
 
       {/* ① HERO */}
       <section
