@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Locale } from "@/i18n/config";
@@ -131,11 +132,20 @@ export default function PortfolioWall({
                   className="portfolio-card group relative block overflow-hidden rounded-[1rem] text-left ring-1 ring-creme/10"
                 >
                   <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#0d0b0e]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    {/*
+                      The wall is 22 cards, and as raw <img> it shipped the
+                      full-size JPEGs — 1.8 MB, for tiles 190px wide on a
+                      phone. next/image serves AVIF at the size actually
+                      painted. The first row is eager so the wall has
+                      something in it immediately; the rest stays lazy.
+                    */}
+                    <Image
                       src={coverOf(st)}
                       alt={`${st.name[lang]} — ${st.tag[lang]}`}
-                      loading="lazy"
+                      fill
+                      sizes="(min-width: 1024px) 400px, (min-width: 640px) 33vw, 50vw"
+                      priority={i < 2}
+                      loading={i < 2 ? undefined : "lazy"}
                       className="h-full w-full object-cover opacity-85 grayscale transition-all duration-700 group-hover:scale-[1.06] group-hover:opacity-100 group-hover:grayscale-0"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#08070a] via-[#08070a]/25 to-transparent" />

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Locale } from "@/i18n/config";
@@ -198,19 +199,24 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
             <div ref={clusterRef} className="[transform-style:preserve-3d]">
               <div ref={hero.ref} onMouseMove={hero.onMove} onMouseLeave={hero.onLeave}
                 className="relative mx-auto h-[520px] w-full max-w-[560px] [transform-style:preserve-3d]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/work/film-01.jpg" alt="Bandita — Filmproduktion" loading="eager" decoding="async"
-                  className="absolute left-[6%] top-[4%] h-[62%] w-[62%] rounded-2xl object-cover shadow-[0_40px_90px_-30px_rgba(20,12,18,0.6)]"
-                  style={{ transform: "translateZ(60px)" }} />
+                {/* next/image with `fill` writes its own inset/size inline, which
+                    would override the percentage placement — so the card keeps
+                    its own positioned box and the image fills that. */}
+                <div className="absolute left-[6%] top-[4%] h-[62%] w-[62%] overflow-hidden rounded-2xl shadow-[0_40px_90px_-30px_rgba(20,12,18,0.6)]"
+                  style={{ transform: "translateZ(60px)" }}>
+                  <Image src="/work/film-01.jpg" alt="Bandita — Filmproduktion" fill priority
+                    sizes="(min-width: 640px) 360px, 60vw" className="object-cover" />
+                </div>
                 {/* front card = live reel */}
                 <div className="absolute right-[2%] top-[24%] h-[56%] w-[46%] overflow-hidden rounded-2xl border-4 border-creme shadow-[0_40px_90px_-30px_rgba(20,12,18,0.65)]"
                   style={{ transform: "translateZ(130px)" }}>
                   <AutoVideo src="/portfolio/video/portugal-reel-01.mp4" poster="/portfolio/video/portugal-reel-01-poster.jpg" className="h-full w-full object-cover" />
                 </div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/work/food-01.jpg" alt="Bandita — Food" loading="lazy" decoding="async"
-                  className="absolute bottom-[2%] left-[18%] h-[38%] w-[40%] rounded-2xl border-4 border-creme object-cover shadow-[0_40px_90px_-30px_rgba(20,12,18,0.6)]"
-                  style={{ transform: "translateZ(30px)" }} />
+                <div className="absolute bottom-[2%] left-[18%] h-[38%] w-[40%] overflow-hidden rounded-2xl border-4 border-creme shadow-[0_40px_90px_-30px_rgba(20,12,18,0.6)]"
+                  style={{ transform: "translateZ(30px)" }}>
+                  <Image src="/work/food-01.jpg" alt="Bandita — Food" fill
+                    sizes="(min-width: 640px) 230px, 40vw" className="object-cover" />
+                </div>
                 <span aria-hidden className="absolute -right-2 top-[14%] h-24 w-24 rounded-2xl bg-pink" style={{ transform: "translateZ(-10px)" }} />
               </div>
             </div>
@@ -455,8 +461,8 @@ export default function ServicesExperience({ lang, dict }: { lang: Locale; dict:
                     <AutoVideo src="/portfolio/video/portugal-reel-02.mp4" poster="/portfolio/video/portugal-reel-02-poster.jpg"
                       className="h-full w-full object-cover opacity-85 transition-transform duration-700 group-hover:scale-105" />
                   ) : (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={s.image} alt={`Bandita ${s.name[lang]}`} loading="lazy" decoding="async"
+                    <Image src={s.image} alt={`Bandita ${s.name[lang]}`} fill
+                      sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
                       className="h-full w-full object-cover opacity-85 transition-transform duration-700 group-hover:scale-105" />
                   )}
                   <span className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: s.color }} />
@@ -562,8 +568,8 @@ function DisciplineCard({ c, lang, reduced }: { c: Chapter; lang: Locale; reduce
       ref={t.ref} onMouseMove={t.onMove} onMouseLeave={t.onLeave}
       className="group relative block aspect-[3/4] overflow-hidden rounded-3xl [transform-style:preserve-3d]"
       style={{ willChange: "transform" }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={c.images[0]} alt={`Bandita — ${c.title[lang]}`} loading="lazy" decoding="async"
+      <Image src={c.images[0]} alt={`Bandita — ${c.title[lang]}`} fill
+        sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 85vw"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/65 to-ink/10" />
       <span className="absolute inset-x-0 top-0 h-1.5" style={{ backgroundColor: c.color }} />
