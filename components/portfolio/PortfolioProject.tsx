@@ -12,6 +12,7 @@ import LazyVideo from "@/components/LazyVideo";
 import SitePreview from "./SitePreview";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { unmaskLines } from "@/lib/unmask";
+import ProjectImage from "./ProjectImage";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -277,11 +278,9 @@ export default function PortfolioProject({
                   className="mx-auto max-h-[82vh] w-full bg-black object-contain"
                 />
               ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <ProjectImage
                   src={m.src}
                   alt={`${st.name[lang]} — ${st.tag[lang]} (${i + 1})`}
-                  loading="lazy"
                   className="mx-auto max-h-[82vh] w-full bg-[#0d0b0e] object-contain"
                 />
               )}

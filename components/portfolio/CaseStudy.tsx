@@ -12,6 +12,7 @@ import SitePreview from "./SitePreview";
 import LazyVideo from "@/components/LazyVideo";
 import ContactCTA from "@/components/sections/ContactCTA";
 import Reveal from "@/components/anim/Reveal";
+import ProjectImage from "./ProjectImage";
 
 /*
   A case study page, rendered on the SERVER.
@@ -186,13 +187,10 @@ export default function CaseStudy({
                 className="w-full bg-black object-contain"
               />
             ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <ProjectImage
                 src={m.src}
                 alt={`${st.name[lang]} — ${st.tag[lang]} (${k + 1})`}
-                loading={k === 0 ? "eager" : "lazy"}
-                decoding="async"
-                className="w-full bg-[#0d0b0e] object-contain"
+                priority={k === 0}
               />
             )}
           </figure>
