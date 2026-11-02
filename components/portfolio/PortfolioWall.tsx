@@ -108,6 +108,8 @@ export default function PortfolioWall({
             }}
           >
             {STATIONS.map((st, i) => {
+              const cover = coverOf(st);
+              const count = mediaCount(st);
               return (
                 /*
                   A real link that behaves like a button.
@@ -139,15 +141,32 @@ export default function PortfolioWall({
                       painted. The first row is eager so the wall has
                       something in it immediately; the rest stays lazy.
                     */}
-                    <Image
-                      src={coverOf(st)}
-                      alt={`${st.name[lang]} — ${st.tag[lang]}`}
-                      fill
-                      sizes="(min-width: 1024px) 400px, (min-width: 640px) 33vw, 50vw"
-                      priority={i < 2}
-                      loading={i < 2 ? undefined : "lazy"}
-                      className="h-full w-full object-cover opacity-85 grayscale transition-all duration-700 group-hover:scale-[1.06] group-hover:opacity-100 group-hover:grayscale-0"
-                    />
+                    {cover ? (
+                      <Image
+                        src={cover}
+                        alt={`${st.name[lang]} — ${st.tag[lang]}`}
+                        fill
+                        sizes="(min-width: 1024px) 400px, (min-width: 640px) 33vw, 50vw"
+                        priority={i < 2}
+                        loading={i < 2 ? undefined : "lazy"}
+                        className="h-full w-full object-cover opacity-85 grayscale transition-all duration-700 group-hover:scale-[1.06] group-hover:opacity-100 group-hover:grayscale-0"
+                      />
+                    ) : (
+                      /*
+                        No stills yet — the same answer SitePreview gives when
+                        a web project has no poster: the project's own accent,
+                        not a borrowed photograph. The card keeps its shape and
+                        its name, and the work behind it is still one click
+                        away.
+                      */
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.06]"
+                        style={{
+                          background: `radial-gradient(120% 90% at 50% 12%, ${st.color}6b 0%, ${st.color}3a 34%, ${st.color}18 58%, ${st.color}08 76%, transparent 92%)`,
+                        }}
+                      />
+                    )}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#08070a] via-[#08070a]/25 to-transparent" />
                     {/* mood accent line */}
                     <div
@@ -178,7 +197,8 @@ export default function PortfolioWall({
                       </h2>
                       <p className="mt-1 flex items-center gap-2 font-sans text-[10px] uppercase tracking-[0.18em] text-creme/60">
                         <span style={{ color: st.color }}>{st.tag[lang]}</span>
-                        <span className="text-creme/30">· {mediaCount(st)}</span>
+                        {/* "· 0" is worse than no count at all */}
+                        {count > 0 && <span className="text-creme/30">· {count}</span>}
                       </p>
                     </div>
                     {/* view cue */}

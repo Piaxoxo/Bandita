@@ -239,6 +239,7 @@ export default function PortfolioProject({
             chrome={st.site.chrome}
             caption={st.site.label?.[lang] ?? st.site.domain ?? st.name[lang]}
             live={st.site.live}
+            allow={st.site.allow}
             poster={st.site.poster}
             color={st.color}
             lang={lang}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { i18n, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { STATIONS, stationBySlug, coverOf } from "@/components/portfolio/portfolio-data";
+import { STATIONS, stationBySlug, shareImageOf } from "@/components/portfolio/portfolio-data";
 import CaseStudy from "@/components/portfolio/CaseStudy";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bandita.agency";
@@ -50,9 +50,9 @@ export async function generateMetadata({
       description,
       url: `${SITE_URL}/${lang}/portfolio/${st.id}`,
       locale: lang === "de" ? "de_AT" : "en_US",
-      images: [{ url: coverOf(st), width: 1200, height: 630, alt: name }],
+      images: [{ url: shareImageOf(st), width: 1200, height: 630, alt: name }],
     },
-    twitter: { card: "summary_large_image", title, description, images: [coverOf(st)] },
+    twitter: { card: "summary_large_image", title, description, images: [shareImageOf(st)] },
   };
 }
 
@@ -77,7 +77,7 @@ export default function CasePage({ params }: { params: { lang: string; slug: str
     headline: name,
     about: st.tag[lang],
     url: `${SITE_URL}/${lang}/portfolio/${st.id}`,
-    image: `${SITE_URL}${coverOf(st)}`,
+    image: `${SITE_URL}${shareImageOf(st)}`,
     inLanguage: lang === "de" ? "de-AT" : "en",
     creator: { "@id": `${SITE_URL}/#organization` },
     ...(st.study?.year ? { dateCreated: st.study.year } : {}),

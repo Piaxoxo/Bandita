@@ -57,10 +57,62 @@ export type Station = {
     label?: Bi; // document chrome: what the caption says
     poster?: string;
     live?: string; // the real site, if it is online
+    /*
+      Permissions-Policy for the frame, as the `allow` attribute spells it.
+
+      Per project, not site-wide. The frame loads before it is clicked, so
+      granting `autoplay` to every embed would let any of them start making
+      noise at a visitor who was only scrolling past. A project asks for it
+      when its own design depends on it — a musician's header film does, a
+      hostel's room gallery does not.
+    */
+    allow?: string;
   };
 };
 
 export const STATIONS: Station[] = [
+  {
+    id: "leherb",
+    kind: "web",
+    name: { en: "Andre Leherb", de: "Andre Leherb" },
+    tag: { en: "Artist Website · 3D", de: "Künstler-Website · 3D" },
+    study: {
+      client: "Andre Leherb",
+      /*
+        Scope only, and only what the agency stated: web design, 3D and
+        creative direction. No brief and no outcome until there are real
+        words and real figures to put there.
+      */
+      approach: {
+        de: "Webdesign, 3D und Creative Direction für den Auftritt des Musikers — von der Gestaltung über die dreidimensionalen Elemente bis zur Führung des Gesamtbilds.",
+        en: "Web design, 3D and creative direction for the musician's presence — from the design through the three-dimensional elements to steering the whole picture.",
+      },
+    },
+    /*
+      No stills yet. The wall falls back to the accent surface until real
+      frames arrive, which is honest: a made-up cover would be worse than
+      none, and the project itself is fully clickable either way.
+    */
+    images: [],
+    site: {
+      src: "https://leherb.music/",
+      domain: "leherb.music",
+      /*
+        `live` is the escape hatch, not a link we advertise: it appears only
+        if the frame cannot load. The site is served from someone else's
+        server, so whether it allows being embedded is theirs to decide and
+        could change — without this, a refusal would be a dead rectangle.
+      */
+      live: "https://leherb.music/",
+      // No poster: the only one available lives on that same server, so it
+      // would fail in exactly the case the fallback exists for.
+      allow: "autoplay; fullscreen",
+    },
+    orientation: "landscape",
+    // The lighter of the site's two purples — the darker one disappears
+    // against the near-black portfolio wall.
+    color: "#B39AFF",
+  },
   {
     id: "antislop",
     kind: "web",
@@ -340,7 +392,19 @@ export function projectMedia(st: Station): Media[] {
   return [...photos, ...vids];
 }
 
-export const coverOf = (st: Station) => st.cover ?? st.images[0];
+/*
+  The wall cover, if there is one.
+
+  Undefined is a real answer, not an oversight: a project can be clickable
+  long before its stills exist — a live site needs no photographs of itself.
+  Callers decide what to show instead; the wall paints the accent surface and
+  the social cards fall back to the house image.
+*/
+export const coverOf = (st: Station): string | undefined => st.cover ?? st.images[0];
+
+/** Cover for social cards and structured data, where a URL is required. */
+export const shareImageOf = (st: Station): string => coverOf(st) ?? "/og/bandita-og.png";
+
 export const mediaCount = (st: Station) => projectMedia(st).length;
 
 export const stationBySlug = (slug: string) => STATIONS.find((s) => s.id === slug);

@@ -67,6 +67,7 @@ export default function SitePreview({
   poster,
   color,
   lang,
+  allow = "fullscreen",
 }: {
   src: string;
   /*
@@ -82,6 +83,13 @@ export default function SitePreview({
   poster?: string;
   color: string;
   lang: Locale;
+  /*
+    The frame's Permissions-Policy. Fullscreen only by default: the iframe is
+    mounted before anyone clicks it, so a blanket `autoplay` would let an
+    embedded site make noise at a visitor who was merely scrolling past. A
+    project opts in when its own design needs it.
+  */
+  allow?: string;
 }) {
   const t = COPY[lang] ?? COPY.de;
   const wrap = useRef<HTMLDivElement>(null);
@@ -449,6 +457,7 @@ export default function SitePreview({
                 off too, so an embedded page cannot hijack the portfolio.
               */
               sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+              allow={allow}
               referrerPolicy="no-referrer-when-downgrade"
               onLoad={() => setPainted(true)}
               className="h-full w-full border-0"
