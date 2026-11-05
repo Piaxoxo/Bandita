@@ -4,7 +4,7 @@ const en: Dictionary = {
   meta: {
     title: "Bandita — Creative & Marketing Agency from Vienna",
     description:
-      "Creative agency from Vienna for ambitious brands: branding, brand strategy, social media content, cinema-camera film production and cinematic websites. Wild. Hip. From Vienna — worldwide.",
+      "Creative & marketing agency from Vienna for ambitious brands: branding, brand strategy, social media content, cinema-camera film production and cinematic websites. Wild. Hip. From Vienna — worldwide.",
     ogAlt: "Bandita — Creative & Marketing Agency from Vienna",
   },
   loader: {
@@ -26,7 +26,7 @@ const en: Dictionary = {
     cta: "Start a project",
   },
   hero: {
-    eyebrow: "Creative agency from Vienna — for ambitious brands, worldwide",
+    eyebrow: "Creative & Marketing Agency · Vienna",
     line1: "Boring doesn't",
     line2: "sell.",
     sub: "We build brands people don't scroll past. Branding, social, cinema-grade film, web — and a strategy that ties it all together.",
@@ -41,9 +41,9 @@ const en: Dictionary = {
     signature: "Verrückt. Hip. Aus Wien.",
   },
   capabilities: {
-    eyebrow: "One team, every discipline",
-    heading: "Everything your brand needs.",
-    headingAccent: "From one team.",
+    eyebrow: "Services",
+    heading: "Seven disciplines.",
+    headingAccent: "One signature.",
     items: [
       "Branding",
       "Strategy",

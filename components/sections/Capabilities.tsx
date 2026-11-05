@@ -62,14 +62,8 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
           <li key={`sr-${item}`}>{item}</li>
         ))}
       </ul>
-
-      <div data-fly className="relative mx-auto mt-10 max-w-[1400px] px-5 md:mt-16 md:px-10">
-        <Reveal>
-          <p className="max-w-2xl font-sans text-lg leading-relaxed text-ink/70">
-            {dict.capabilities.body}
-          </p>
-        </Reveal>
-      </div>
+      {/* The constellation names the disciplines; the paragraph that used to
+          list them again underneath is gone. */}
     </section>
   );
 }

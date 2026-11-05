@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { gsap } from "gsap";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
@@ -34,8 +33,9 @@ function Chars({ text }: { text: string }) {
   );
 }
 
-export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale }) {
-  const router = useRouter();
+// `lang` stays in the signature: the page passes it, and the hero will want it
+// again the moment a locale-specific asset returns.
+export default function Hero({ dict }: { dict: Dictionary; lang: Locale }) {
   const { introDone, reducedMotion } = useSite();
   const root = useRef<HTMLDivElement>(null);
   const filmRef = useRef<HTMLVideoElement>(null);
@@ -92,12 +92,7 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
           },
           "-=0.4",
         )
-        .from(".hero-sub", { opacity: 0, y: 24, duration: 0.9 }, "-=0.6")
-        .from(
-          ".hero-cta",
-          { opacity: 0, y: 24, duration: 0.8, stagger: 0.1 },
-          "-=0.6",
-        )
+        .from(".hero-cta", { opacity: 0, y: 24, duration: 0.8 }, "-=0.5")
         .from(".hero-scroll", { opacity: 0, duration: 0.8 }, "-=0.4");
     }, el);
 
@@ -150,23 +145,15 @@ export default function Hero({ dict, lang }: { dict: Dictionary; lang: Locale })
           </span>
         </h1>
 
-        <p className="hero-sub mt-8 max-w-xl font-sans text-lg leading-relaxed text-creme/75 md:text-xl">
-          {dict.hero.sub}
-        </p>
-
+        {/* No paragraph under the line, and one button. The headline is the
+            whole argument; a sentence explaining it would only say it was
+            not enough. */}
         <div className="mt-12 flex flex-wrap items-center gap-4">
           <MagneticButton
             onClick={() => scrollToId("contact")}
             className="hero-cta rounded-full bg-pink px-8 py-4 font-sans text-sm uppercase tracking-[0.12em] text-creme transition-colors hover:bg-ink"
           >
             {dict.hero.ctaPrimary}
-          </MagneticButton>
-          <MagneticButton
-            onClick={() => router.push(`/${lang}/about`)}
-            cursor="link"
-            className="hero-cta rounded-full border border-creme/25 px-8 py-4 font-sans text-sm uppercase tracking-[0.12em] text-creme transition-colors hover:border-pink hover:text-pink"
-          >
-            {dict.hero.ctaSecondary}
           </MagneticButton>
         </div>
       </div>

@@ -86,22 +86,15 @@ export default function Manifesto({ dict }: { dict: Dictionary }) {
           {dict.manifesto.eyebrow}
         </p>
 
-        <h2 data-hl className="mf-heading max-w-5xl font-display text-4xl font-medium leading-[1.08] tracking-[-0.01em] text-ink sm:text-5xl md:text-6xl lg:text-7xl">
+        {/* One sentence, and larger than before — the paragraph that used to
+            follow it is gone. A line that needs a paragraph is not the line. */}
+        <h2 data-hl className="mf-heading max-w-6xl font-display text-5xl font-medium leading-[1.02] tracking-[-0.015em] text-ink sm:text-6xl md:text-7xl lg:text-[7.5rem]">
           {words.map((w, i) => (
             <span key={i} className="mf-word inline-block">
               {w}&nbsp;
             </span>
           ))}
         </h2>
-
-        <div className="mt-16 grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
-          <p className="max-w-xl font-sans text-lg leading-relaxed text-ink/70">
-            {dict.manifesto.body}
-          </p>
-          <p className="font-display text-2xl italic text-pink">
-            {dict.manifesto.signature}
-          </p>
-        </div>
       </div>
     </section>
   );

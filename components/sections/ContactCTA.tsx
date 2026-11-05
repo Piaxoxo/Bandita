@@ -5,20 +5,13 @@ import type { Locale } from "@/i18n/config";
 import Reveal from "@/components/anim/Reveal";
 import Parallax from "@/components/anim/Parallax";
 import MagneticButton from "@/components/MagneticButton";
-import NewsletterSignup from "@/components/NewsletterSignup";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { OFFICE_EMAIL } from "@/lib/contact";
 import { INSTAGRAM, utm } from "@/lib/social";
 import { InstagramIcon } from "@/components/SocialIcons";
 
-const OPTIONS: Record<Locale, string[]> = {
-  de: ["Angebot holen", "Rückruf anfordern", "Einfach Hallo"],
-  en: ["Get a quote", "Request a callback", "Just say hi"],
-};
-
 export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; lang?: Locale }) {
   const { open } = useQuote();
-  const options = OPTIONS[lang] ?? OPTIONS.de;
   const de = lang === "de";
 
   return (
@@ -49,17 +42,9 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
               {de ? "Individuelles Angebot anfordern" : "Request your individual offer"}
             </MagneticButton>
 
-            {/* quick contacts — all open the offer builder (no mail window) */}
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              {options.map((label) => (
-                <button key={label} onClick={() => open()} data-cursor="link"
-                  className="rounded-full border border-creme/40 px-6 py-3 font-sans text-xs uppercase tracking-[0.14em] text-creme/90 transition-colors hover:border-creme hover:bg-creme hover:text-ink">
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            {/* email + Instagram DM — equal-footing contact channels */}
+            {/* email + Instagram DM — equal-footing contact channels.
+                The three quick-option pills that sat here all opened the same
+                builder: three buttons for one action is noise, not choice. */}
             <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-6">
               <a href={`mailto:${OFFICE_EMAIL}`} data-cursor="link"
                 className="font-sans text-sm lowercase tracking-[0.1em] text-creme/80 underline decoration-creme/30 underline-offset-4 transition-colors hover:text-creme">
@@ -74,14 +59,8 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
               </a>
             </div>
             <span className="font-sans text-xs uppercase tracking-[0.2em] text-creme/60">{dict.cta.note}</span>
-
-            {/* newsletter */}
-            <div className="mt-6 flex flex-col items-center gap-3 border-t border-creme/20 pt-8">
-              <p className="font-sans text-xs uppercase tracking-[0.2em] text-creme/70">
-                {de ? "Oder bleib dran — Newsletter" : "Or stay in the loop — newsletter"}
-              </p>
-              <NewsletterSignup lang={lang} tone="dark" />
-            </div>
+            {/* The newsletter form lives in the footer (FooterActions) and was
+                duplicated here, one screen above itself. */}
           </div>
         </Reveal>
       </div>

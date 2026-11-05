@@ -4,7 +4,7 @@ const de: Dictionary = {
   meta: {
     title: "Bandita — Kreativagentur & Marketing aus Wien",
     description:
-      "Kreativagentur aus Wien für Marken mit Ambition: Branding, Markenstrategie, Social-Media-Content, Filmproduktion mit Kinokamera und cinematische Websites. Verrückt. Hip. Aus Wien — weltweit.",
+      "Kreativ- & Marketingagentur aus Wien für Marken mit Ambition: Branding, Markenstrategie, Social-Media-Content, Filmproduktion mit Kinokamera und cinematische Websites. Verrückt. Hip. Aus Wien — weltweit.",
     ogAlt: "Bandita — Kreativagentur & Marketing aus Wien",
   },
   loader: {
@@ -26,7 +26,7 @@ const de: Dictionary = {
     cta: "Projekt anfragen",
   },
   hero: {
-    eyebrow: "Kreativagentur aus Wien — für Marken mit Ambition, weltweit",
+    eyebrow: "Kreativ- & Marketingagentur · Wien",
     line1: "Brav war",
     line2: "gestern.",
     sub: "Wir bauen Marken, an denen man nicht vorbeiscrollt. Branding, Social, Film in Kino-Qualität, Web — und eine Strategie, die alles zusammenhält.",
@@ -41,9 +41,9 @@ const de: Dictionary = {
     signature: "Verrückt. Hip. Aus Wien.",
   },
   capabilities: {
-    eyebrow: "Ein Team, alle Disziplinen",
-    heading: "Alles, was deine Marke braucht.",
-    headingAccent: "Aus einer Hand.",
+    eyebrow: "Leistungen",
+    heading: "Sieben Disziplinen.",
+    headingAccent: "Eine Handschrift.",
     items: [
       "Branding",
       "Strategie",

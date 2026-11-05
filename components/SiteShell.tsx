@@ -10,7 +10,6 @@ import Loader from "./Loader";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import AccessibilityPanel from "./AccessibilityPanel";
-import FloatingCTA from "./FloatingCTA";
 import SceneLayer from "./webgl/SceneLayer";
 import CinemaOverlay from "./CinemaOverlay";
 import PageTransition from "./PageTransition";
@@ -35,7 +34,10 @@ export default function SiteShell({
         <Nav lang={lang} dict={dict} />
         <main id="main">{children}</main>
         <Footer lang={lang} dict={dict} />
-        <FloatingCTA lang={lang} />
+        {/* The floating "Angebot anfordern" pill is gone. It was the fourth
+            way to the same form on every page — nav, hero, contact section,
+            and this — and on a phone it sat on top of the work. The nav's
+            button is on every page already. */}
         <AccessibilityPanel lang={lang} dict={dict} />
         <PageTransition />
         <ScrollFlight />

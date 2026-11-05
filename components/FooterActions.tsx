@@ -83,7 +83,7 @@ export default function FooterActions({ lang }: { lang: Locale }) {
         <p className="mt-2">
           <Link href={`/${lang}/marketing-agentur-wien`} data-cursor="link"
             className="font-sans text-xs uppercase tracking-[0.14em] text-creme/50 transition-colors hover:text-pink">
-            {de ? "Marketing Agentur Wien" : "Marketing Agency Vienna"}
+            {de ? "Kreativ- & Marketingagentur Wien" : "Creative & Marketing Agency Vienna"}
           </Link>
         </p>
       </div>

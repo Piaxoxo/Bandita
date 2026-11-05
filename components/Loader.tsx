@@ -63,11 +63,11 @@ export default function Loader({ dict }: { dict: Dictionary }) {
     // Absolute safety net so the intro can never trap the page.
     //
     // It must sit just past the animation's natural end, or it truncates it:
-    // up to 0.5s waiting for Bodoni, then 2.0s forming + 1.1s holding + 1.3s
-    // scattering = 4.9s. At the old 4.2s the exit was being cut mid-scatter —
-    // invisible while the WebGL canvas took a moment to come up, obvious now
-    // that the 2D one starts immediately.
-    const safety = window.setTimeout(done, isReduced ? 900 : 5200);
+    // up to 0.5s waiting for Bodoni, then 1.3s forming + 0.55s holding + 1.0s
+    // scattering = 3.35s. (It once sat at 4.2s against a 4.9s animation and
+    // cut the exit mid-scatter — invisible while the WebGL canvas took a
+    // moment to come up, obvious once the 2D one started immediately.)
+    const safety = window.setTimeout(done, isReduced ? 900 : 3700);
 
     if (isReduced) {
       setCount(100);
@@ -83,7 +83,7 @@ export default function Loader({ dict }: { dict: Dictionary }) {
     const counter = { v: 0 };
     const tween = gsap.to(counter, {
       v: 100,
-      duration: 2.1,
+      duration: 1.4, // tracks the shortened formation phase
       ease: "power2.inOut",
       onUpdate: () => setCount(Math.round(counter.v)),
     });

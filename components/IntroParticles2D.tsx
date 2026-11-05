@@ -37,10 +37,13 @@ const WORD_W = 9; // world units the wordmark spans
 const HALF = (FOV * Math.PI) / 180 / 2;
 const FOCAL = 1 / Math.tan(HALF);
 
-// Phase lengths, in seconds — unchanged from the WebGL version.
-const FORM = 2.0;
-const HOLD = 1.1;
-const EXIT = 1.3;
+// Phase lengths, in seconds. The WebGL original ran 2.0 / 1.1 / 1.3 — 4.4s
+// plus the font wait, which is a long time to ask of a first visitor. The
+// shape of the motion is kept; each phase is simply shorter, with the hold
+// cut most: the word is read in half a second, and the rest was waiting.
+const FORM = 1.3;
+const HOLD = 0.55;
+const EXIT = 1.0;
 
 const COLORS = ["#FCF6EC", "#FF5C9E", "#FB003F"] as const; // creme, rose, pink
 
