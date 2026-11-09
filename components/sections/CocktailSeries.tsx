@@ -20,8 +20,8 @@ if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
   slower than its name, which is what gives the slide depth.
 
   These are concept images (AI-generated, the agency's own words) and the
-  corner says so. The names are the agency's, invented for the series; the
-  sub-lines name only what the pictures show.
+  corner says so. Names and ingredient lines are taken from the posters the
+  images came as — nothing is added to them.
 */
 
 type Drink = {
@@ -38,34 +38,28 @@ type Drink = {
 
 const DRINKS: Drink[] = [
   {
-    id: "cranberry", src: "/cocktails/cranberry.webp", w: 715, h: 945,
-    name: { de: "Scharlach", en: "Scarlet" },
-    sub: { de: "Cranberry · Rosmarin · Kristallglas", en: "Cranberry · rosemary · cut crystal" },
+    id: "chai", src: "/cocktails/chai.webp", w: 561, h: 958,
+    name: { de: "Chai Latte", en: "Chai Latte" },
+    sub: { de: "Vodka · Chai-Sirup · Vanille · Crème · Zimt", en: "Vodka · chai syrup · vanilla · cream · cinnamon" },
+    bg: "#FB003F", fg: "creme",
+  },
+  {
+    id: "pumpkin", src: "/cocktails/pumpkin.webp", w: 595, h: 1218,
+    name: { de: "Pumpkin Martini", en: "Pumpkin Martini" },
+    sub: { de: "Vodka · Pumpkin Spice · Vanille · Ahorn · Crème", en: "Vodka · pumpkin spice · vanilla · maple · cream" },
     bg: "#5FC9BC", fg: "ink",
   },
   {
-    id: "zuckerwatte", src: "/cocktails/zuckerwatte.webp", w: 617, h: 1224,
-    name: { de: "Wolke Sieben", en: "Cloud Nine" },
-    sub: { de: "Zuckerwatte · Rosenblüten · Coupe", en: "Cotton candy · rose petals · coupe" },
+    id: "onyx", src: "/cocktails/onyx.webp", w: 590, h: 931,
+    name: { de: "Onyx Margarita", en: "Onyx Margarita" },
+    sub: { de: "Tequila Reposado · Brombeere · Limette · Agave · Glitzer", en: "Tequila reposado · blackberry · lime · agave · edible glitter" },
     bg: "#FFC23D", fg: "ink",
   },
   {
-    id: "brombeere", src: "/cocktails/brombeere.webp", w: 793, h: 1267,
-    name: { de: "Mitternacht", en: "Midnight" },
-    sub: { de: "Brombeere · Stiefmütterchen · Coupe", en: "Blackberry · pansy · coupe" },
-    bg: "#FF8A5B", fg: "ink",
-  },
-  {
-    id: "trueffel", src: "/cocktails/trueffel.webp", w: 629, h: 1005,
-    name: { de: "Blattgold", en: "Gold Leaf" },
-    sub: { de: "Trüffel · Blattgold · Thymian", en: "Truffle · gold leaf · thyme" },
+    id: "truffle", src: "/cocktails/truffle.webp", w: 569, h: 761,
+    name: { de: "Truffle Sour", en: "Truffle Sour" },
+    sub: { de: "Trüffel-Gin · Zitrone · Holunderblüte · Eiweiß · Schwarzer Trüffel", en: "Truffle-infused gin · lemon · elderflower · egg white · black truffle" },
     bg: "#1A1216", fg: "creme",
-  },
-  {
-    id: "gurke", src: "/cocktails/gurke.webp", w: 555, h: 988,
-    name: { de: "Grüne Stunde", en: "Green Hour" },
-    sub: { de: "Gurke · Kräuter · Coupe", en: "Cucumber · herbs · coupe" },
-    bg: "#FB003F", fg: "creme",
   },
 ];
 
@@ -166,13 +160,18 @@ export default function CocktailSeries({ lang }: { lang: Locale }) {
             return (
               <article
                 key={d.id}
-                className={`relative flex h-full shrink-0 items-center justify-center ${reducedMotion ? "min-h-[100svh]" : ""}`}
+                // overflow-hidden: the name drifts against the slide and must
+                // not bleed into the neighbour
+                className={`relative flex h-full shrink-0 items-center justify-center overflow-hidden ${reducedMotion ? "min-h-[100svh]" : ""}`}
                 style={{ width: reducedMotion ? "100%" : `${100 / n}%`, backgroundColor: reducedMotion ? d.bg : undefined }}
               >
-                {/* the name, huge, behind the glass */}
+                {/* the name, huge, behind the glass — sized to its length so
+                    "Pumpkin Martini" fits one line where "Chai Latte" fills it;
+                    phones let it wrap instead */}
                 <div
                   aria-hidden
-                  className={`cs-name pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none text-center font-display text-[24vw] italic leading-[0.85] tracking-[-0.03em] md:text-[17vw] ${reducedMotion ? dfg : ""}`}
+                  className={`cs-name pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 select-none px-2 text-center font-display text-[20vw] italic leading-[0.85] tracking-[-0.03em] md:whitespace-nowrap md:text-[length:var(--nm)] ${reducedMotion ? dfg : ""}`}
+                  style={{ "--nm": `${Math.min(13.5, 158 / d.name[lang].length)}vw` } as React.CSSProperties}
                 >
                   {d.name[lang]}
                 </div>
@@ -194,11 +193,11 @@ export default function CocktailSeries({ lang }: { lang: Locale }) {
                 {/* bottom padding clears the fixed accessibility button */}
                 <div className={`absolute inset-x-0 bottom-0 z-20 px-5 pb-20 md:px-10 md:pb-24 ${reducedMotion ? dfg : ""}`}>
                   <div className="mx-auto flex max-w-[1600px] items-end justify-between gap-6 font-sans text-[10px] uppercase tracking-[0.3em] md:text-[11px]">
-                    <div>
+                    <div className="max-w-[70%] md:max-w-none">
                       <h3 className="font-display text-2xl normal-case tracking-normal md:text-4xl">{d.name[lang]}</h3>
                       <p className="mt-2 opacity-60">{d.sub[lang]}</p>
                     </div>
-                    <span className="font-display text-base tracking-normal opacity-70 md:text-lg">
+                    <span className="whitespace-nowrap font-display text-base tracking-normal opacity-70 md:text-lg">
                       0{i + 1}<span className="opacity-50"> / 0{n}</span>
                     </span>
                   </div>
