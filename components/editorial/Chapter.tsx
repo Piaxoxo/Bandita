@@ -14,6 +14,7 @@ export const CHAPTER_COLORS = {
   "03": "#FFC23D", // Gelb
   "04": "#5FC9BC", // Teal
   "05": "#FF5C9E", // Rosé
+  "06": "#FB003F", // Pink — the palette comes round again
 } as const;
 
 export type ChapterNo = keyof typeof CHAPTER_COLORS;

@@ -15,7 +15,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
     >
       <div data-fly className="relative mx-auto mb-10 max-w-[1400px] px-5 md:mb-14 md:px-10">
         <Reveal>
-          <Chapter n="04" title={dict.capabilities.eyebrow} className="mb-12 md:mb-16" />
+          <Chapter n="05" title={dict.capabilities.eyebrow} className="mb-12 md:mb-16" />
         </Reveal>
         <Reveal as="h2" data-hl className="max-w-4xl font-display text-4xl font-medium leading-[1.05] md:text-6xl lg:text-7xl">
           {dict.capabilities.heading}{" "}

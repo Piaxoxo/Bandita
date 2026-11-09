@@ -22,7 +22,7 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
 
       <div data-fly className="relative mx-auto max-w-[1400px] px-5 text-center md:px-10">
         <Reveal>
-          <Chapter n="05" title={dict.cta.eyebrow} tone="creme" className="mb-14 text-left md:mb-20" />
+          <Chapter n="06" title={dict.cta.eyebrow} tone="creme" className="mb-14 text-left md:mb-20" />
         </Reveal>
 
         <Parallax speed={-60}>

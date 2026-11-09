@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Locale } from "@/i18n/config";
 import Reveal from "@/components/anim/Reveal";
+import ParticleHeadline from "@/components/anim/ParticleHeadline";
 import Chapter from "@/components/editorial/Chapter";
 import { STATIONS, stationBySlug, coverOf } from "@/components/portfolio/portfolio-data";
 
@@ -29,15 +30,14 @@ export default function SelectedWork({ lang }: { lang: Locale }) {
     <section id="work" className="relative px-5 pb-24 pt-16 text-ink md:px-10 md:pb-36 md:pt-24">
       <div className="mx-auto max-w-[1600px]">
         <Reveal>
-          <Chapter n="02" title={de ? "Arbeiten" : "Work"} />
+          <Chapter n="03" title={de ? "Arbeiten" : "Work"} />
         </Reveal>
         <div className="mb-14 mt-10 flex flex-col gap-6 md:mb-20 md:mt-14 md:flex-row md:items-end md:justify-between">
-          <Reveal
+          <ParticleHeadline
             as="h2"
-            className="font-display text-5xl font-medium leading-[0.98] tracking-[-0.01em] sm:text-6xl md:text-7xl lg:text-8xl"
-          >
-            {de ? "Reden kann jeder." : "Anyone can talk."}
-          </Reveal>
+            text={de ? "Reden kann jeder." : "Anyone can talk."}
+            className="font-display text-5xl font-medium leading-[0.98] tracking-[-0.01em] text-ink sm:text-6xl md:text-7xl lg:text-8xl"
+          />
           <Reveal>
             <Link
               href={`/${lang}/portfolio`}

@@ -86,10 +86,51 @@ export function initSceneInputs(): () => void {
     lastScrollPx = y;
   };
 
+  /*
+    Where the "pointer" comes from depends on the device.
+
+    With a mouse it is the cursor. On a phone there is no cursor — a finger
+    only exists while it touches, and dragging would fight the scroll — so
+    the pointer is the tilt of the device: lean the phone and the ribbon,
+    the cover film and the masthead lean with it. gamma is left–right tilt,
+    beta front–back; beta is taken relative to however the phone was held
+    when the page opened, because nobody reads with the screen vertical.
+
+    iOS only hands out orientation after a user gesture, so there the first
+    touch asks once; Android gives it freely.
+  */
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  const clamp = (v: number) => Math.max(-1, Math.min(1, v));
+
   const onPointer = (e: PointerEvent) => {
+    if (coarse) return;
     scene.rawPointerX = (e.clientX / window.innerWidth) * 2 - 1;
     scene.rawPointerY = -((e.clientY / window.innerHeight) * 2 - 1);
   };
+
+  let betaBase: number | null = null;
+  const onOrient = (e: DeviceOrientationEvent) => {
+    if (e.gamma == null || e.beta == null) return;
+    if (betaBase === null) betaBase = e.beta;
+    scene.rawPointerX = clamp(e.gamma / 28);
+    scene.rawPointerY = clamp(-(e.beta - betaBase) / 28);
+  };
+  const attachGyro = () => window.addEventListener("deviceorientation", onOrient, { passive: true });
+  let armGyro: (() => void) | null = null;
+  if (coarse && typeof DeviceOrientationEvent !== "undefined") {
+    const DOE = DeviceOrientationEvent as unknown as { requestPermission?: () => Promise<"granted" | "denied"> };
+    if (typeof DOE.requestPermission === "function") {
+      armGyro = () => {
+        DOE.requestPermission!()
+          .then((r) => { if (r === "granted") attachGyro(); })
+          .catch(() => {});
+        if (armGyro) window.removeEventListener("touchend", armGyro);
+      };
+      window.addEventListener("touchend", armGyro, { passive: true });
+    } else {
+      attachGyro();
+    }
+  }
 
   const onReduced = (e: MediaQueryListEvent) => {
     scene.reduced = e.matches;
@@ -104,6 +145,8 @@ export function initSceneInputs(): () => void {
   cleanup = () => {
     window.removeEventListener("scroll", onScroll);
     window.removeEventListener("pointermove", onPointer);
+    window.removeEventListener("deviceorientation", onOrient);
+    if (armGyro) window.removeEventListener("touchend", armGyro);
     mq.removeEventListener("change", onReduced);
     cleanup = null;
   };

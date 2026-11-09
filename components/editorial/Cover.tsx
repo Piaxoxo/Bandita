@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/types";
@@ -12,6 +12,9 @@ import { unmaskLines } from "@/lib/unmask";
 import Parallax from "@/components/anim/Parallax";
 import Wordmark from "@/components/Wordmark";
 import Chapter from "./Chapter";
+
+// The window carries three.js; it loads after the intro like every scene.
+const GlassWindow = dynamic(() => import("@/components/webgl/GlassWindow"), { ssr: false });
 
 /*
   The cover.
@@ -123,22 +126,20 @@ export default function Cover({ dict, lang }: { dict: Dictionary; lang: Locale }
             </span>
           </h1>
 
-          {/* the cover image */}
+          {/* the cover window: the brand film, with the ribbon turning to
+              glass where it crosses the frame */}
           <figure className="cv-image md:col-span-5">
             <Parallax speed={-30}>
               <div className="relative aspect-[4/5] overflow-hidden md:aspect-[3/4]">
-                <Image
-                  src="/work/film-02.jpg"
-                  alt={de ? "Bandita — Filmproduktion" : "Bandita — film production"}
-                  fill
-                  priority
-                  sizes="(min-width: 768px) 40vw, 100vw"
-                  className="object-cover"
+                <GlassWindow
+                  video="/video/reel-mojito.mp4"
+                  poster="/video/reel-mojito.jpg"
+                  alt={de ? "Bandita — Film" : "Bandita — film"}
                 />
               </div>
             </Parallax>
             <figcaption className="mt-3 flex items-center justify-between font-sans text-[10px] uppercase tracking-[0.3em] text-ink/50">
-              <span>{de ? "Filmproduktion" : "Film production"}</span>
+              <span>{de ? "Film · Bandita Reel" : "Film · Bandita reel"}</span>
               <span>Wien · 2026</span>
             </figcaption>
           </figure>
