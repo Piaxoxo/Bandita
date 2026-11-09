@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSite } from "@/lib/site-context";
 import { initSceneInputs } from "@/lib/scene-store";
@@ -10,43 +10,66 @@ import { useDeferredScene } from "@/lib/use-deferred-scene";
 const RibbonScene = dynamic(() => import("./RibbonScene"), { ssr: false });
 
 /*
-  Paper.
+  The page behind the page.
 
-  Under the ribbon there is only the page: creme, with the faintest warmth in
-  two corners so it reads as stock rather than as a flat hex value. The old
-  layer painted two large pink glows here for a glass world to float in; the
-  ribbon carries the colour now, so the paper can be paper.
+  It is one fixed surface under everything, and it changes colour as you
+  scroll: dark for the cover, paper for the photographs, dark again for the
+  work, paper for the manifesto. Sections do not paint their own backgrounds
+  — they declare a tone with `data-tone`, and whichever section holds the
+  middle of the screen sets the colour here, with a slow crossfade. That is
+  what lets the ribbon run unbroken across light and dark: it lives on this
+  surface, not behind a stack of opaque sections.
+
+  `html[data-tone]` carries the current tone too, so chrome like the running
+  head can follow it.
 */
-function Paper() {
-  return (
-    <div className="absolute inset-0 overflow-hidden bg-creme">
-      <div
-        className="absolute right-[-20%] top-[-20%] h-[70vmax] w-[70vmax] rounded-full opacity-[0.22]"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(255,214,178,0.45) 0%, rgba(255,205,170,0.22) 34%, transparent 70%)",
-        }}
-      />
-      <div
-        className="absolute bottom-[-25%] left-[-15%] h-[60vmax] w-[60vmax] rounded-full opacity-[0.18]"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(255,140,176,0.35) 0%, rgba(255,124,168,0.16) 36%, transparent 70%)",
-        }}
-      />
-    </div>
-  );
+
+export type Tone = "dark" | "paper";
+const COLORS: Record<Tone, string> = { dark: "#0e0a0d", paper: "#FCF6EC" };
+
+function useTone(): Tone {
+  const [tone, setTone] = useState<Tone>("paper");
+  useEffect(() => {
+    const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-tone]"));
+    if (!sections.length) {
+      document.documentElement.dataset.tone = "paper";
+      return;
+    }
+    let raf = 0;
+    const pick = () => {
+      raf = 0;
+      const mid = window.innerHeight * 0.5;
+      let best: HTMLElement | null = null;
+      let bestD = Infinity;
+      for (const s of sections) {
+        const r = s.getBoundingClientRect();
+        // distance from the viewport centre to the section's span
+        const d = mid < r.top ? r.top - mid : mid > r.bottom ? mid - r.bottom : 0;
+        if (d < bestD) { bestD = d; best = s; }
+      }
+      const t = (best?.dataset.tone as Tone | undefined) ?? "paper";
+      setTone(t);
+      document.documentElement.dataset.tone = t;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(pick); };
+    pick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+  return tone;
 }
 
 export default function SceneLayer() {
   const { reducedMotion } = useSite();
   const pathname = usePathname();
-
-  // About / Portfolio / Studio paint their own worlds.
   const isOther = /^\/(en|de)\/(about|portfolio|studio)(\/|$)/.test(pathname);
-
-  // three.js waits for the intro to finish and the thread to go idle.
   const mounted = useDeferredScene(!isOther);
+  const tone = useTone();
 
   useEffect(() => initSceneInputs(), []);
 
@@ -54,7 +77,10 @@ export default function SceneLayer() {
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10">
-      <Paper />
+      <div
+        className="absolute inset-0 transition-colors duration-[900ms] ease-bandita"
+        style={{ backgroundColor: COLORS[tone] }}
+      />
       {mounted && !reducedMotion && (
         <div className="absolute inset-0">
           <RibbonScene />

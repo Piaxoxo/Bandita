@@ -81,7 +81,7 @@ export default function PhotoSpread({
   const [lead, ...rest] = photos;
 
   return (
-    <section className="relative px-5 pb-20 pt-10 text-ink md:px-10 md:pb-28 md:pt-12">
+    <section data-tone="paper" className="relative px-5 pb-20 pt-16 text-ink md:px-10 md:pb-28 md:pt-24">
       <div className="mx-auto max-w-[1600px]">
         <Reveal>
           <Chapter n={n} title={title[lang]} />

@@ -43,9 +43,9 @@ const POINTS: [number, number, number][] = [
   [1.0, -43.0, -1.0], [-7.0, -47.0, 0.4], [-3.0, -52.0, -0.5], [5.0, -56.0, 0.6],
   [7.8, -60.0, 0.0],
 ];
-// A ribbon, not a road: at this camera ~0.55 units is about the width of a
-// hand-tied bow on the page.
-const WIDTH = 0.55;
+// Wide enough to be an event, not a thread. The first pass at 0.55 read as a
+// hairline from across the room; on a dark chapter it has to carry colour.
+const WIDTH = 0.85;
 
 const SEGMENTS: Record<DeviceTier, number> = { high: 420, mid: 300, low: 200 };
 
@@ -99,21 +99,35 @@ function Ribbon({ segments }: { segments: number }) {
     const m = meshRef.current;
     if (!g || !m) return;
 
-    // Scroll pulls the ribbon up; the pointer leans it a little toward you.
+    // Scroll pulls the ribbon up.
     g.position.y = store.scroll * SCROLL_TRAVEL;
-    g.position.x += (store.pointerX * 0.5 - g.position.x) * 0.05;
+
+    // The pointer in the ribbon's own coordinates: the viewport at z=0 is
+    // about ±4.1 high, ±4.1·aspect wide, and the group has scrolled up.
+    const aspect = size.width / size.height;
+    const px = store.pointerX * 4.1 * aspect;
+    const py = store.pointerY * 4.1 - g.position.y;
 
     const time = store.reduced ? 0 : state.clock.elapsedTime;
     const pos = geometry.attributes.position as THREE.BufferAttribute;
     for (let i = 0; i <= segments; i++) {
       const t = i / segments;
       const p = points[i];
+      // Real deformation, not a translate: where the band passes near the
+      // pointer it is drawn toward it, and the pull falls off with distance,
+      // so it bends like fabric someone is reaching for.
+      const dx = px - p.x;
+      const dy = py - p.y;
+      const dist = Math.hypot(dx, dy);
+      const pull = Math.max(0, 1 - dist / 5.5) * 1.6;
+      const bx = dist > 0.001 ? (dx / dist) * pull : 0;
+      const by = dist > 0.001 ? (dy / dist) * pull : 0;
       // A fuller twist than tape would take: the folds are where silk catches
       // light, and without them the band reads as a flat stroke of colour.
       const twist = Math.sin(t * 16 + time * 1.2) * 0.75 + Math.sin(t * 6 - time * 0.7) * 0.4;
       side.copy(frames.binormals[i]).applyAxisAngle(frames.tangents[i], twist).multiplyScalar(WIDTH / 2);
-      pos.setXYZ(i * 2, p.x - side.x, p.y - side.y, p.z - side.z);
-      pos.setXYZ(i * 2 + 1, p.x + side.x, p.y + side.y, p.z + side.z);
+      pos.setXYZ(i * 2, p.x + bx - side.x, p.y + by - side.y, p.z - side.z);
+      pos.setXYZ(i * 2 + 1, p.x + bx + side.x, p.y + by + side.y, p.z + side.z);
     }
     pos.needsUpdate = true;
     geometry.computeVertexNormals();

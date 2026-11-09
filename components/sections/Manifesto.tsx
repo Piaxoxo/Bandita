@@ -39,6 +39,7 @@ export default function Manifesto({ dict }: { dict: Dictionary }) {
     <section
       id="manifesto"
       ref={root}
+      data-tone="paper"
       className="relative overflow-hidden py-32 md:py-48"
     >
       {/* parallax ghost word */}

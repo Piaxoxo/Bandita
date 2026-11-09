@@ -16,7 +16,7 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
   const de = lang === "de";
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-pink py-32 text-creme md:py-48">
+    <section id="contact" data-tone="dark" className="relative overflow-hidden bg-pink py-32 text-creme md:py-48">
       <div aria-hidden className="motion-only pointer-events-none absolute inset-0 opacity-30"
         style={{ background: "radial-gradient(60% 60% at 50% 0%, rgba(255,255,255,0.35), transparent 70%)" }} />
 

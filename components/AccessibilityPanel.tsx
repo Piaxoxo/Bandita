@@ -75,7 +75,9 @@ export default function AccessibilityPanel({
         aria-label={t.open}
         aria-expanded={open}
         data-cursor="link"
-        className="fixed bottom-5 left-5 z-[65] flex h-12 w-12 items-center justify-center rounded-full bg-ink text-creme shadow-lg transition-transform duration-300 ease-bandita hover:scale-110 md:bottom-7 md:left-7"
+        // Inverts with the page tone (html[data-tone], set by SceneLayer): ink
+        // on paper, creme on the dark chapters, so it never disappears.
+        className="fixed bottom-5 left-5 z-[65] flex h-12 w-12 items-center justify-center rounded-full bg-ink text-creme shadow-lg transition-[transform,background-color,color] duration-300 ease-bandita hover:scale-110 md:bottom-7 md:left-7 [html[data-tone=dark]_&]:bg-creme [html[data-tone=dark]_&]:text-ink"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
           <circle cx="12" cy="4" r="2" fill="currentColor" />

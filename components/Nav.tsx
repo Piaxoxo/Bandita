@@ -30,8 +30,20 @@ export default function Nav({ lang, dict }: { lang: Locale; dict: Dictionary }) 
   const barRef = useRef<HTMLElement>(null);
 
   const isHome = pathname === `/${lang}`;
-  // About & Portfolio render dark worlds — flip the (otherwise ink) chrome to light.
-  const dark = /^\/(en|de)\/(about|portfolio)(\/|$)/.test(pathname);
+  // About & Portfolio render dark worlds — flip the (otherwise ink) chrome to
+  // light. On the homepage the chapters set the tone (see SceneLayer), and
+  // the bar follows whatever html[data-tone] says.
+  const pathDark = /^\/(en|de)\/(about|portfolio)(\/|$)/.test(pathname);
+  const [toneDark, setToneDark] = useState(false);
+  useEffect(() => {
+    const el = document.documentElement;
+    const read = () => setToneDark(el.dataset.tone === "dark");
+    read();
+    const mo = new MutationObserver(read);
+    mo.observe(el, { attributes: true, attributeFilter: ["data-tone"] });
+    return () => mo.disconnect();
+  }, []);
+  const dark = pathDark || toneDark;
   // On the cover the masthead does this job; the bar waits until it is gone.
   const hidden = isHome && scrollY < 220 && !open;
   const scrolled = scrollY > 40;

@@ -11,6 +11,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
   return (
     <section
       id="capabilities"
+      data-tone="paper"
       className="relative overflow-hidden py-32 text-ink md:py-44"
     >
       <div data-fly className="relative mx-auto mb-10 max-w-[1400px] px-5 md:mb-14 md:px-10">

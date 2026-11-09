@@ -26,23 +26,25 @@ export default function SelectedWork({ lang }: { lang: Locale }) {
   const de = lang === "de";
 
   return (
-    // On paper, not on black: in a magazine the work sits on the page.
-    <section id="work" className="relative px-5 pb-24 pt-16 text-ink md:px-10 md:pb-36 md:pt-24">
+    // A dark chapter: the page behind goes to ink as this scrolls in (see
+    // SceneLayer), and the work gets the wall it had before.
+    <section id="work" data-tone="dark" className="relative px-5 pb-24 pt-20 text-creme md:px-10 md:pb-36 md:pt-28">
       <div className="mx-auto max-w-[1600px]">
         <Reveal>
-          <Chapter n="03" title={de ? "Arbeiten" : "Work"} />
+          <Chapter n="03" title={de ? "Arbeiten" : "Work"} tone="creme" />
         </Reveal>
         <div className="mb-14 mt-10 flex flex-col gap-6 md:mb-20 md:mt-14 md:flex-row md:items-end md:justify-between">
           <ParticleHeadline
             as="h2"
             text={de ? "Reden kann jeder." : "Anyone can talk."}
-            className="font-display text-5xl font-medium leading-[0.98] tracking-[-0.01em] text-ink sm:text-6xl md:text-7xl lg:text-8xl"
+            color="#FCF6EC"
+            className="font-display text-5xl font-medium leading-[0.98] tracking-[-0.01em] text-creme sm:text-6xl md:text-7xl lg:text-8xl"
           />
           <Reveal>
             <Link
               href={`/${lang}/portfolio`}
               data-cursor="link"
-              className="group inline-flex items-center gap-3 font-sans text-[11px] uppercase tracking-[0.3em] text-ink/55 transition-colors hover:text-ink"
+              className="group inline-flex items-center gap-3 font-sans text-[11px] uppercase tracking-[0.3em] text-creme/55 transition-colors hover:text-creme"
             >
               {de ? `Alle ${STATIONS.length} Projekte` : `All ${STATIONS.length} projects`}
               <span aria-hidden className="transition-transform group-hover:translate-x-1">
@@ -62,9 +64,9 @@ export default function SelectedWork({ lang }: { lang: Locale }) {
                 <Link
                   href={`/${lang}/portfolio/${st.id}`}
                   data-cursor="link"
-                  className="group relative block overflow-hidden ring-1 ring-ink/10 transition-shadow duration-500 hover:shadow-[0_30px_60px_-30px_rgba(26,18,22,0.35)]"
+                  className="group relative block overflow-hidden ring-1 ring-creme/10 transition-shadow duration-500 hover:shadow-[0_40px_80px_-30px_rgba(251,0,63,0.35)]"
                 >
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-ink/5">
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-creme/5">
                     <Image
                       src={cover}
                       alt={`${st.name[lang]} — ${st.tag[lang]}`}
