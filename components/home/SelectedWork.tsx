@@ -31,7 +31,7 @@ export default function SelectedWork({ lang }: { lang: Locale }) {
     <section id="work" data-tone="dark" className="relative px-5 pb-24 pt-20 text-creme md:px-10 md:pb-36 md:pt-28">
       <div className="mx-auto max-w-[1600px]">
         <Reveal>
-          <Chapter n="03" title={de ? "Arbeiten" : "Work"} tone="creme" />
+          <Chapter n="04" title={de ? "Arbeiten" : "Work"} tone="creme" />
         </Reveal>
         <div className="mb-14 mt-10 flex flex-col gap-6 md:mb-20 md:mt-14 md:flex-row md:items-end md:justify-between">
           <ParticleHeadline

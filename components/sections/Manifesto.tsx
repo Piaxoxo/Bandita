@@ -55,7 +55,7 @@ export default function Manifesto({ dict }: { dict: Dictionary }) {
           site's habit of six motion languages at once. */}
 
       <div data-fly className="relative mx-auto max-w-[1400px] px-5 md:px-10">
-        <Chapter n="04" title={dict.manifesto.eyebrow} className="mb-12 md:mb-16" />
+        <Chapter n="05" title={dict.manifesto.eyebrow} className="mb-12 md:mb-16" />
 
         {/* One sentence, larger than before, and set from particles: it
             gathers as you reach it and lets go as you leave. The paragraph

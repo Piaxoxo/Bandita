@@ -17,7 +17,7 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
     >
       <div data-fly className="relative mx-auto mb-10 max-w-[1400px] px-5 md:mb-14 md:px-10">
         <Reveal>
-          <Chapter n="05" title={dict.capabilities.eyebrow} className="mb-12 md:mb-16" />
+          <Chapter n="06" title={dict.capabilities.eyebrow} className="mb-12 md:mb-16" />
         </Reveal>
         {/* Two lines, each set from particles in its own colour: the accent is
             a whole sentence and gets its own line, so it never orphans. */}

@@ -15,6 +15,7 @@ export const CHAPTER_COLORS = {
   "04": "#5FC9BC", // Teal
   "05": "#FF5C9E", // Rosé
   "06": "#FB003F", // Pink — the palette comes round again
+  "07": "#FF8A5B", // Coral
 } as const;
 
 export type ChapterNo = keyof typeof CHAPTER_COLORS;
@@ -24,14 +25,17 @@ export default function Chapter({
   title,
   tone = "ink",
   className = "",
+  color: colorOverride,
 }: {
   n: ChapterNo;
   title: string;
   /** "ink" on paper, "creme" on a dark or pink spread */
   tone?: "ink" | "creme";
   className?: string;
+  /** when the chapter's own colour is the background (the series on Gelb) */
+  color?: string;
 }) {
-  const color = CHAPTER_COLORS[n];
+  const color = colorOverride ?? CHAPTER_COLORS[n];
   const line = tone === "ink" ? "bg-ink/15" : "bg-creme/30";
   const text = tone === "ink" ? "text-ink/70" : "text-creme/80";
   return (

@@ -2,6 +2,7 @@ import { i18n, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import Cover from "@/components/editorial/Cover";
 import PhotoSpread from "@/components/editorial/PhotoSpread";
+import CocktailSeries from "@/components/sections/CocktailSeries";
 import SelectedWork from "@/components/home/SelectedWork";
 import Manifesto from "@/components/sections/Manifesto";
 import Capabilities from "@/components/sections/Capabilities";
@@ -12,17 +13,18 @@ export function generateStaticParams() {
 }
 
 /*
-  One issue, six chapters, numbered the way the brand guide numbers itself:
+  One issue, seven chapters, numbered the way the brand guide numbers itself:
 
-    01  Titel       → Cover        masthead, the line, the film window
-    02  Am Set      → PhotoSpread  photographs from the work itself
-    03  Arbeiten    → SelectedWork six projects on paper
-    04  Haltung     → Manifesto    one sentence
-    05  Leistungen  → Capabilities the constellation
-    06  Kontakt     → ContactCTA   the pink spread
+    01  Titel       → Cover          the film, the glass band, the line
+    02  Am Set      → PhotoSpread    photographs from the work itself
+    03  Serie       → CocktailSeries five glasses on five colours, pinned
+    04  Arbeiten    → SelectedWork   six projects on ink
+    05  Haltung     → Manifesto      one sentence
+    06  Leistungen  → Capabilities   the constellation
+    07  Kontakt     → ContactCTA     the pink spread
 
-  Paper throughout, the ribbon running the length of it; the only full-colour
-  spread is the last one, where the page stops showing and asks.
+  The page behind alternates ink and paper (see SceneLayer); the ribbon runs
+  the length of it.
 */
 
 // The agency's own photographs. Captions name only what the picture shows
@@ -69,6 +71,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
         photos={SET_PHOTOS}
         lang={lang}
       />
+      <CocktailSeries lang={lang} />
       <SelectedWork lang={lang} />
       <Manifesto dict={dict} />
       <Capabilities dict={dict} />
