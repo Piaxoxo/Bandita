@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { Locale } from "@/i18n/config";
 import Reveal from "@/components/anim/Reveal";
 import Parallax from "@/components/anim/Parallax";
+import ParticleHeadline from "@/components/anim/ParticleHeadline";
 import Chapter, { type ChapterNo } from "./Chapter";
 
 /*
@@ -101,11 +102,13 @@ export default function PhotoSpread({
               </Reveal>
             ))}
             {line && (
-              <Reveal delay={0.2}>
-                <p className="mt-10 max-w-xs font-display text-2xl leading-snug text-ink md:text-3xl">
-                  {line[lang]}
-                </p>
-              </Reveal>
+              <div className="mt-10 max-w-xs">
+                <ParticleHeadline
+                  as="p"
+                  text={line[lang]}
+                  className="font-display text-2xl leading-snug text-ink md:text-3xl"
+                />
+              </div>
             )}
           </div>
         </div>

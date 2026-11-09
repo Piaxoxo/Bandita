@@ -6,6 +6,7 @@ import Reveal from "@/components/anim/Reveal";
 import Parallax from "@/components/anim/Parallax";
 import MagneticButton from "@/components/MagneticButton";
 import Chapter from "@/components/editorial/Chapter";
+import ParticleHeadline from "@/components/anim/ParticleHeadline";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { OFFICE_EMAIL } from "@/lib/contact";
 import { INSTAGRAM, utm } from "@/lib/social";
@@ -26,9 +27,16 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
         </Reveal>
 
         <Parallax speed={-60}>
-          <Reveal as="h2" className="mx-auto max-w-5xl font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] sm:text-5xl md:text-7xl">
-            {dict.cta.heading}
-          </Reveal>
+          <div className="mx-auto max-w-5xl">
+            <ParticleHeadline
+              as="h2"
+              text={dict.cta.heading}
+              color="#FCF6EC"
+              accent="#1A1216"
+              accentRatio={0.08}
+              className="font-display text-4xl font-medium leading-[1.04] tracking-[-0.01em] text-creme sm:text-5xl md:text-7xl"
+            />
+          </div>
         </Parallax>
 
         <Reveal>

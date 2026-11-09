@@ -64,6 +64,8 @@ export default function ParticleHeadline({
   color = "#1A1216",
   accent = "#FB003F",
   accentRatio = 0.12,
+  mode = "scroll",
+  armed = true,
 }: {
   text: string;
   as?: ElementType;
@@ -73,11 +75,27 @@ export default function ParticleHeadline({
   /** a few particles in the brand colour, so the line is never flat */
   accent?: string;
   accentRatio?: number;
+  /**
+   * "scroll": forms and dissolves with the line's position in the viewport.
+   * "cover": the line is on screen from the start, so it forms on a clock
+   * once `armed` (after the intro) and only the dissolve is scroll-driven.
+   */
+  mode?: "scroll" | "cover";
+  armed?: boolean;
 }) {
   const wrap = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { reducedMotion } = useSite();
+  // cover mode: the formation starts from the outside, via this ref, so a
+  // change of `armed` does not rebuild the particles
+  const startForm = useRef<() => void>(() => {});
+  const armedRef = useRef(armed);
+  armedRef.current = armed;
+
+  useEffect(() => {
+    if (mode === "cover" && armed) startForm.current();
+  }, [mode, armed]);
 
   useEffect(() => {
     const el = textRef.current;
@@ -200,14 +218,39 @@ export default function ParticleHeadline({
       raf = requestAnimationFrame(loop);
     };
 
-    const st = ScrollTrigger.create({
-      trigger: box,
-      start: "top 88%",
-      end: "bottom 10%",
-      scrub: 0.5,
-      onUpdate: (self) => { progress = self.progress; },
-      onToggle: (self) => { active = self.isActive; if (!active) draw(); },
-    });
+    let st: ScrollTrigger;
+    let formTween: gsap.core.Tween | null = null;
+    if (mode === "scroll") {
+      st = ScrollTrigger.create({
+        trigger: box,
+        start: "top 88%",
+        end: "bottom 10%",
+        scrub: 0.5,
+        onUpdate: (self) => { progress = self.progress; },
+        onToggle: (self) => { active = self.isActive; if (!active) draw(); },
+      });
+    } else {
+      // Formation on a clock, dissolve on scroll: the two never overlap in
+      // time, so whichever is further along owns the progress value.
+      const form = { v: 0 };
+      let dissolve = 0;
+      const apply = () => {
+        progress = dissolve > 0.002 ? 0.58 + 0.42 * dissolve : form.v * 0.5;
+      };
+      active = true;
+      startForm.current = () => {
+        if (formTween || disposed) return;
+        formTween = gsap.to(form, { v: 1, duration: 2.2, delay: 0.15, ease: "power2.out", onUpdate: apply });
+      };
+      if (armedRef.current) startForm.current();
+      st = ScrollTrigger.create({
+        trigger: box,
+        start: "top 35%",
+        end: "top -20%",
+        scrub: 0.4,
+        onUpdate: (self) => { dissolve = self.progress; apply(); },
+      });
+    }
 
     const ro = new ResizeObserver(() => {
       cancelAnimationFrame(raf);
@@ -230,12 +273,17 @@ export default function ParticleHeadline({
       cancelAnimationFrame(raf);
       ro.disconnect();
       st.kill();
+      formTween?.kill();
       el.style.opacity = "";
     };
-  }, [text, color, accent, accentRatio, reducedMotion]);
+  }, [text, color, accent, accentRatio, reducedMotion, mode]);
+
+  // A span headline (one line of a larger heading) needs a span wrapper, so
+  // the markup stays valid inside the parent's <h1>/<h2>.
+  const Wrap: ElementType = Tag === "span" ? "span" : "div";
 
   return (
-    <div ref={wrap} className="relative">
+    <Wrap ref={wrap} className="relative block">
       <Tag ref={textRef as React.Ref<HTMLElement>} className={className}>
         {text.split(" ").map((word, i, arr) => (
           <span key={i}>
@@ -245,6 +293,6 @@ export default function ParticleHeadline({
         ))}
       </Tag>
       <canvas ref={canvasRef} aria-hidden className="pointer-events-none absolute inset-0 h-full w-full" />
-    </div>
+    </Wrap>
   );
 }

@@ -3,6 +3,7 @@
 import type { Dictionary } from "@/i18n/types";
 import Reveal from "@/components/anim/Reveal";
 import Chapter from "@/components/editorial/Chapter";
+import ParticleHeadline from "@/components/anim/ParticleHeadline";
 import ServiceConstellation from "@/components/webgl/ServiceConstellation";
 
 export default function Capabilities({ dict }: { dict: Dictionary }) {
@@ -18,15 +19,19 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
         <Reveal>
           <Chapter n="05" title={dict.capabilities.eyebrow} className="mb-12 md:mb-16" />
         </Reveal>
-        <Reveal as="h2" data-hl className="max-w-4xl font-display text-4xl font-medium leading-[1.05] md:text-6xl lg:text-7xl">
-          {dict.capabilities.heading}{" "}
-          {/* The accent is a whole sentence and must wrap as one. Left to flow
-              freely it orphaned "Aus" at the end of a line on phones, with
-              "einer Hand." stranded below it. */}
-          <span className="inline-block whitespace-nowrap italic text-pink">
-            {dict.capabilities.headingAccent}
-          </span>
-        </Reveal>
+        {/* Two lines, each set from particles in its own colour: the accent is
+            a whole sentence and gets its own line, so it never orphans. */}
+        <h2 className="max-w-4xl font-display text-4xl font-medium leading-[1.05] md:text-6xl lg:text-7xl">
+          <ParticleHeadline as="span" text={dict.capabilities.heading} className="block text-ink" />
+          <ParticleHeadline
+            as="span"
+            text={dict.capabilities.headingAccent}
+            color="#FB003F"
+            accent="#1A1216"
+            accentRatio={0.08}
+            className="block italic text-pink"
+          />
+        </h2>
       </div>
 
       {/* 3D orbiting service constellation (decorative) */}
