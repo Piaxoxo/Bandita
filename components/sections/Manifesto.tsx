@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Dictionary } from "@/i18n/types";
 import { useSite } from "@/lib/site-context";
-import LazyVideo from "@/components/LazyVideo";
+import Chapter from "@/components/editorial/Chapter";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -66,25 +66,12 @@ export default function Manifesto({ dict }: { dict: Dictionary }) {
         Bandita
       </span>
 
-      {/* the orange cocktail film, edge-feathered so it floats free, tilting in 3D.
-          Lazy: it sits below the fold and is hidden entirely under lg — no reason
-          to spend 1.4 MB on it during the first paint. */}
-      <LazyVideo
-        aria-hidden
-        className="hero-cocktail pointer-events-none absolute right-[4%] top-1/2 hidden aspect-[3/4] w-[300px] object-cover lg:block xl:w-[340px]"
-        style={{
-          WebkitMaskImage: "radial-gradient(closest-side, #000 60%, transparent 82%)",
-          maskImage: "radial-gradient(closest-side, #000 60%, transparent 82%)",
-          filter: "drop-shadow(0 30px 45px rgba(251,0,63,0.18))",
-        }}
-        src="/video/cocktail.mp4"
-        poster="/video/cocktail.jpg"
-      />
+      {/* The floating cocktail film is gone: the ribbon is the one object on
+          these pages now, and a second one competing with it was the old
+          site's habit of six motion languages at once. */}
 
       <div data-fly className="relative mx-auto max-w-[1400px] px-5 md:px-10">
-        <p className="mb-10 font-sans text-[11px] uppercase tracking-[0.4em] text-pink">
-          {dict.manifesto.eyebrow}
-        </p>
+        <Chapter n="03" title={dict.manifesto.eyebrow} className="mb-12 md:mb-16" />
 
         {/* One sentence, and larger than before — the paragraph that used to
             follow it is gone. A line that needs a paragraph is not the line. */}

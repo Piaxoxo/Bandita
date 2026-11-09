@@ -125,7 +125,10 @@ export default function Loader({ dict }: { dict: Dictionary }) {
   return (
     <div
       ref={root}
-      className="fixed inset-0 z-[80] overflow-hidden bg-ink text-creme"
+      // Paper, not a black curtain: the particles form the word on the same
+      // creme the page is printed on, so the intro becomes the masthead
+      // instead of cutting to it.
+      className="fixed inset-0 z-[80] overflow-hidden bg-creme text-ink"
       role="status"
       aria-live="polite"
       aria-label="Loading Bandita"
@@ -144,7 +147,7 @@ export default function Loader({ dict }: { dict: Dictionary }) {
       {/* Static fallback for reduced motion */}
       {reduced && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="font-display text-[16vw] font-semibold tracking-tight md:text-[11vw]">
+          <span className="font-display text-[16vw] font-medium tracking-[0.064em] text-pink md:text-[11vw]">
             BANDITA
           </span>
         </div>
@@ -152,23 +155,23 @@ export default function Loader({ dict }: { dict: Dictionary }) {
 
       {/* DOM chrome over the canvas */}
       <div className="loader-chrome pointer-events-none absolute inset-0">
-        <div className="absolute right-6 top-6 font-sans text-sm tabular-nums tracking-widest text-creme/55 md:right-10 md:top-10">
+        <div className="absolute right-6 top-6 font-display text-base tabular-nums text-pink md:right-10 md:top-10">
           {String(count).padStart(3, "0")}
         </div>
 
-        <p className="absolute left-1/2 top-[14%] -translate-x-1/2 font-sans text-[11px] uppercase tracking-[0.4em] text-creme/55">
+        <p className="absolute left-1/2 top-[14%] -translate-x-1/2 font-sans text-[10px] uppercase tracking-[0.42em] text-ink/50">
           {dict.loader.enter}
         </p>
 
-        <div className="absolute bottom-[16%] left-1/2 flex -translate-x-1/2 items-center gap-3 font-sans text-[11px] uppercase tracking-[0.3em] text-creme/55">
+        <div className="absolute bottom-[16%] left-1/2 flex -translate-x-1/2 items-center gap-4 font-sans text-[10px] uppercase tracking-[0.42em] text-ink/50">
           <span>{dict.loader.line1}</span>
-          <span className="h-px w-8 bg-creme/30" />
+          <span className="h-px w-8 bg-ink/25" />
           <span>{dict.loader.line2}</span>
         </div>
 
         <button
           onClick={() => finish.current()}
-          className="pointer-events-auto absolute bottom-8 left-1/2 -translate-x-1/2 font-sans text-[11px] uppercase tracking-[0.25em] text-creme/45 transition-colors hover:text-creme"
+          className="pointer-events-auto absolute bottom-8 left-1/2 -translate-x-1/2 font-sans text-[10px] uppercase tracking-[0.3em] text-ink/40 transition-colors hover:text-pink"
         >
           {dict.loader.skip}
         </button>

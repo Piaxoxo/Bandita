@@ -1,6 +1,6 @@
 import { i18n, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import Hero from "@/components/sections/Hero";
+import Cover from "@/components/editorial/Cover";
 import SelectedWork from "@/components/home/SelectedWork";
 import Manifesto from "@/components/sections/Manifesto";
 import Capabilities from "@/components/sections/Capabilities";
@@ -11,20 +11,16 @@ export function generateStaticParams() {
 }
 
 /*
-  Five screens. The previous homepage had thirteen blocks — packages, two
-  inline offers, reels, philosophy, an offer band, editorial, newsletter,
-  social — and around a thousand words. It explained the agency; it never
-  showed the work.
+  One issue, five chapters, numbered the way the brand guide numbers itself:
 
-  The order is the argument:
-    a line        → Hero
-    the work      → SelectedWork
-    one sentence  → Manifesto
-    the range     → Capabilities
-    the ask       → ContactCTA
+    01  Titel       → Cover        masthead, the line, one image
+    02  Arbeiten    → SelectedWork six projects on paper
+    03  Haltung     → Manifesto    one sentence
+    04  Leistungen  → Capabilities the constellation
+    05  Kontakt     → ContactCTA   the pink spread
 
-  Dark for the film and the work, creme from the sentence on: one turn of
-  the light, placed where the page stops showing and starts talking.
+  Paper throughout, the ribbon running the length of it; the only full-colour
+  spread is the last one, where the page stops showing and asks.
 */
 export default function HomePage({ params }: { params: { lang: string } }) {
   const lang: Locale = isLocale(params.lang) ? params.lang : i18n.defaultLocale;
@@ -32,7 +28,7 @@ export default function HomePage({ params }: { params: { lang: string } }) {
 
   return (
     <>
-      <Hero dict={dict} lang={lang} />
+      <Cover dict={dict} lang={lang} />
       <SelectedWork lang={lang} />
       <Manifesto dict={dict} />
       <Capabilities dict={dict} />

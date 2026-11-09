@@ -1,0 +1,10 @@
+<svg width="1600" height="620" viewBox="0 0 1600 620" xmlns="http://www.w3.org/2000/svg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500&amp;display=swap');
+.vg{font-family:'Bodoni Moda','Didot','Bodoni MT','Times New Roman',serif;}
+.sn{font-family:'Helvetica Neue',Arial,sans-serif;}
+</style>
+<rect width="1600" height="620" fill="#FCF6EC"/>
+<text x="800" y="360" text-anchor="middle" class="vg" fill="#FB003F" font-size="250" letter-spacing="16">BANDITA</text>
+<text x="800" y="450" text-anchor="middle" class="sn" fill="#9E3050" font-size="34" letter-spacing="40">MARKETING AGENCY</text>
+</svg>

@@ -45,7 +45,9 @@ const FORM = 1.3;
 const HOLD = 0.55;
 const EXIT = 1.0;
 
-const COLORS = ["#FCF6EC", "#FF5C9E", "#FB003F"] as const; // creme, rose, pink
+// On paper now, so the dots are the brand's colours rather than paper-coloured
+// dots on black: mostly Pink, some Rosé, a few in the wordmark's Burgunder.
+const COLORS = ["#FB003F", "#FF5C9E", "#9E3050"] as const; // pink, rosé, burgunder
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 const easeIn = (t: number) => t * t * t;
@@ -143,7 +145,7 @@ function sampleWord(count: number): Buffers | null {
 
     seed[i] = Math.random();
     const roll = Math.random();
-    color[i] = roll < 0.78 ? 0 : roll < 0.92 ? 1 : 2;
+    color[i] = roll < 0.72 ? 0 : roll < 0.9 ? 1 : 2;
   }
 
   return { n, start, target, dir, seed, color };

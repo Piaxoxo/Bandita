@@ -5,6 +5,7 @@ import type { Locale } from "@/i18n/config";
 import Reveal from "@/components/anim/Reveal";
 import Parallax from "@/components/anim/Parallax";
 import MagneticButton from "@/components/MagneticButton";
+import Chapter from "@/components/editorial/Chapter";
 import { useQuote } from "@/components/quote/QuoteProvider";
 import { OFFICE_EMAIL } from "@/lib/contact";
 import { INSTAGRAM, utm } from "@/lib/social";
@@ -21,7 +22,7 @@ export default function ContactCTA({ dict, lang = "de" }: { dict: Dictionary; la
 
       <div data-fly className="relative mx-auto max-w-[1400px] px-5 text-center md:px-10">
         <Reveal>
-          <p className="mb-8 font-sans text-[11px] uppercase tracking-[0.4em] text-creme/70">{dict.cta.eyebrow}</p>
+          <Chapter n="05" title={dict.cta.eyebrow} tone="creme" className="mb-14 text-left md:mb-20" />
         </Reveal>
 
         <Parallax speed={-60}>

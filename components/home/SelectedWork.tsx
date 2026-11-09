@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Locale } from "@/i18n/config";
 import Reveal from "@/components/anim/Reveal";
+import Chapter from "@/components/editorial/Chapter";
 import { STATIONS, stationBySlug, coverOf } from "@/components/portfolio/portfolio-data";
 
 /*
@@ -24,27 +25,24 @@ export default function SelectedWork({ lang }: { lang: Locale }) {
   const de = lang === "de";
 
   return (
-    <section id="work" className="relative bg-[#08070a] px-5 py-28 text-creme md:px-10 md:py-40">
+    // On paper, not on black: in a magazine the work sits on the page.
+    <section id="work" className="relative px-5 pb-24 pt-16 text-ink md:px-10 md:pb-36 md:pt-24">
       <div className="mx-auto max-w-[1600px]">
-        <div className="mb-14 flex flex-col gap-6 md:mb-20 md:flex-row md:items-end md:justify-between">
-          <div>
-            <Reveal>
-              <p className="mb-6 font-sans text-[11px] uppercase tracking-[0.4em] text-pink">
-                {de ? "Arbeiten" : "Work"}
-              </p>
-            </Reveal>
-            <Reveal
-              as="h2"
-              className="font-display text-5xl font-medium leading-[0.98] tracking-[-0.01em] sm:text-6xl md:text-7xl lg:text-8xl"
-            >
-              {de ? "Reden kann jeder." : "Anyone can talk."}
-            </Reveal>
-          </div>
+        <Reveal>
+          <Chapter n="02" title={de ? "Arbeiten" : "Work"} />
+        </Reveal>
+        <div className="mb-14 mt-10 flex flex-col gap-6 md:mb-20 md:mt-14 md:flex-row md:items-end md:justify-between">
+          <Reveal
+            as="h2"
+            className="font-display text-5xl font-medium leading-[0.98] tracking-[-0.01em] sm:text-6xl md:text-7xl lg:text-8xl"
+          >
+            {de ? "Reden kann jeder." : "Anyone can talk."}
+          </Reveal>
           <Reveal>
             <Link
               href={`/${lang}/portfolio`}
               data-cursor="link"
-              className="group inline-flex items-center gap-3 font-sans text-xs uppercase tracking-[0.2em] text-creme/60 transition-colors hover:text-creme"
+              className="group inline-flex items-center gap-3 font-sans text-[11px] uppercase tracking-[0.3em] text-ink/55 transition-colors hover:text-ink"
             >
               {de ? `Alle ${STATIONS.length} Projekte` : `All ${STATIONS.length} projects`}
               <span aria-hidden className="transition-transform group-hover:translate-x-1">
@@ -64,9 +62,9 @@ export default function SelectedWork({ lang }: { lang: Locale }) {
                 <Link
                   href={`/${lang}/portfolio/${st.id}`}
                   data-cursor="link"
-                  className="group relative block overflow-hidden rounded-[1rem] ring-1 ring-creme/10"
+                  className="group relative block overflow-hidden ring-1 ring-ink/10 transition-shadow duration-500 hover:shadow-[0_30px_60px_-30px_rgba(26,18,22,0.35)]"
                 >
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#0d0b0e]">
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-ink/5">
                     <Image
                       src={cover}
                       alt={`${st.name[lang]} — ${st.tag[lang]}`}

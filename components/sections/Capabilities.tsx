@@ -2,6 +2,7 @@
 
 import type { Dictionary } from "@/i18n/types";
 import Reveal from "@/components/anim/Reveal";
+import Chapter from "@/components/editorial/Chapter";
 import ServiceConstellation from "@/components/webgl/ServiceConstellation";
 
 export default function Capabilities({ dict }: { dict: Dictionary }) {
@@ -12,21 +13,9 @@ export default function Capabilities({ dict }: { dict: Dictionary }) {
       id="capabilities"
       className="relative overflow-hidden py-32 text-ink md:py-44"
     >
-      {/* subtle radial depth glow */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[80vmin] w-[80vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-40"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(251,0,63,0.32) 0%, rgba(251,0,63,0.20) 24%, rgba(255,92,158,0.10) 48%, rgba(255,92,158,0.03) 66%, transparent 82%)",
-        }}
-      />
-
       <div data-fly className="relative mx-auto mb-10 max-w-[1400px] px-5 md:mb-14 md:px-10">
         <Reveal>
-          <p className="mb-8 font-sans text-[11px] uppercase tracking-[0.4em] text-pink">
-            {dict.capabilities.eyebrow}
-          </p>
+          <Chapter n="04" title={dict.capabilities.eyebrow} className="mb-12 md:mb-16" />
         </Reveal>
         <Reveal as="h2" data-hl className="max-w-4xl font-display text-4xl font-medium leading-[1.05] md:text-6xl lg:text-7xl">
           {dict.capabilities.heading}{" "}
