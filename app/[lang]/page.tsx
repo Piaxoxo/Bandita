@@ -25,24 +25,32 @@ export function generateStaticParams() {
   spread is the last one, where the page stops showing and asks.
 */
 
-// The agency's own photographs, as they arrive. Captions name only what the
-// picture shows; no places or dates are guessed.
-//
-// Stand-ins for now: the two film-set stills already in the repo. The
-// photographs sent for this chapter (Blackmagic rig, the shoot, the trade
-// fair for ROWA) reached the conversation as previews only, not as files,
-// and are swapped in the moment they land on disk.
+// The agency's own photographs. Captions name only what the picture shows
+// and what the agency said about it; no places or dates are guessed.
 const SET_PHOTOS = [
   {
-    src: "/work/film-01.jpg",
-    alt: { de: "Filmproduktion — am Set", en: "Film production — on set" },
-    caption: { de: "Am Set", en: "On set" },
+    src: "/editorial/set-dreh.jpg",
+    alt: { de: "Dreh mit Kinokamera — Blick auf den Monitor der Blackmagic", en: "Shooting on a cinema camera — the Blackmagic monitor" },
+    caption: { de: "Dreh · Kinokamera", en: "Shoot · cinema camera" },
     aspect: "3/2" as const,
   },
   {
-    src: "/work/film-02.jpg",
-    alt: { de: "Filmproduktion — Kinokamera", en: "Film production — cinema camera" },
-    caption: { de: "Dreh", en: "Shoot" },
+    src: "/editorial/set-messe-rowa.jpg",
+    alt: { de: "Pia-Alice Stelzl am Messestand von ROWA, mit orangen Ballons und einem Kind", en: "Pia-Alice Stelzl at the ROWA trade-fair stand, with orange balloons and a child" },
+    caption: { de: "Messe-Support & Social-Media-Content für ROWA", en: "Trade-fair support & social content for ROWA" },
+    aspect: "4/5" as const,
+    position: "top" as const,
+  },
+  {
+    src: "/editorial/set-rig.jpg",
+    alt: { de: "Kinokamera am Set — Blackmagic 6K mit Holzgriff und XLR-Kabel", en: "Cinema camera on set — Blackmagic 6K with wooden grip and XLR cable" },
+    caption: { de: "Am Set · Blackmagic 6K", en: "On set · Blackmagic 6K" },
+    aspect: "3/2" as const,
+  },
+  {
+    src: "/editorial/reel-happy-place.jpg",
+    alt: { de: "Standbild aus einem Reel — Felsen, Gras, blauer Himmel, Schriftzug My Happy Place", en: "Still from a reel — rocks, grass, blue sky, the words My Happy Place" },
+    caption: { de: "Reel-Still · My Happy Place", en: "Reel still · My Happy Place" },
     aspect: "4/5" as const,
   },
 ];

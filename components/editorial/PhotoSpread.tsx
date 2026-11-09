@@ -24,6 +24,14 @@ export type Photo = {
   caption: Bi;
   /** how the frame crops it; the file's own ratio is irrelevant here */
   aspect?: "3/2" | "4/5" | "1/1" | "16/10";
+  /** where the crop anchors — "top" keeps a face in a tall frame */
+  position?: "center" | "top" | "bottom";
+};
+
+const POSITION: Record<NonNullable<Photo["position"]>, string> = {
+  center: "object-center",
+  top: "object-top",
+  bottom: "object-bottom",
 };
 
 const ASPECT: Record<NonNullable<Photo["aspect"]>, string> = {
@@ -38,7 +46,14 @@ function Frame({ photo, lang, speed, sizes, priority = false }: { photo: Photo; 
     <figure>
       <Parallax speed={speed}>
         <div className={`relative overflow-hidden bg-ink/5 ${ASPECT[photo.aspect ?? "3/2"]}`}>
-          <Image src={photo.src} alt={photo.alt[lang]} fill sizes={sizes} priority={priority} className="object-cover" />
+          <Image
+            src={photo.src}
+            alt={photo.alt[lang]}
+            fill
+            sizes={sizes}
+            priority={priority}
+            className={`object-cover ${POSITION[photo.position ?? "center"]}`}
+          />
         </div>
       </Parallax>
       <figcaption className="mt-3 font-sans text-[10px] uppercase tracking-[0.3em] text-ink/50">
@@ -66,7 +81,7 @@ export default function PhotoSpread({
   const [lead, ...rest] = photos;
 
   return (
-    <section className="relative px-5 py-20 text-ink md:px-10 md:py-28">
+    <section className="relative px-5 pb-20 pt-10 text-ink md:px-10 md:pb-28 md:pt-12">
       <div className="mx-auto max-w-[1600px]">
         <Reveal>
           <Chapter n={n} title={title[lang]} />
