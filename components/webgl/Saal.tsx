@@ -246,7 +246,7 @@ function Letters({
           {glass ? (
             // a faint inner glow, so the glass keeps an edge where the room
             // behind it is dark
-            <MeshTransmissionMaterial ref={mat1 as never} {...glassProps} color="#fff0f4" emissive="#3a2f33" emissiveIntensity={0.55} />
+            <MeshTransmissionMaterial ref={mat1 as never} {...glassProps} roughness={0.24} color="#fff4f6" emissive="#4a3d42" emissiveIntensity={0.7} />
           ) : (
             <meshPhysicalMaterial ref={mat1 as never} color="#ffd9e4" roughness={0.2} clearcoat={0.9} transparent opacity={0.9} />
           )}
@@ -390,7 +390,7 @@ function Room({
       </mesh>
 
       <Suspense fallback={null}>
-        <Screen src={video} aspect={aspect} x={portrait ? 0 : -0.9} onTexture={setFilm} />
+        <Screen src={video} aspect={aspect} x={portrait ? 0 : -0.3} onTexture={setFilm} />
       </Suspense>
       <Suspense fallback={null}>
         <Letters lines={lines} tier={tier} armed={armed} progress={progress} width={letterW} left={left} />
