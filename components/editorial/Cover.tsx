@@ -121,8 +121,9 @@ export default function Cover({ dict, lang }: { dict: Dictionary; lang: Locale }
             <span className="hidden sm:inline">Wien</span>
           </div>
           <div className="cv-rule mt-3 h-px bg-creme/50" />
-          <div className="cv-mast flex justify-center py-6 md:py-8">
-            <Wordmark tone="creme" className="text-[15vw] sm:text-[12.5vw] lg:text-[10vw] xl:text-[8.5rem]" />
+          {/* smaller than on paper: in the hall the letters are the headline */}
+          <div className="cv-mast flex justify-center py-5 md:py-6">
+            <Wordmark tone="creme" className="text-[13vw] sm:text-[9vw] lg:text-[6.5vw] xl:text-[5.6rem]" />
           </div>
           <div className="cv-rule h-px bg-creme/50" />
 
