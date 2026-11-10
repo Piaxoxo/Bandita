@@ -5,7 +5,9 @@ import PhotoSpread from "@/components/editorial/PhotoSpread";
 import CocktailSeries from "@/components/sections/CocktailSeries";
 import SelectedWork from "@/components/home/SelectedWork";
 import Manifesto from "@/components/sections/Manifesto";
+import Founder from "@/components/sections/Founder";
 import Capabilities from "@/components/sections/Capabilities";
+import Voices from "@/components/sections/Voices";
 import ContactCTA from "@/components/sections/ContactCTA";
 
 export function generateStaticParams() {
@@ -13,15 +15,17 @@ export function generateStaticParams() {
 }
 
 /*
-  One issue, seven chapters, numbered the way the brand guide numbers itself:
+  One issue, nine chapters, numbered the way the brand guide numbers itself:
 
-    01  Titel       → Cover          the film, the glass band, the line
-    02  Am Set      → PhotoSpread    photographs from the work itself
-    03  Serie       → CocktailSeries five glasses on five colours, pinned
-    04  Arbeiten    → SelectedWork   six projects on ink
-    05  Haltung     → Manifesto      one sentence
-    06  Leistungen  → Capabilities   the constellation
-    07  Kontakt     → ContactCTA     the pink spread
+    01  Titel            → Cover          the film, the glass band, the line
+    02  Am Set           → PhotoSpread    photographs from the work itself
+    03  Serie            → CocktailSeries four glasses on four colours, pinned
+    04  Arbeiten         → SelectedWork   six projects on ink
+    05  Haltung          → Manifesto      one sentence
+    06  Wer dahintersteht→ Founder        the founder, the team
+    07  Leistungen       → Capabilities   the constellation
+    08  Was Kunden sagen → Voices         Facebook reviews, verbatim (renders only with entries)
+    09  Kontakt          → ContactCTA     the pink spread
 
   The page behind alternates ink and paper (see SceneLayer); the ribbon runs
   the length of it.
@@ -74,7 +78,9 @@ export default function HomePage({ params }: { params: { lang: string } }) {
       <CocktailSeries lang={lang} />
       <SelectedWork lang={lang} />
       <Manifesto dict={dict} />
+      <Founder dict={dict} lang={lang} />
       <Capabilities dict={dict} />
+      <Voices lang={lang} />
       <ContactCTA dict={dict} lang={lang} />
     </>
   );
