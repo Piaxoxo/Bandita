@@ -445,7 +445,9 @@ function Room({ lines, video, aspect, armed, progress }: { lines: Lines; video: 
       <Silk width={visW} portrait={portrait} />
 
       {/* the cinema camera, when its model is delivered */}
-      <KameraModel position={portrait ? [visW / 2 - 0.4, -1.4, -2.4] : [visW / 2 - 1.6, -0.9, 0.6]} rotation={[0, -0.8, 0]} scale={portrait ? 0.55 : 1} />
+      {/* the rig stands on the floor line to the right, in front of the
+          letters, turned a little toward them */}
+      <KameraModel position={portrait ? [visW / 2 - 0.9, -3.0, -0.4] : [visW / 2 - 2.4, -2.6, 1.0]} rotation={[0, -0.7, 0]} scale={portrait ? 1.9 : 2.7} />
 
       <Rig armed={armed} progress={progress} />
 

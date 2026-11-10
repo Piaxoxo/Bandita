@@ -13,9 +13,12 @@ import * as THREE from "three";
   missing model is not an error, it is a space kept free. The boundary
   swallows the 404 so the rest of the hall is unaffected.
 
-  Delivery spec: GLB, under 10 MB, under 150k triangles, textures embedded,
-  the lens pointing along +Z, roughly 1.5 units long. The slot scales and
-  turns it; it should not have to be perfect on arrival.
+  The delivered model (Tripo, from the set photograph) was 873k triangles
+  and 26 MB; it ships simplified to 122k and Draco-compressed to 0.8 MB.
+  Textures stay JPEG: converted to WebP they rendered the whole frame
+  blue in the headless check, and that is not a risk worth 150 kB. Its
+  bounding box is ~0.8 × 1.0 × 0.45 with the origin at the base, so
+  `scale` is roughly the rig's height in world units.
 */
 
 export const KAMERA_URL = "/models/kinokamera.glb";
@@ -32,8 +35,20 @@ class Quiet extends Component<{ children: ReactNode }, { failed: boolean }> {
 }
 
 function Model({ scale, ...props }: { scale: number } & JSX.IntrinsicElements["group"]) {
-  const { scene } = useGLTF(KAMERA_URL);
+  // Draco-compressed (26 MB from Tripo → 0.6 MB); the decoder is served
+  // from /draco, not a CDN
+  const { scene } = useGLTF(KAMERA_URL, "/draco/");
   const group = useRef<THREE.Group>(null);
+  useEffect(() => {
+    scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (m.isMesh && m.material) {
+        const mat = m.material as THREE.MeshStandardMaterial;
+        mat.envMapIntensity = 1.4;
+        m.castShadow = false;
+      }
+    });
+  }, [scene]);
   useFrame((state) => {
     const g = group.current;
     if (!g) return;
