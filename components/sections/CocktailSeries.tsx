@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Locale } from "@/i18n/config";
 import { useSite } from "@/lib/site-context";
 import Chapter from "@/components/editorial/Chapter";
+import SeriesBackdrop from "./SeriesBackdrop";
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -68,8 +69,19 @@ export default function CocktailSeries({ lang }: { lang: Locale }) {
   const track = useRef<HTMLDivElement>(null);
   const { reducedMotion } = useSite();
   const [index, setIndex] = useState(0);
+  const pos = useRef(0);
+  const active = useRef(false);
   const de = lang === "de";
   const n = DRINKS.length;
+
+  // the backdrop only animates while the section is on screen
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => { active.current = e.isIntersecting; }, { rootMargin: "80px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     const el = root.current;
@@ -92,7 +104,10 @@ export default function CocktailSeries({ lang }: { lang: Locale }) {
           // No snap: ScrollTrigger's snap tween and Lenis both write the
           // scroll position and fight over it (the page jumped by screens on
           // touch). The slides are a continuous strip instead.
-          onUpdate: (self) => setIndex(Math.round(self.progress * (n - 1))),
+          onUpdate: (self) => {
+            pos.current = self.progress * (n - 1);
+            setIndex(Math.round(pos.current));
+          },
           invalidateOnRefresh: true,
         },
       });
@@ -141,6 +156,9 @@ export default function CocktailSeries({ lang }: { lang: Locale }) {
       style={{ backgroundColor: current.bg }}
     >
       <div className={`relative flex h-[100svh] flex-col ${fg}`}>
+        {/* each cocktail's world, behind the strip */}
+        {!reducedMotion && <SeriesBackdrop pos={pos} active={active} />}
+
         {/* chapter head, fixed within the pinned screen */}
         <div className="absolute inset-x-0 top-0 z-20 px-5 pt-24 md:px-10 md:pt-28">
           <div className="mx-auto max-w-[1600px]">
